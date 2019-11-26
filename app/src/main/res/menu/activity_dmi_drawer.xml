@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:id="@+id/user_menu">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_appointments_list"
+            android:icon="@drawable/appointment"
+            android:title="@string/myappointments" />
+        <item
+            android:id="@+id/nav_waiting_list"
+            android:icon="@drawable/waiting"
+            android:title="@string/maypatient_list" />
+        <item
+            android:id="@+id/nav_encountered"
+            android:icon="@drawable/encounter"
+            android:title="@string/encounters" />
+
+    </group>
+    <group android:id="@+id/physician_menu">
+        <item
+            android:id="@+id/encounter_to_reviews"
+            android:icon="@drawable/encounters"
+            android:title="@string/encounter_to_reviews" />
+        <item
+            android:id="@+id/patients"
+            android:icon="@drawable/patient"
+            android:title="@string/supervise_patients" />
+
+    </group>
+    <group android:id="@+id/adminmenu">
+
+        <item
+            android:id="@+id/physicians"
+            android:icon="@drawable/physicians"
+            android:title="@string/physiscians" />
+        <item
+            android:id="@+id/nurses"
+            android:icon="@drawable/nurses"
+            android:title="@string/nurses" />
+
+    </group>
+
+    <item android:title="@string/account">
+        <menu>
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/profile"
+                android:title="@string/profile" />
+            <item
+                android:id="@+id/nav_disconnect"
+                android:icon="@drawable/shutdown"
+                android:title="@string/disconnect" />
+        </menu>
+    </item>
+
+</menu>

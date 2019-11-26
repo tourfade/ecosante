@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:elevation="4dp"
+    android:padding="10dp"
+    app:cardCornerRadius="5dp">
+    <LinearLayout
+        android:id="@+id/insider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp" />
+
+        <LinearLayout
+
+            android:id="@+id/labItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_toRightOf="@id/icon"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/labName"
+                style="@style/TextView.InputLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:maxLines="2"
+                android:paddingTop="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                android:text="Cholestérole" />
+
+            <TextView
+                android:id="@+id/labValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:paddingLeft="5dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="7dp"
+                android:text="121mg" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_centerVertical="true"
+                android:background="@color/colorAccent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/labItem"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/sep"
+            android:layout_toRightOf="@id/icon"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/status"
+                style="@style/TextView.InputLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                android:text="Effectué" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:paddingLeft="5dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="7dp"
+                android:text="le 12/04/2019" />
+
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/sep"
+            android:layout_width="5dp"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/labItem"
+            android:background="@color/colorAccent" />
+    </RelativeLayout>
+        <ImageButton
+            android:id="@+id/item_delete"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@id/rectoView"
+            android:background="@color/colorAccent"
+            android:src="@android:drawable/ic_menu_delete" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+

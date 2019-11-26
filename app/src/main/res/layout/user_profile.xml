@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/patientDoctorCard"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:cardCornerRadius="5dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <ImageView
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/userPicture"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/person"
+                    android:scaleType="centerInside"/>
+                <LinearLayout
+                    android:id="@+id/lastnametitleContainer"
+                    android:layout_toRightOf="@id/userPicture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_marginTop="10dp"
+                        android:layout_width="0dp"
+                        android:textSize="15sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:orientation="vertical">
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/title" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/title"
+                            style="@style/Widget.AppCompat.Spinner.Underlined"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/title"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="4dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="9dp"
+                            android:spinnerMode="dropdown" />
+                    </LinearLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/lastnameContainer"
+                        android:hint="@string/lastname">
+
+                        <EditText
+                            android:id="@+id/lastname"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textPersonName|textCapCharacters"
+
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="TOURE" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_below="@id/lastnametitleContainer"
+                    android:layout_toRightOf="@id/userPicture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/firstnameContainer"
+                    android:hint="@string/firstname">
+
+                    <EditText
+                        android:id="@+id/firstname"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textPersonName|textCapWords"
+                        android:textAllCaps="true"
+                        android:maxLines="1"
+                        android:padding="8dp"
+                        android:text="Fadel" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <LinearLayout
+                    android:layout_below="@id/firstnameContainer"
+                    android:id="@+id/birthContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1.1"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/dobContainer"
+                        android:hint="@string/dob">
+
+                        <EditText
+                            android:focusable="false"
+                            android:id="@+id/dob"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="date"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="06/11/1977" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/pobContainer"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:hint="@string/pob">
+
+                        <EditText
+                            android:id="@+id/pob"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textAutoComplete|textCapWords"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="Kaedi" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/sex" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/sex"
+                            style="@style/Widget.AppCompat.Spinner.Underlined"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/sex"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="5dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="9dp"
+                            android:spinnerMode="dropdown" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/jobContainner"
+                    android:layout_below="@id/birthContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="7dp"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="@string/speciality" />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/speciality"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textAutoComplete"
+                        android:maxLines="1"
+                        android:paddingLeft="7dp"
+                        android:text="Cardiologue" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/patientDoctorCard"
+            android:id="@+id/userContactCard"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:cardCornerRadius="5dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/addressContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/adress">
+
+                    <EditText
+                        android:id="@+id/address"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="none|textCapWords"
+                        android:maxLines="1"
+                        android:padding="8dp"
+                        android:text="41 rue Sicap Mbao, Dakar" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_below="@id/addressContainer"
+                    android:id="@+id/phoneContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fixphoneContainer"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/fix">
+
+                        <EditText
+                            android:id="@+id/fixphone"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="phone"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="8194483485" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/mobile">
+
+                        <EditText
+                            android:id="@+id/mobile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="phone"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="77543452" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+
+                        android:layout_below="@id/phoneContainer"
+                        android:id="@+id/emailContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="@string/email">
+
+                        <EditText
+                            android:id="@+id/email"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="ftoure@gmail.com" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/userContactCard"
+            android:id="@+id/account"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:cardCornerRadius="5dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:id="@+id/validityContainer"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputLayout
+
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:hint="Validité Abonnement">
+
+                        <EditText
+                            android:focusable="false"
+                            android:id="@+id/validity_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="none"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="20/Avril 2020" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/renewSubscription"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="0.75"
+                        android:background="@drawable/radius5b"
+                        android:text="Renouveller"
+                        android:textColor="@color/common_google_signin_btn_text_dark_default"
+                        android:textSize="12sp"
+                        android:elevation="4dp"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:background="@drawable/radius5o"
+                    android:textColor="@color/common_google_signin_btn_text_dark_default"
+                    android:layout_below="@id/validityContainer"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/updatePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Changer mot de passe"
+                    android:elevation="4dp" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</ScrollView>

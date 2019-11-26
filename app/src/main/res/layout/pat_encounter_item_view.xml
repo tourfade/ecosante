@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/patientConstants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:elevation="4dp"
+        android:padding="10dp"
+        app:cardCornerRadius="5dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Consultation"
+            android:textAlignment="center"
+            android:textColor="@color/colorAlbatre"
+            android:background="@color/colorAccent"
+            android:layout_height="20dp"/>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:id="@+id/insider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:srcCompat="@drawable/encounter" />
+
+                <LinearLayout
+                    android:id="@+id/dateContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/icon"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="@string/encouter_date" />
+
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="7dp"
+                        android:text="21/10/2019" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nurseContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_below="@id/dateContainer"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="@string/nurse" />
+
+                    <TextView
+                        android:id="@+id/nurse"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="7dp"
+                        android:text="Khadijetou TOURE" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@id/nurseContainer"
+                    android:id="@+id/line1"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/pressureC"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/pressure" />
+
+                        <TextView
+                            android:id="@+id/pressure"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="12/7cmgh" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_marginLeft="2dp"
+                        android:id="@+id/glycemyC"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/gaj" />
+
+                        <TextView
+                            android:id="@+id/glycemy"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="97mg/dl" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/heartRateC"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/heartrate" />
+
+                        <TextView
+                            android:id="@+id/heartrate"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="70bat/min" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/verso"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="#F3F2F2"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <ImageButton
+                    android:id="@+id/item_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:elevation="6dp"
+                    android:src="@android:drawable/ic_menu_edit" />
+
+                <ImageButton
+                    android:id="@+id/item_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorAccent"
+                    android:elevation="5dp"
+                    android:src="@android:drawable/ic_menu_delete" />
+            </LinearLayout>
+        </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+

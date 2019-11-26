@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/refresh_layout_app"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:id="@+id/swiperefresh"
+        android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/newFiles"
+        android:layout_width="@dimen/standard_45"
+        android:layout_height="@dimen/standard_45"
+        app:fabCustomSize="@dimen/standard_45"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/standard_21"
+        app:backgroundTint="@color/colorAccent"
+        app:srcCompat="@drawable/pdf"
+        />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/newPicture"
+        android:layout_width="@dimen/standard_45"
+        android:layout_height="@dimen/standard_45"
+        app:fabCustomSize="@dimen/standard_45"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/standard_21"
+        app:backgroundTint="@color/colorAccent"
+        app:srcCompat="@drawable/ic_menu_camera" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/newItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/colorAccent"
+        app:srcCompat="@drawable/addnew" />
+
+</RelativeLayout>

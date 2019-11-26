@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/patientConstants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:elevation="4dp"
+        android:padding="10dp"
+        app:cardCornerRadius="5dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Rendez-Vous"
+            android:id="@+id/header"
+            android:textAlignment="center"
+            android:textColor="@color/colorAlbatre"
+            android:layout_height="20dp"/>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:id="@+id/insider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RelativeLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+            <LinearLayout
+                android:id="@+id/objectContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:id="@+id/object_title"
+                        android:text="@string/object" />
+
+                    <TextView
+                        android:id="@+id/object"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="7dp"
+                        android:text="Rencontrer avec Dr Guissé" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/placecontainer"
+                android:layout_below="@id/objectContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="@string/place" />
+
+                    <TextView
+                        android:id="@+id/place"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="7dp"
+                        android:text="Domicile du patient" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/location" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/datetimeContainer"
+                android:layout_below="@id/placecontainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1.2"
+                    android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/date_title"
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/appointment_date" />
+
+                        <TextView
+                            android:id="@+id/date"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:textColor="@color/colorAccent"
+                            android:text="Lundi 21/02/2018" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/apptContainer"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="@string/time" />
+
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="7dp"
+                        android:textColor="@color/colorAccent"
+                        android:text="14:30" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/time" />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+            <LinearLayout
+        android:id="@+id/verso"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="#F3F2F2"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageButton
+            android:id="@+id/item_edit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:elevation="6dp"
+            android:src="@android:drawable/ic_menu_edit" />
+
+        <ImageButton
+            android:id="@+id/item_delete"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:elevation="5dp"
+            android:src="@android:drawable/ic_menu_delete" />
+    </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:elevation="4dp"
+    android:padding="10dp"
+    app:cardCornerRadius="5dp">
+    <LinearLayout
+        android:id="@+id/insider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:id="@id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/date"
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:maxLines="1"
+                    android:text="le 12/04/2019" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="5"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="7dp"
+                    android:text="Opération de coeur" />
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/item_delete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_toEndOf="@id/rectoView"
+            android:background="@color/colorAccent"
+            android:src="@android:drawable/ic_menu_delete" />
+    </LinearLayout>
+    <View
+        android:layout_gravity="bottom"
+        android:id="@+id/sep"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/container"
+        android:layout_toLeftOf="@id/container"
+        android:background="@color/colorAccent" />
+</androidx.cardview.widget.CardView>
+
+

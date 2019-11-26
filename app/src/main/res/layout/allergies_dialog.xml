@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fallcontainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/allergies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00DDD7D7"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:scrollbars="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/allergies"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorAlbatre"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/actContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="3"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="Allergies aux.." />
+
+                <AutoCompleteTextView
+                    android:id="@+id/allergens"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textAutoComplete"
+                    android:paddingLeft="7dp"
+                    android:text="Pollen"
+                    android:textSize="10sp" />
+
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/diagDateContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:hint="Depuis">
+
+                <EditText
+                    android:id="@+id/allergy_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:inputType="date"
+                    android:maxLines="1"
+                    android:paddingBottom="15dp"
+                    android:text="06/11/2019"
+                    android:textSize="10sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

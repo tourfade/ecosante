@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/docnamecont"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:hint="Nom du Document"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/docname"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:selectAllOnFocus="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <ImageView
+        android:layout_below="@id/docnamecont"
+        android:layout_above="@id/docdatecont"
+        android:id="@+id/docImg"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:elevation="5dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/file"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/docdatecont"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+
+        android:focusable="false"
+        android:hint="Date"
+        app:layout_constraintTop_toBottomOf="@id/docnamecont"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <EditText
+            android:id="@+id/docdate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:inputType="date"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:text="22/09/2019"
+            android:selectAllOnFocus="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+</RelativeLayout>

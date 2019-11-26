@@ -1,0 +1,1211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorAccent"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/patientConstants"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:elevation="4dp"
+            android:padding="10dp"
+            app:cardCornerRadius="5dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@+id/line1"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/pressureC"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/pressure" />
+
+                        <TextView
+                            android:id="@+id/pressure"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="12/7cmgh" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_marginLeft="2dp"
+                        android:id="@+id/temperatureC"
+                        android:layout_width="0dp"
+                        android:clickable="true"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/temperature" />
+
+                        <TextView
+                            android:id="@+id/temperature"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="37.5°C" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_marginLeft="2dp"
+                        android:id="@+id/weightC"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/weight" />
+
+                        <TextView
+                            android:id="@+id/weight"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="85KG" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/line2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line1"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/heightC"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/height" />
+
+                        <TextView
+                            android:id="@+id/height"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="180cm" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/waistsizeC"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/waistsize" />
+
+                        <TextView
+                            android:id="@+id/waistsize"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="124cm" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/breathRateC"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/resprate" />
+
+                        <TextView
+                            android:id="@+id/breathrate"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="20mv/mn" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/line2p5"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/line2"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_marginLeft="2dp"
+                        android:id="@+id/glycemyC"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/gaj" />
+
+                        <TextView
+                            android:id="@+id/glycemy"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="97mg/dl" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/heartRateC"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/heartrate" />
+
+                        <TextView
+                            android:id="@+id/heartrate"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="70bat/min" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/line3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line2p5"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/annorexia" />
+
+                        <CheckBox
+                            android:id="@+id/anorexia"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:checked="true"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/asthenia" />
+
+                        <CheckBox
+                            android:id="@+id/asthenia"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:checked="true" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/dyspnea" />
+
+                        <CheckBox
+                            android:id="@+id/dysphnea"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:checked="true" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/line3.5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line3"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/omi" />
+
+                        <CheckBox
+                            android:id="@+id/omi"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:checked="true" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/apathy" />
+
+                        <CheckBox
+                            android:id="@+id/apathy"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:checked="true" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/emaciation" />
+
+                        <CheckBox
+                            android:id="@+id/emaciation"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:checked="true" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/patientConstants"
+            android:id="@+id/patientgeneralexam"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:cardCornerRadius="5dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+
+                <LinearLayout
+                    android:id="@+id/line4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/autonomy" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/autonomy"
+                            style="@style/Widget.AppCompat.Spinner.Underlined"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/autonomy"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="10dp"
+                            android:spinnerMode="dropdown" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/spaceorientation" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/orientation"
+                            style="@style/Widget.AppCompat.Spinner.Underlined"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/spaceorientation"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="10dp"
+                            android:spinnerMode="dropdown" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_below="@id/line4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/field">
+
+                    <EditText
+                        android:id="@+id/field"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textAutoCorrect|textWebEditText|textMultiLine"
+                        android:maxLines="4"
+                        android:padding="8dp"
+                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/patientgeneralexam"
+            android:id="@+id/lifebeahviours"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:cardCornerRadius="5dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@+id/line5"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+
+                    <LinearLayout
+                        android:id="@+id/smokingC"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/smoking" />
+
+                        <CheckBox
+                            android:clickable="false"
+                            android:id="@+id/smoking"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="3c/j" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ethylismC"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/ethylism" />
+
+                        <CheckBox
+                            android:clickable="false"
+                            android:id="@+id/ethylism"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="1V/j" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+
+                    android:layout_below="@id/line5"
+                    android:id="@+id/line51"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/teaC"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/tea" />
+
+                        <CheckBox
+                            android:clickable="false"
+                            android:id="@+id/tea"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:checked="false"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/otherC"
+                         android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/otherBehaviors" />
+
+                        <CheckBox
+                            android:clickable="false"
+                            android:id="@+id/otherlfiebehaviours"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="2"
+                            android:text="Acro au sport"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:checked="true" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_below="@id/line51"
+                    android:id="@+id/line7"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/running_treatment">
+
+                        <EditText
+                            android:id="@+id/running_treatment"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textAutoCorrect|textWebEditText|textMultiLine"
+                            android:maxLines="1"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:text=" Epaississement des parois" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/durationC"
+                        android:clickable="true"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/duration">
+
+                        <EditText
+                            android:focusableInTouchMode="false"
+                            android:clickable="false"
+                            android:id="@+id/durationValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textAutoCorrect|textWebEditText|textMultiLine"
+                            android:maxLines="2"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:text=" 6sem " />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/lifebeahviours"
+            android:id="@+id/bilanandrecommandation"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:cardCornerRadius="5dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@+id/line8"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_marginBottom="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/existinglabs"
+                            android:textSize="20sp" />
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/addLab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/dynamic_button"
+                            android:elevation="5dp"
+                            android:padding="5dp"
+                            app:backgroundTint="@color/colorAccent"
+                            app:fabSize="mini"
+                            app:srcCompat="@drawable/labs" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/labs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:spanCount="1" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/line9"
+                    android:layout_below="@id/line8"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_marginBottom="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/prescription"
+                            android:textSize="20sp" />
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/addMedication"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/dynamic_button"
+                            android:elevation="5dp"
+                            app:backgroundTint="@color/colorAccent"
+                            app:fabSize="mini"
+                            app:srcCompat="@drawable/drug" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/drugs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:spanCount="1" />
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/line10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/line9"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/advisings">
+
+                    <EditText
+                        android:id="@+id/advisings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line10"
+                        android:inputType="textAutoCorrect|textWebEditText|textMultiLine"
+                        android:maxLines="2"
+                        android:padding="8dp"
+                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporv" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+                <LinearLayout
+                    android:layout_below="@+id/line10"
+                    android:id="@+id/line12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/diabetic_diet" />
+
+                        <CheckBox
+                            android:id="@+id/diabetic_diet"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:maxLines="2"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/hypocaloric_diet" />
+
+                        <CheckBox
+                            android:id="@+id/hypocaloric_diet"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:maxLines="2"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_below="@+id/line12"
+                    android:id="@+id/line13"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/hyposode" />
+
+                        <CheckBox
+                            android:id="@+id/hyposode_diet"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:maxLines="2"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/hyperprotidic" />
+
+                        <CheckBox
+                            android:id="@+id/hyperprotidic_diet"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:maxLines="2"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_below="@id/bilanandrecommandation"
+        android:id="@+id/actions"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        app:cardCornerRadius="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <Button
+            android:textColor="@color/colorAccent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/cancel"
+            android:text="Annuler"/>
+        <Button
+            android:textColor="@color/colorAccent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:id="@+id/save"
+            android:text="Sauvegarder"/>
+    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</ScrollView>
+</RelativeLayout>

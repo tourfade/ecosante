@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sex">
+        <item>H</item>
+        <item>F</item>
+        <item>A</item>
+        <item>Inc</item>
+    </string-array>
+    <string-array name="status">
+        <item>Célibataire</item>
+        <item>Marié/é</item>
+        <item>Divorcé/e</item>
+        <item>Veuf/ve</item>
+        <item>Indeterminé</item>
+
+    </string-array>
+    <string-array name="gsrh">
+        <item>INC</item>
+        <item>A+</item>
+        <item>B+</item>
+        <item>AB+</item>
+        <item>O+</item>
+        <item>A-</item>
+        <item>B-</item>
+        <item>AB-</item>
+        <item>O-</item>
+    </string-array>
+    <string-array name="autonomy">
+        <item>Indeterminé</item>
+        <item>Absente</item>
+        <item>Partielle</item>
+        <item>Totale</item>
+
+    </string-array>
+    <string-array name="spaceorientation">
+        <item>Indeterminé</item>
+        <item>Bonne</item>
+        <item>Mauvaise</item>
+    </string-array>
+    <string-array name="body_site">
+        <item>Indeterminé</item>
+        <item>Axillaire</item>
+        <item>Oreilles</item>
+        <item>Bouche</item>
+        <item>Rectum</item>
+    </string-array>
+    <string-array name="state">
+        <item>À Jeûn</item>
+        <item>Normal</item>
+        <item>Indeterminé</item>
+    </string-array>
+    <string-array name="body_site_heartrate">
+        <item>Indeterminé</item>
+        <item>Coude</item>
+        <item>Cou</item>
+        <item>Poignet</item>
+    </string-array>
+    <string-array name="duration_unit">
+        <item>Jour</item>
+        <item>Semaine</item>
+        <item>Mois</item>
+        <item>Année</item>
+    </string-array>
+    <string-array name="lab_type">
+        <item>@string/otherlab</item>
+        <item>@string/hematology</item>
+        <item>@string/bacteriology</item>
+        <item>@string/serology</item>
+        <item>@string/biochemistry</item>
+    </string-array>
+    <string-array name="title">
+        <item></item>
+        <item>Dr</item>
+        <item>Pr</item>
+        <item>Mme</item>
+        <item>Mlle</item>
+        <item>Mr</item>
+    </string-array>
+    <string-array name="renewal_number">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="medication_status">
+        <item>@string/new_med</item>
+        <item>@string/running</item>
+        <item>@string/terminated</item>
+        <item>@string/unknown</item>
+
+    </string-array>
+    <string-array name="anemia_forms">
+        <item>AS</item>
+        <item>SS</item>
+    </string-array>
+    <string-array name="diabete_forms" >
+        <item>Type 1</item>
+        <item>Type 2</item>
+        <item>Autre</item>
+    </string-array>
+    <string-array name="days">
+
+        <item>Dimanche</item>
+        <item>Lundi</item>
+        <item>Mardi</item>
+        <item>Mercredi</item>
+        <item>Jeudi</item>
+        <item>Vendredi</item>
+        <item>Samedi</item>
+
+    </string-array>
+</resources>
+

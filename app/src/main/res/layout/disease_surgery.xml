@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/actContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextView.InputLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            android:text="Chirurgie Subie" />
+
+        <AutoCompleteTextView
+            android:id="@+id/act"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textAutoComplete"
+            android:paddingLeft="7dp"
+            android:text="Ablation de ..." />
+
+    </LinearLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_below="@id/actContainer"
+        android:id="@+id/percentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:hint="@string/notes">
+
+        <EditText
+            android:id="@+id/notes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine|textCapSentences|textImeMultiLine|textAutoComplete"
+            android:text="bla bla bla" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/diagDateContainer"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/percentContainer"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:hint="Date de l'opération">
+
+        <EditText
+            android:id="@+id/surgery_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:inputType="date"
+            android:maxLines="1"
+            android:text="06/11/2019" />
+    </com.google.android.material.textfield.TextInputLayout>
+</RelativeLayout>

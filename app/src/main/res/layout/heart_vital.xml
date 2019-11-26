@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+
+    <LinearLayout
+        android:id="@+id/bodySiteContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextView.InputLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            android:text="@string/body_part" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/heartRateBodySite"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/body_site_heartrate"
+            android:paddingLeft="0dp"
+            android:paddingTop="10dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="10dp"
+            android:spinnerMode="dropdown" />
+
+
+    </LinearLayout>
+    <com.google.android.material.textfield.TextInputLayout
+
+        android:layout_below="@id/bodySiteContainer"
+        android:id="@+id/heartRateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre de Battements par mn">
+
+        <EditText
+            android:selectAllOnFocus="true"
+            android:id="@+id/heartrate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:padding="8dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+</RelativeLayout>

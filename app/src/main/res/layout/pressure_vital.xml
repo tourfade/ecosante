@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/systoliqueContainner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Systolique en cmHg">
+
+        <EditText
+            android:selectAllOnFocus="true"
+            android:id="@+id/systolic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:padding="8dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/diastoliqueContainner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/systoliqueContainner"
+        android:hint="Diastolique en cmHg">
+
+        <EditText
+            android:selectAllOnFocus="true"
+            android:id="@+id/diastolic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:padding="8dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+</RelativeLayout>

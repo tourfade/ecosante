@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="4dp"
+    app:cardCornerRadius="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:id="@+id/docotorContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextView.InputLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dp"
+                android:paddingTop="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                android:text="Choisir le médecin" />
+
+            <AutoCompleteTextView
+                android:id="@+id/doctor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textAutoComplete"
+                android:maxLines="1"
+                android:paddingLeft="7dp"
+                android:text="Dr Habib Dieye" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_below="@id/docotorContainer"
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Lieu de Rendez-Vous"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/place"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:maxLines="1"
+                    android:text="Chez le Patient"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="5dp">
+
+                <ImageButton
+                    android:id="@+id/locateme"
+                    android:layout_width="48dp"
+                    android:layout_height="47dp"
+                    android:src="@android:drawable/ic_menu_mylocation" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#868686" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/line3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/line2"
+            android:layout_marginTop="10dp">
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1.4"
+                android:hint="De préférence avant le...">
+
+                <EditText
+                    android:id="@+id/latest_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:inputType="date"
+                    android:maxLines="1"
+                    android:text="06/11/2019" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/line4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line3"
+            android:layout_marginTop="10dp"
+            android:hint="@string/details">
+
+            <EditText
+                android:id="@+id/details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/line10"
+                android:inputType="textAutoCorrect|textWebEditText|textMultiLine"
+                android:maxLines="8"
+                android:padding="8dp"
+                android:text="On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L'avantage du Lorem Ipsum sur un texte générique comme" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </RelativeLayout>
+</ScrollView>

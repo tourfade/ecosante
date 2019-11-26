@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="4dp"
+    app:cardCornerRadius="5dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:id="@+id/userPicture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/person"
+            android:scaleType="centerInside"/>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:id="@+id/lastnametitleContainer"
+            android:layout_toLeftOf="@id/userPicture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextView.InputLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                android:id="@+id/title"
+                android:text="Dr" />
+
+            <TextView
+                android:id="@+id/titlename"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:paddingLeft="5dp"
+                android:paddingTop="7dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="7dp"
+                android:text="Ibrahima KANE" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorAccent" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:id="@+id/specialityContainner"
+            android:layout_below="@id/lastnametitleContainer"
+            android:layout_toLeftOf="@id/userPicture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextView.InputLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                android:text="@string/speciality" />
+
+            <TextView
+                android:id="@+id/speciality"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:paddingLeft="5dp"
+                android:paddingTop="7dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="7dp"
+                android:text="Cardiologue" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorAccent" />
+
+        </LinearLayout>
+        <LinearLayout
+           android:layout_marginTop="5dp"
+           android:orientation="horizontal"
+           android:id="@+id/phonesContainer"
+           android:layout_below="@id/specialityContainner"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <LinearLayout
+               android:id="@+id/mobileContainner"
+               android:layout_below="@id/lastnametitleContainer"
+               android:layout_toLeftOf="@id/userPicture"
+               android:layout_width="0dp"
+               android:layout_weight="1"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+
+               <TextView
+                   style="@style/TextView.InputLabel"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:paddingTop="0dp"
+                   android:paddingRight="0dp"
+                   android:paddingBottom="0dp"
+                   android:text="@string/mobile" />
+
+               <TextView
+                   android:id="@+id/mobile"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:maxLines="1"
+                   android:paddingLeft="5dp"
+                   android:paddingTop="7dp"
+                   android:paddingRight="0dp"
+                   android:paddingBottom="7dp"
+                   android:text="+18194483485" />
+
+               <View
+                   android:layout_width="match_parent"
+                   android:layout_height="1dp"
+                   android:background="@color/colorAccent" />
+
+           </LinearLayout>
+           <LinearLayout
+               android:layout_marginLeft="5dp"
+               android:id="@+id/fixphoneContainner"
+               android:layout_below="@id/lastnametitleContainer"
+               android:layout_toLeftOf="@id/userPicture"
+               android:layout_width="0dp"
+               android:layout_weight="1"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+
+               <TextView
+                   style="@style/TextView.InputLabel"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:paddingTop="0dp"
+                   android:paddingRight="0dp"
+                   android:paddingBottom="0dp"
+                   android:text="@string/fix" />
+
+               <TextView
+                   android:id="@+id/fixphone"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:maxLines="1"
+                   android:paddingLeft="5dp"
+                   android:paddingTop="7dp"
+                   android:paddingRight="0dp"
+                   android:paddingBottom="7dp"
+                   android:text="8194483485" />
+
+               <View
+                   android:layout_width="match_parent"
+                   android:layout_height="1dp"
+                   android:background="@color/colorAccent" />
+
+           </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/phonesContainer"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/emailContainner"
+                android:layout_below="@id/phonesContainer"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="@string/email" />
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="7dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="7dp"
+                    android:text="docteur@gmail.com" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginLeft="5dp"
+                android:id="@+id/userTypeContainner"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="@string/type" />
+
+                <TextView
+                    android:id="@+id/userType"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="7dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="7dp"
+                    android:text="Medecin" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

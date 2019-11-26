@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/patientConstants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:elevation="4dp"
+        android:padding="10dp"
+        app:cardCornerRadius="5dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Consultation"
+            android:textAlignment="center"
+            android:textColor="@color/colorAlbatre"
+            android:background="@color/colorAccent"
+            android:layout_height="20dp"/>
+        <RelativeLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/patientImg"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                app:srcCompat="@drawable/encounter" />
+
+
+
+            <LinearLayout
+                android:id="@+id/patientContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@id/patientImg"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="@string/patient" />
+
+                <TextView
+                    android:id="@+id/patient"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="7dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="7dp"
+                    android:text="Khadijetou TOURE" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:id="@+id/line3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/patientContainer"
+                android:layout_toLeftOf="@id/patientImg"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="@string/dob_pob" />
+
+                <TextView
+                    android:id="@+id/dobpob"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="7dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="7dp"
+                    android:text="65ans, né à Kaedi" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_below="@id/line3"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="@string/mobile" />
+                    <TextView
+                        android:id="@+id/mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="7dp"
+                        android:text="+211777248980" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="@string/date" />
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="7dp"
+                        android:text="21/10/2019" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+

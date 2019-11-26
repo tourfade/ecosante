@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="145dp"
+    android:layout_margin="10dp"
+    android:elevation="4dp"
+    android:padding="10dp"
+    app:cardCornerRadius="5dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/colorAccent"
+        android:text="Document"
+        android:textAlignment="center"
+        android:textColor="@color/colorAlbatre" />
+
+    <LinearLayout
+        android:id="@+id/insider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rectoView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:paddingRight="5dp">
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/broken_mage" />
+
+            <LinearLayout
+                android:id="@+id/docdatecontainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titlecontainer"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/thumbnail"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="En Date du " />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="7dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="7dp"
+                    android:text="23/01/2018" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/titlecontainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@id/thumbnail"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="Titre du document" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="7dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="7dp"
+                    android:text="Analyses de sangs" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/verso"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="#F3F2F2"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageButton
+                android:id="@+id/item_edit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:elevation="6dp"
+                android:src="@android:drawable/ic_menu_edit" />
+
+            <ImageButton
+                android:id="@+id/item_delete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:elevation="5dp"
+                android:src="@android:drawable/ic_menu_delete" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

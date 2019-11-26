@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "364955068574",
+    "firebase_url": "https://dmimobile.firebaseio.com",
+    "project_id": "dmimobile",
+    "storage_bucket": "dmimobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364955068574:android:d33bbc4b2af269f821738f",
+        "android_client_info": {
+          "package_name": "com.kamitsoft.dmi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "364955068574-dnp9qlauns1nkefcli6hotfrkc18iqel.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB03AeVtOU0VcjL4J-ZhGDHkcQlK0TK4XA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "364955068574-dnp9qlauns1nkefcli6hotfrkc18iqel.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

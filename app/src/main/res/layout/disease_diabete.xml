@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/formContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextView.InputLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            android:text="Type de Diabète" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/diabeteType"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/diabete_forms"
+            android:paddingLeft="0dp"
+            android:paddingTop="10dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="8dp"
+            android:spinnerMode="dropdown" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_below="@id/formContainer"
+        android:id="@+id/percentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:hint="@string/notes">
+
+        <EditText
+            android:id="@+id/notes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine|textCapSentences|textImeMultiLine|textAutoComplete"
+            android:text="bla bla bla" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/diagDateContainer"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/percentContainer"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/diag_date">
+
+        <EditText
+            android:id="@+id/diag_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:inputType="date"
+            android:maxLines="1"
+            android:text="06/11/2019" />
+    </com.google.android.material.textfield.TextInputLayout>
+</RelativeLayout>

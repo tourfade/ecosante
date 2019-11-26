@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+
+        android:id="@+id/behaveQuantityContainner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Durée du Traitement">
+
+        <EditText
+            android:selectAllOnFocus="true"
+            android:id="@+id/behaveQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:padding="8dp" />
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/durationUnit"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/duration_unit"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:spinnerMode="dropdown"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+</RelativeLayout>

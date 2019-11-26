@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    style="@style/AppTheme.NoActionBar"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorAccent"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="60dp"
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+        <com.google.android.material.tabs.TabLayout
+            app:tabTextAppearance="@style/KCustomTabText"
+            android:id="@+id/nav_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            app:tabGravity="fill"
+            app:tabSelectedTextColor="@color/colorAccent"
+            android:layout_alignParentBottom="true"
+            app:tabIndicatorGravity="bottom">
+
+
+        </com.google.android.material.tabs.TabLayout>
+
+
+
+</RelativeLayout>

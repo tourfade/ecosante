@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="4dp"
+    app:cardCornerRadius="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:id="@+id/drugNameC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextView.InputLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dp"
+                android:paddingTop="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                android:text="@string/drug" />
+
+            <AutoCompleteTextView
+                android:id="@+id/drug"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textAutoComplete"
+                android:maxLines="1"
+                android:paddingLeft="7dp"
+                android:text="Nivaquine" />
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/directionsC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/drugNameC"
+            android:layout_marginTop="10dp"
+            android:hint="@string/direction">
+
+            <EditText
+                android:id="@+id/directions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/line10"
+                android:inputType="textAutoCorrect|textWebEditText|textMultiLine"
+                android:maxLines="8"
+                android:padding="8dp"
+                android:text="2 comprimés par jour au reveil pendant 3 mois" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout
+            android:id="@+id/statusC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/directionsC"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="Status" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/status"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/medication_status"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="8dp"
+                    android:spinnerMode="dropdown" />
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/startingDateContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:hint="@string/starting_date">
+
+                <EditText
+                    android:id="@+id/starting_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:inputType="date"
+                    android:maxLines="1"
+                    android:text="06/11/2019" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/renewC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/statusC"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="7dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="@string/renewal" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/renewal"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/renewal_number"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="8dp"
+                    android:spinnerMode="dropdown" />
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/endingDateContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="@string/terminate_at">
+
+                <EditText
+                    android:id="@+id/ending_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:inputType="date"
+                    android:maxLines="1"
+                    android:text="06/11/2019" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>

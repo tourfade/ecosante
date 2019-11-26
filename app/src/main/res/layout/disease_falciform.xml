@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/formContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextView.InputLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dp"
+                android:paddingTop="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                android:text="Forme Drépano" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/forms"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/anemia_forms"
+                android:paddingLeft="0dp"
+                android:paddingTop="10dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="8dp"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/percentContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:hint="@string/percentage">
+
+            <EditText
+                android:id="@+id/percent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:text="10" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/diagDateContainer"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/formContainer"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/diag_date">
+
+        <EditText
+            android:id="@+id/diag_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:inputType="date"
+            android:maxLines="1"
+            android:text="06/11/2019" />
+    </com.google.android.material.textfield.TextInputLayout>
+</RelativeLayout>
