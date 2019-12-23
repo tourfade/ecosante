@@ -2,7 +2,7 @@ package com.kamitsoft.ecosante.client.patient.oracles;
 
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,21 +11,35 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
 import com.kamitsoft.ecosante.database.UserDAO;
-import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.PhysicianInfo;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
+import com.kamitsoft.ecosante.model.repositories.UsersRepository;
+import com.kamitsoft.ecosante.services.OracleProxy;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PhysistOracleAdapter extends ArrayAdapter {
 
-    private final UserDAO localDatabaseRepo;
-    private List<UserInfo> dataList;
+    private String token;
+    //private final UserDAO localDatabaseRepo;
+    private List<PhysicianInfo> dataList;
     private Context mContext;
 
 
@@ -34,8 +48,15 @@ public class PhysistOracleAdapter extends ArrayAdapter {
     public PhysistOracleAdapter(Context context) {
         super(context, 0);
         dataList = new ArrayList<>();
-        localDatabaseRepo = KsoftDatabase.getInstance(context).userDAO();
         mContext = context;
+        KsoftDatabase.getInstance(context)
+                .userDAO()
+                .getConnectedAccount()
+                .observe((ComponentActivity)context, accountInfo -> {
+                    if(accountInfo !=null)
+                        token = accountInfo.getJwtToken();
+        });
+        initProxy();
     }
 
     @Override
@@ -44,7 +65,7 @@ public class PhysistOracleAdapter extends ArrayAdapter {
     }
 
     @Override
-    public UserInfo getItem(int position) {
+    public PhysicianInfo getItem(int position) {
         return dataList.get(position);
     }
 
@@ -58,10 +79,10 @@ public class PhysistOracleAdapter extends ArrayAdapter {
         TextView speciality = view.findViewById(R.id.speciality);
         TextView fullName = view.findViewById(R.id.fullName);
         ImageView avatar = view.findViewById(R.id.avatar);
-        UserInfo user = getItem(position);
-        speciality.setText(Utils.niceFormat(user.getSpeciality()));
+        PhysicianInfo user = getItem(position);
+        speciality.setText(Utils.niceFormat(user.speciality));
         fullName.setText(Utils.formatUser(getContext(), user));
-        Utils.load(getContext(),user.getAvatar(),avatar,R.drawable.user_avatar,R.drawable.physist);
+        Utils.load(getContext(),user.avatar,avatar,R.drawable.user_avatar,R.drawable.physist);
 
         return view;
     }
@@ -74,6 +95,7 @@ public class PhysistOracleAdapter extends ArrayAdapter {
 
     public class ListFilter extends Filter {
         private Object lock = new Object();
+
 
         @Override
         protected FilterResults performFiltering(CharSequence prefix) {
@@ -88,10 +110,13 @@ public class PhysistOracleAdapter extends ArrayAdapter {
                 final String searchStrLowerCase = prefix.toString().toLowerCase();
 
                 //Call to database to get matching records using room
-                List<UserInfo> matchValues = localDatabaseRepo.findUsers(searchStrLowerCase+"%");
-
-                results.values = matchValues;
-                results.count = matchValues.size();
+                try {
+                    Response<List<PhysicianInfo>> response = oracleProxy.search(searchStrLowerCase).execute();
+                    results.values = response.body();
+                    results.count = response.body().size();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             return results;
@@ -100,7 +125,7 @@ public class PhysistOracleAdapter extends ArrayAdapter {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             if (results.values != null) {
-                dataList = (ArrayList<UserInfo>)results.values;
+                dataList = (ArrayList<PhysicianInfo>)results.values;
             } else {
                 dataList = null;
             }
@@ -112,4 +137,33 @@ public class PhysistOracleAdapter extends ArrayAdapter {
         }
 
     }
+    private OracleProxy oracleProxy;
+    private void initProxy(){
+
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(300, TimeUnit.SECONDS)
+                .connectTimeout(300, TimeUnit.SECONDS)
+                .addInterceptor(chain -> {
+                    if (token != null) {
+                        Request request = chain
+                                .request()
+                                .newBuilder()
+                                .addHeader("Authorization", token)
+                                .build();
+                        return chain.proceed(request);
+                    }
+                    return chain.proceed(chain.request());
+                }).build();
+
+        oracleProxy =  new Retrofit.Builder()
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create(Utils.getGsonBuilder()))
+                .baseUrl(BuildConfig.SERVER_URL)
+                .build().create(OracleProxy.class);
+
+
+    }
+
+
 }

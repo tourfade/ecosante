@@ -24,6 +24,10 @@
     </group>
     <group android:id="@+id/physician_menu">
         <item
+            android:id="@+id/supervisednurses"
+            android:icon="@drawable/nurses"
+            android:title="@string/supervised_nurses" />
+        <item
             android:id="@+id/encounter_to_reviews"
             android:icon="@drawable/encounters"
             android:title="@string/encounter_to_reviews" />

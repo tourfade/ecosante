@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
@@ -102,6 +103,18 @@ public class UserEncountersAdapter extends RecyclerView.Adapter<UserEncountersAd
             myHolder.dobpob.setText(Utils.formatAge(current.getDob())+" né(é) à "+Utils.niceFormat(current.getPob()));
             myHolder.mobile.setText(current.getMobile());
             myHolder.date.setText(Utils.format(current.getCreatedAt()));
+            if(UserType.isNurse(app.getCurrentUser().getUserType())){
+                myHolder.monitorTitle.setText("Supervisé par:");
+                myHolder.monitor.setText(Utils.niceFormat(current.getSupervisor().supFullName));
+
+            }
+            if(UserType.isPhysist(app.getCurrentUser().getUserType())){
+                myHolder.monitorTitle.setText("Rencontre avec:");
+                myHolder.monitor.setText(Utils.niceFormat(current.getMonitor().monitorFullName));
+
+            }
+
+
 
             Utils.load(context,current.getAvatar(),myHolder.avatar,R.drawable.broken_mage,R.drawable.patient);
 
@@ -146,7 +159,7 @@ public class UserEncountersAdapter extends RecyclerView.Adapter<UserEncountersAd
 
     public static class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView date,patient,dobpob,mobile;
+        TextView date,patient,dobpob,mobile, monitorTitle, monitor;
         ImageView avatar;
         // create constructor to get widget reference
         public MyHolder(View itemView) {
@@ -156,8 +169,10 @@ public class UserEncountersAdapter extends RecyclerView.Adapter<UserEncountersAd
              patient = itemView.findViewById(R.id.patient);
              dobpob = itemView.findViewById(R.id.dobpob);
              mobile = itemView.findViewById(R.id.mobile);
+             monitor = itemView.findViewById(R.id.monitor);
+             monitorTitle = itemView.findViewById(R.id.monitorTitle);
 
-             itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
 
         }
 

@@ -27,15 +27,17 @@ public interface EncounterDAO {
     LiveData<List<EncounterInfo>> getPatientEncounters(String patientUuid);
 
     @Query("SELECT e.uuid, e.patientUuid, " +
-            "e.userUuid,e.createdAt, " +
-            "e.pressusreSystolic,e.pressusreDiastolic, " +
+            "e.monitor,e.createdAt, " +
+            "e.pressureSystolic,e.pressureDiastolic, " +
             "e.glycemy, e.glycemyState,  p.patientID, " +
-            "e.user, e.patientUuid, e.userUuid, " +
+            "e.supervisor, e.patientUuid, " +
             "p.firstName, p.lastName, p.middleName, " +
             "p.sex, p.pob, p.dob, p.mobile, p.avatar " +
            " FROM encounterinfo e LEFT JOIN patientinfo p ON e.patientUuid = p.uuid" +
-           " WHERE e.userUuid =:userUuid AND e.deleted<= 0 ORDER BY e.createdAt DESC")
-    LiveData<List<EncounterHeaderInfo>> getUserEncounters(String userUuid);
+           " WHERE  e.deleted<= 0 ORDER BY e.createdAt DESC")
+    LiveData<List<EncounterHeaderInfo>> getEncounterHeaders();
+
+
 
     @Query("SELECT * FROM encounterinfo ORDER BY createdAt DESC")
     LiveData<List<EncounterInfo>> getAllEncounters();
@@ -52,8 +54,8 @@ public interface EncounterDAO {
     @Update
     int update(EncounterInfo... encounterInfo);
 
-    @Query("SELECT * FROM labinfo WHERE encounterUuid=:encounterUuid AND deleted<= 0 ORDER BY createdAt DESC")
-    LiveData<List<LabInfo>> getLabs(String encounterUuid);
+    @Query("SELECT * FROM labinfo WHERE  deleted<= 0 ORDER BY createdAt DESC")
+    LiveData<List<LabInfo>> getLabs();
 
     @Query("SELECT * FROM labinfo WHERE uuid=:uuid")
     LabInfo getLab(String uuid);
@@ -61,16 +63,16 @@ public interface EncounterDAO {
     @Update
     int updateLab(LabInfo... lab);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertLab(LabInfo... lab);
 
-    @Query("SELECT * FROM medicationinfo WHERE encounterUuid=:encounterUuid AND deleted<= 0 ORDER BY createdAt DESC")
-    LiveData<List<MedicationInfo>> getMedications(String encounterUuid);
+    @Query("SELECT * FROM medicationinfo WHERE  deleted<= 0 ORDER BY createdAt DESC")
+    LiveData<List<MedicationInfo>> getMedications();
 
     @Update
     int updateMedication(MedicationInfo... l);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMedication(MedicationInfo... l);
 
     @Query("SELECT * FROM documentinfo WHERE encounterUuid=:encounterUuid  AND deleted<= 0 ORDER BY createdAt DESC")

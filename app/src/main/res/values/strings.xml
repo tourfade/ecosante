@@ -95,7 +95,7 @@
     <string name="weight">Poids</string>
     <string name="gaj">Glycémie</string>
     <string name="height">Taille</string>
-    <string name="waistsize">Tour Taille</string>
+    <string name="waistSize">Tour Taille</string>
     <string name="resprate">F.Respiratoire.</string>
     <string name="heartrate">F. Cardiaque</string>
     <string name="annorexia">Anorexie</string>
@@ -247,5 +247,7 @@
     <string name="payment">Passerelle de Paiement</string>
     <string name="connection_token">connextion_token</string>
     <string name="connection_credential">connexion_credential</string>
+    <string name="supervisor">Médecin Superviseur</string>
+    <string name="supervised_nurses">Infirmiers Supervisés</string>
 
 </resources>

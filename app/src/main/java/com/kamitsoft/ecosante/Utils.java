@@ -12,37 +12,43 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.signature.ObjectKey;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kamitsoft.ecosante.constant.TitleType;
 import com.kamitsoft.ecosante.model.Drug;
 import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.services.DateDeserializer;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import androidx.annotation.AnyRes;
 import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
-import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.fragment.app.FragmentActivity;
 
 public class Utils {
     private static DateFormat df = DateFormat.getDateInstance();
     private static DecimalFormat fmt = new DecimalFormat("#.#");
     static final long DAY_MS = 24 * 3600000;
     private static final int PICTURE_WIDTH = 230;
+
     public static String formatUser(Context context, UserInfo user) {
         return  formatName(context,
                     user.getFirstName(),
                     user.getLastName(),
                     user.getTitle());
-        }
+    }
+    public static String formatUser(Context context, PhysicianInfo user) {
+        return  formatName(context,
+                            user.firstName,
+                            user.lastName,
+                            user.title);
+    }
 
     public static String formatPatient(Context context, PatientInfo patientInfo) {
         return patientInfo==null?"":formatName(context,
@@ -368,6 +374,14 @@ public class Utils {
         },  calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
         datePickerDialog.show();
+    }
+
+    public static Gson  getGsonBuilder(){
+            return new GsonBuilder() //"2019-06-06 21:25:52"
+                    .setDateFormat("yyyy-MM-dd HH:mm")
+                    .registerTypeAdapter(Date.class, new DateDeserializer())
+                    .create();
+
     }
 
     @FunctionalInterface

@@ -59,22 +59,6 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="@string/acocunt">
-
-                    <EditText
-                        android:id="@+id/input_account"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:imeOptions="actionNext"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:padding="8dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:hint="@string/email">
 
@@ -119,16 +103,33 @@
                     android:textAllCaps="true"
                     android:textColor="@color/common_google_signin_btn_text_dark_default"
                     android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_restorcredential"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                <LinearLayout
+                    android:padding="5dp"
                     android:layout_marginTop="15dp"
-                    android:text="Mots de passe oublié ?"
-                    android:textColor="@color/colorAccent" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
+
+                    <TextView
+                        android:id="@+id/tv_activate_account"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textSize="11sp"
+                        android:text="Nouveau Compte ?"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/tv_restorcredential"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Mots de passe oublié ?"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="11sp" />
+            </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

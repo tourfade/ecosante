@@ -16,7 +16,7 @@ public enum VitalType {
     WEIGHT(3,R.string.weight, R.string.kg,R.layout.weight_vital,R.drawable.vs_weight),
     GLYCEMY(4,R.string.gaj, R.string.mgpdl,R.layout.glycemy_vital,R.drawable.gluco),
     HEIGHT(5,R.string.height, R.string.cm,R.layout.height_vital,R.drawable.height),
-    WAISTSIZE(6,R.string.waistsize, R.string.cm,R.layout.waist_vital,R.drawable.waist),
+    WAISTSIZE(6,R.string.waistSize, R.string.cm,R.layout.waist_vital,R.drawable.waist),
     BREATHRATE(7,R.string.resprate_long, R.string.respmn,R.layout.breathrate_vital,R.drawable.vs_breath),
     HEARTRATE(8,R.string.heartrate_long, R.string.batpmn,R.layout.heart_vital,R.drawable.heartrate);
 

@@ -96,16 +96,14 @@ public class PatientEncountersAdapter extends AbstractAdapter<PatientEncountersA
 
             EncounterInfo current = mdata.get(position);
 
-            myHolder.nurse.setText(Utils.niceFormat(current.getUser()));
+            myHolder.nurse.setText(Utils.niceFormat(current.getMonitor().monitorFullName));
+
             myHolder.date.setText(Utils.format(current.getCreatedAt()));
             myHolder.glycemy.setText(Utils.format(current.getGlycemy())+context.getString(VitalType.GLYCEMY.unit));
             myHolder.heartrate.setText(Utils.format(current.getHeartRate())+context.getString(VitalType.HEARTRATE.unit));
 
-            myHolder.pressure.setText(Utils.format(current.getPressusreSystolic())+"/"+
-                    Utils.format(current.getPressusreDiastolic())+" "+context.getString(VitalType.PRESSURE.unit));
-
-
-
+            myHolder.pressure.setText(Utils.format(current.getPressureSystolic())+"/"+
+                    Utils.format(current.getPressureDiastolic())+" "+context.getString(VitalType.PRESSURE.unit));
 
         }else {
         }

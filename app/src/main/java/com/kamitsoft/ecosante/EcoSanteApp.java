@@ -13,15 +13,13 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
+import android.widget.Toast;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.multidex.MultiDexApplication;
 
 import com.facebook.stetho.Stetho;
+import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
@@ -31,12 +29,9 @@ import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.repositories.UsersRepository;
-import com.kamitsoft.ecosante.model.viewmodels.DocumentsViewModel;
-import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 import com.kamitsoft.ecosante.services.ApiSyncService;
 import com.kamitsoft.ecosante.services.WorkerService;
 
-import java.sql.Timestamp;
 
 public class EcoSanteApp extends MultiDexApplication {
     private UserInfo editingUser;
@@ -44,7 +39,6 @@ public class EcoSanteApp extends MultiDexApplication {
     private UserInfo currentUser;
     private MutableLiveData<PatientInfo> currentPatient = new MutableLiveData<>();
     private MutableLiveData<EncounterInfo> currentEncounter = new MutableLiveData<>();
-    private SummaryInfo currentSummary;
     private DocumentInfo currentDocument;
     private UsersRepository usersRepository;
     public static final String  CHANNEL_ID = "com.kamitsoft.dmi.dmichannel";
@@ -75,21 +69,22 @@ public class EcoSanteApp extends MultiDexApplication {
         super.onCreate();
         db = KsoftDatabase.getInstance(this);
         credential = getSharedPreferences(getString(R.string.connection_credential), Context.MODE_PRIVATE);
-
         Stetho.initializeWithDefaults(this);
         creatChannel();
-        observeNetwork();
-        Intent intent = new Intent(this, ApiSyncService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
         usersRepository = new UsersRepository(this);
         usersRepository.getConnectedUser().observeForever(userInfo -> {
+            if(userInfo == null && currentUser !=null){
+                service().unSubscribe(currentUser.getAccountID());
+            }
             currentUser = userInfo;
+
         });
         currentPatient.observeForever(patientInfo -> {
             if(patientInfo == null){
                 this.currentEncounter.setValue(null);
-                this.currentSummary = null;
                 this.currentDocument = null;
+
             }
         });
         currentEncounter.observeForever(encounterInfo -> {
@@ -100,10 +95,29 @@ public class EcoSanteApp extends MultiDexApplication {
 
                 encounterInfo.setPatientID(currentPatient.getValue().getPatientID());
                 encounterInfo.setPatientUuid(currentPatient.getValue().getUuid());
-                encounterInfo.setUser(Utils.formatUser(this, currentUser));
+
+                encounterInfo.getMonitor().monitorFullName = Utils.formatUser(this, currentUser);
+                encounterInfo.getMonitor().monitorUuid = currentUser.getUuid();
+                encounterInfo.getMonitor().active = true;
                 encounterInfo.setUserUuid(currentUser.getUuid());
+                if(UserType.isPhysist(currentUser.getUserType())){
+                    encounterInfo.getSupervisor().physicianUuid = currentUser.getUuid();
+                    encounterInfo.getSupervisor().nurseUuid = currentUser.getUuid();
+                    encounterInfo.getSupervisor().active = true;
+                }
+                if(UserType.isNurse(currentUser.getUserType())){
+                    encounterInfo.setSupervisor(currentUser.getSupervisor());
+                }
+
             }
         });
+
+
+        observeNetwork();
+
+        Intent intent = new Intent(this, ApiSyncService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
 
     }
 
@@ -144,11 +158,10 @@ public class EcoSanteApp extends MultiDexApplication {
         return db;
     }
 
-
+    public void setCurrentUser(UserInfo userInfo) {
+        currentUser = userInfo;
+    }
     public UserInfo getCurrentUser() {
-        if(currentUser == null){
-            return null;
-        }
 
         return currentUser;
     }
@@ -169,10 +182,6 @@ public class EcoSanteApp extends MultiDexApplication {
 
 
     }
-    public MutableLiveData<EncounterInfo> getCurrentLiveEncounter() {
-        return currentEncounter;
-    }
-
     public EncounterInfo getCurrentEncounter() {
         return currentEncounter.getValue();
     }
@@ -206,29 +215,8 @@ public class EcoSanteApp extends MultiDexApplication {
         currentPatient.setValue(null);
     }
 
-    public SummaryInfo getCurrentSummary() {
-        if(currentPatient.getValue() == null){
-            return null;
-        }
-        if(currentSummary == null) {
-            currentSummary =  db.summaryDAO().getPatientSummary(currentPatient.getValue().getUuid());
-        }
-        if(currentSummary == null){
-            currentSummary = new SummaryInfo();
-            currentSummary.setPatientID(currentPatient.getValue().getPatientID());
-            currentSummary.setPatientUuid(currentPatient.getValue().getUuid());
-            db.summaryDAO().insert(currentSummary);
-        }
-        return currentSummary;
-    }
 
-    public void saveSummary() {
-        final SummaryInfo cs = currentSummary;
-        cs.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        if(db.summaryDAO().update(cs) <= 0){
-            db.summaryDAO().insert(cs);
-        }
-    }
+
 
 
 
@@ -239,14 +227,6 @@ public class EcoSanteApp extends MultiDexApplication {
         li.setEncounterUuid(currentEncounter.getValue().getUuid());
         return li;
     }
-
-    public void disconnectUser() {
-        service().unSubscribe(currentUser.getAccountID());
-        currentUser = null;
-        setConnectionToken("");
-
-    }
-
 
 
 
@@ -278,15 +258,9 @@ public class EcoSanteApp extends MultiDexApplication {
         currentDocument = item;
     }
 
-    public String getConnectionToken() {
-        return credential.getString(getString(R.string.connection_token),"");
-    }
-    public void setConnectionToken(String token) {
-        credential
-                .edit()
-                .putString(getString(R.string.connection_token),token)
-                .commit();
-    }
+
+
+
 
 
 }

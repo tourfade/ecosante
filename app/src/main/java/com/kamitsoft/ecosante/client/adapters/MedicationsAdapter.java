@@ -23,6 +23,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -38,7 +39,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     private static final int VIEW_TYPE_NORMAL = 0;
     private static final int VIEW_TYPE_EMPTY = 1;
     private final NumberFormat decimalFormatf;
-    private final EcoSanteApp app;
+   // private final EcoSanteApp app;
 
     private DateFormat df = DateFormat.getDateInstance();
     private Context context;
@@ -50,11 +51,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         this.context = context;
         mdata = new ArrayList<>();
         decimalFormatf = DecimalFormat.getNumberInstance();
-        app = (EcoSanteApp)context.getApplicationContext();
-        String uuid = app.getCurrentEncounter().getUuid();
-        app.getDb().encounterDAO().getMedications(uuid).observe((AppCompatActivity)context, meds -> {
-            syncData(meds);
-        });
+
     }
 
     // return total item from List

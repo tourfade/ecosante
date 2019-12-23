@@ -15,7 +15,11 @@ import com.kamitsoft.ecosante.client.PatientBaseFragment;
 import com.kamitsoft.ecosante.client.adapters.DocumentsListAdapter;
 import com.kamitsoft.ecosante.client.patient.dialogs.DocEditorDialog;
 import com.kamitsoft.ecosante.model.DocumentInfo;
+import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.DocumentsViewModel;
+
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +27,6 @@ import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class PatientDocuments extends PatientBaseFragment {
     private RecyclerView recyclerview;
@@ -34,7 +37,7 @@ public class PatientDocuments extends PatientBaseFragment {
     private FloatingActionButton newImg;
     private boolean isFABOpen;
     private DocumentsViewModel model;
-    private SwipeRefreshLayout swr;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +63,15 @@ public class PatientDocuments extends PatientBaseFragment {
         recyclerview.setAdapter(docAdapter);
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
-        model.getPatientDocuments().observe(this, documentInfos -> docAdapter.syncData(documentInfos));
+        model.getDocuments().observe(this, documentInfos -> {
+            PatientInfo p = app.getCurrentPatient();
+            if(p != null) {
+                docAdapter.syncData(documentInfos.parallelStream()
+                        .filter(d -> app.getCurrentPatient()!=null &&  d.getPatientUuid().equals(p.getUuid()))
+                        .collect(Collectors.toList()));
+            }
+
+        });
         docAdapter.setItemClickListener(this::handleDocument);
         newDoc = view.findViewById(R.id.newItem);
         newPdf =  view.findViewById(R.id.newFiles);
@@ -87,10 +98,10 @@ public class PatientDocuments extends PatientBaseFragment {
 
     }
 
-    private void requestSync() {
-        getActivity().runOnUiThread(() -> swr.setRefreshing(false));
+    @Override
+    protected Class<?> getEntity() {
+        return DocumentInfo.class;
     }
-
     @Override
     public void onResume() {
         super.onResume();

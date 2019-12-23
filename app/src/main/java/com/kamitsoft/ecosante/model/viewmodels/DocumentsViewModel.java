@@ -20,7 +20,7 @@ public class DocumentsViewModel extends AndroidViewModel {
         document = repository.getPatientDocs();
     }
 
-    public LiveData<List<DocumentInfo>> getPatientDocuments() {
+    public LiveData<List<DocumentInfo>> getDocuments() {
         if (document == null) {
             document = new MutableLiveData<>();
         }
@@ -29,7 +29,6 @@ public class DocumentsViewModel extends AndroidViewModel {
 
     public void insert(DocumentInfo doc){
         doc.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-
         repository.insert(doc);
     }
     public void update(DocumentInfo doc){

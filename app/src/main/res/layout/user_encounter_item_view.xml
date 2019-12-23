@@ -104,16 +104,19 @@
                     android:background="@color/colorAccent" />
 
             </LinearLayout>
+
             <LinearLayout
-                android:layout_marginTop="10dp"
+                android:id="@+id/line8"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/line3"
-                android:layout_height="wrap_content">
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
@@ -124,6 +127,7 @@
                         android:paddingRight="0dp"
                         android:paddingBottom="0dp"
                         android:text="@string/mobile" />
+
                     <TextView
                         android:id="@+id/mobile"
                         android:layout_width="match_parent"
@@ -134,16 +138,19 @@
                         android:paddingRight="0dp"
                         android:paddingBottom="7dp"
                         android:text="+211777248980" />
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/colorAccent" />
 
                 </LinearLayout>
+
                 <LinearLayout
+                    android:layout_marginLeft="5dp"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
@@ -154,6 +161,7 @@
                         android:paddingRight="0dp"
                         android:paddingBottom="0dp"
                         android:text="@string/date" />
+
                     <TextView
                         android:id="@+id/date"
                         android:layout_width="match_parent"
@@ -164,14 +172,46 @@
                         android:paddingRight="0dp"
                         android:paddingBottom="7dp"
                         android:text="21/10/2019" />
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/colorAccent" />
 
                 </LinearLayout>
-            </LinearLayout>
 
+            </LinearLayout>
+            <LinearLayout
+                android:layout_below="@id/line8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:id="@+id/monitorTitle"
+                    android:text="Moniteur" />
+                <TextView
+                    android:id="@+id/monitor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="7dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="7dp"
+                    android:text="Fadel TOURE" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+
+            </LinearLayout>
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

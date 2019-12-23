@@ -214,10 +214,10 @@
                             android:paddingTop="0dp"
                             android:paddingRight="0dp"
                             android:paddingBottom="0dp"
-                            android:text="@string/waistsize" />
+                            android:text="@string/waistSize" />
 
                         <TextView
-                            android:id="@+id/waistsize"
+                            android:id="@+id/waistSize"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:maxLines="1"

@@ -13,6 +13,7 @@ public class EntitySync {
     @NonNull @PrimaryKey
     private String entity;
     private long lastSynced;
+    private boolean isDirty;
 
     @NonNull
     public String getEntity() {
@@ -36,4 +37,11 @@ public class EntitySync {
     }
 
 
+    public boolean isDirty() {
+        return isDirty;
+    }
+
+    public void setDirty(boolean dirty) {
+        isDirty = dirty;
+    }
 }

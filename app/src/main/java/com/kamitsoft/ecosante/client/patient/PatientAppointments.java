@@ -14,7 +14,10 @@ import com.kamitsoft.ecosante.client.patient.dialogs.ApptRequestorDialog;
 import com.kamitsoft.ecosante.client.patient.dialogs.DocEditorDialog;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.AppointmentsViewModel;
+
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +29,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 public class PatientAppointments extends BaseFragment {
     private RecyclerView recyclerView;
     private AppointmentsAdapter adapter;
-    private SwipeRefreshLayout swr;
     private AppointmentsViewModel model;
     private PatientInfo currentPatient;
     private boolean isFABOpen;
@@ -52,7 +54,10 @@ public class PatientAppointments extends BaseFragment {
         currentPatient = app.getCurrentPatient();
         model = ViewModelProviders.of(this).get(AppointmentsViewModel.class);
         model.getPatientData().observe(this, appointmentInfos ->  {
-            adapter.syncData(appointmentInfos);
+            currentPatient = app.getCurrentPatient();
+            if(currentPatient != null) {
+                adapter.syncData(appointmentInfos.parallelStream().filter(d -> d.getPatientUuid().equals(currentPatient.getUuid())).collect(Collectors.toList()));
+            }
         });
         recyclerView =  view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -101,15 +106,17 @@ public class PatientAppointments extends BaseFragment {
             model.update(item);
             return;
         }
-        if(item.getUserUuid().equals(app.getCurrentUser().getUuid())) {
+        if(item.getRecipientUuid().equals(app.getCurrentUser().getUuid())) {
             new ApptEditorDialog(false, item).show(getFragmentManager(), "appdialog");
         }else{
             new ApptRequestorDialog(false, item).show(getFragmentManager(), "appReqdialog");
         }
     }
 
-    private void requestSync() {
-        getActivity().runOnUiThread(() -> swr.setRefreshing(false));
+
+    @Override
+    protected Class<?> getEntity(){
+        return  AppointmentInfo.class;
     }
 
     @Override

@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -23,16 +24,19 @@ public interface SummaryDAO {
     @Query("SELECT * FROM summaryinfo WHERE patientUuid=:patUuid")
     SummaryInfo getPatientSummary(String patUuid);
 
-    @Insert
-    void insert(SummaryInfo summary);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(SummaryInfo... summary);
 
     @Delete
     void delete(SummaryInfo summary);
 
-    @Update
-    int update(SummaryInfo summary);
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    int update(SummaryInfo... summary);
 
 
     @Query("SELECT * FROM summaryinfo WHERE patientUuid=:patientUUID")
     LiveData<SummaryInfo> getPatientSummaryLD(String patientUUID);
+
+    @Query("SELECT * FROM summaryinfo WHERE updatedAt > (SELECT lastSynced FROM entitysync WHERE entity ='summaryinfo')")
+    LiveData<List<SummaryInfo>> getUnsync();
 }

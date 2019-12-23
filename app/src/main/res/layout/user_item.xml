@@ -73,10 +73,11 @@
                 android:paddingTop="0dp"
                 android:paddingRight="0dp"
                 android:paddingBottom="0dp"
+                android:id="@+id/specialityOrSupervisorText"
                 android:text="@string/speciality" />
 
             <TextView
-                android:id="@+id/speciality"
+                android:id="@+id/specialityOrSupervisor"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:maxLines="1"

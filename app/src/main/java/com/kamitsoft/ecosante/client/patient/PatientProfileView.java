@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ import com.kamitsoft.ecosante.client.TextWatchAdapter;
 import com.kamitsoft.ecosante.constant.Gender;
 import com.kamitsoft.ecosante.constant.MaritalStatus;
 import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.json.Monitor;
 import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
 
 import java.sql.Timestamp;
@@ -42,6 +44,7 @@ public class PatientProfileView extends PatientBaseFragment  {
     private PatientInfo currentPatient;
     private ImagePickerActivity picker;
     private PatientsViewModel model;
+    private boolean isNew;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +89,35 @@ public class PatientProfileView extends PatientBaseFragment  {
         personContactphone1 = view.findViewById(R.id.personContactphone1);
         personContactphone2 = view.findViewById(R.id.personContactphone2);
         perosnContactAddress = view.findViewById(R.id.perosnContactAddress);
-        currentPatient = app.getCurrentPatient();
-        edit(getActivity().getIntent().getBooleanExtra("isNew",false));
+        //currentPatient = app.getCurrentPatient();
+        isNew = getActivity().getIntent().getBooleanExtra("isNew", false);
+        edit(isNew);
+
         initListeners();
-        initPatientInfo();
+
+        model.getCurrentPatient().observe(this, patientInfo -> {
+            if (patientInfo == null) { return;}
+
+            this.currentPatient = patientInfo;
+            initPatientInfo();
+        });
+
+        model.getAllDatas().observe(this, patientInfo -> {
+            if (patientInfo == null || currentPatient == null) { return;}
+            for(PatientInfo p:patientInfo) {
+                if (currentPatient != null && currentPatient.getUuid().equals(p.getUuid())) {
+                    model.setCurrentPatient(p);
+                    break;
+                }
+            }
+
+        });
+
+    }
+
+    @Override
+    protected Class<?> getEntity() {
+        return PatientInfo.class;
     }
 
     @Override
@@ -123,9 +151,8 @@ public class PatientProfileView extends PatientBaseFragment  {
     }
 
     private void save() {
-        currentPatient.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         model.insert(currentPatient);
-        model.setCurrentPatient(currentPatient);
+        //model.setCurrentPatient(currentPatient);
     }
 
     public void edit(boolean editable){
@@ -135,7 +162,7 @@ public class PatientProfileView extends PatientBaseFragment  {
 
         firstName.setEnabled(editable);
         lastName.setEnabled(editable);
-        dob.setEnabled(editable);
+        //dob.setEnabled(editable);
 
         pob.setEnabled(editable);
         sex.setEnabled(editable);
@@ -320,15 +347,18 @@ public class PatientProfileView extends PatientBaseFragment  {
 
         retired.setOnCheckedChangeListener((buttonView, isChecked) -> {
             currentPatient.setRetired(isChecked);
+            //Toast.makeText(getContext(),"retired"+isChecked, Toast.LENGTH_LONG).show();
         });
         ipres.setOnCheckedChangeListener((buttonView, isChecked) -> {
             currentPatient.setIpres(isChecked);
+            //Toast.makeText(getContext(),"ipres"+isChecked, Toast.LENGTH_LONG).show();
         });
         fnr.setOnCheckedChangeListener((buttonView, isChecked) -> {
             currentPatient.setFnr(isChecked);
         });
         official.setOnCheckedChangeListener((buttonView, isChecked) -> {
             currentPatient.setOfficial(isChecked);
+            //Toast.makeText(getContext(),"official"+isChecked, Toast.LENGTH_LONG).show();
         });
 
         dob.setOnClickListener(v->{
@@ -345,10 +375,16 @@ public class PatientProfileView extends PatientBaseFragment  {
         });
     }
 
-
     private  void initPatientInfo(){
         if(currentPatient == null){
             return;
+        }
+        if(isNew){
+            currentPatient.getMonitor().monitorUuid = app.getCurrentUser().getUuid();
+            currentPatient.getMonitor().patientUuid = currentPatient.getUuid();
+            currentPatient.getMonitor().active = true;
+            currentPatient.getMonitor().monitorFullName = Utils.formatUser(getContext(),app.getCurrentUser());
+
         }
         Utils.load(getContext(),currentPatient.getAvatar(),patientPicture,R.drawable.user_avatar,R.drawable.patient);
 
@@ -360,10 +396,10 @@ public class PatientProfileView extends PatientBaseFragment  {
         sex.setSelection(Gender.indexOf(currentPatient.getSex()));
         status.setSelection(MaritalStatus.indexOf(currentPatient.getMaritalStatus()));
         occupation.setText(Utils.niceFormat(currentPatient.getOccupation()));
-        retired.setSelected(currentPatient.getRetired());
-        ipres.setSelected(currentPatient.getIpres());
-        fnr.setSelected(currentPatient.getFnr());
-        official.setSelected(currentPatient.getOfficial());
+        retired.setChecked(currentPatient.getRetired());
+        ipres.setChecked(currentPatient.getIpres());
+        fnr.setChecked(currentPatient.getFnr());
+        official.setChecked(currentPatient.getOfficial());
         address.setText(Utils.niceFormat(currentPatient.getAddress()));
         fixPhone.setText(Utils.niceFormat(currentPatient.getFixPhone()));
         mobile.setText(Utils.niceFormat(currentPatient.getMobile()));
@@ -376,8 +412,6 @@ public class PatientProfileView extends PatientBaseFragment  {
 
 
     }
-
-
 
 
 }

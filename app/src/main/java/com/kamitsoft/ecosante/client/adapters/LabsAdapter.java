@@ -53,9 +53,7 @@ public class LabsAdapter extends RecyclerView.Adapter<LabsAdapter.MyHolder>  {
         decimalFormatf = DecimalFormat.getNumberInstance();
         app = (EcoSanteApp)context.getApplicationContext();
         String uuid = app.getCurrentEncounter().getUuid();
-        app.getDb().encounterDAO().getLabs(uuid).observe((AppCompatActivity)context, labs -> {
-            syncData(labs);
-        });
+
     }
 
     // return total item from List

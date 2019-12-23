@@ -33,7 +33,6 @@ public class PatientEncounters extends PatientBaseFragment {
     private PatientEncountersAdapter encounterAdapter;
     private FloatingActionButton newEncounter;
     private EncountersViewModel model;
-    private SwipeRefreshLayout swr;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +63,6 @@ public class PatientEncounters extends PatientBaseFragment {
             encounterAdapter.syncData(data.collect(Collectors.toList()));
         });
 
-
-
-
         encounterAdapter.setItemClickListener((itemPosition, v) -> {
             if(v.getId() == R.id.item_delete){
                 EncounterInfo item = encounterAdapter.getItem(itemPosition);
@@ -93,8 +89,9 @@ public class PatientEncounters extends PatientBaseFragment {
 
     }
 
-    private void requestSync() {
-        getActivity().runOnUiThread(() -> swr.setRefreshing(false));
+    @Override
+    protected Class<?> getEntity() {
+        return EncounterInfo.class;
     }
 
     @Override

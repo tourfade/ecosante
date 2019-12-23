@@ -32,6 +32,13 @@
             android:name="com.kamitsoft.ecosante.signing.SignIn"
             android:windowSoftInputMode="adjustPan">
         </activity>
+
+        <activity
+            android:launchMode="singleInstance"
+            android:name="com.kamitsoft.ecosante.signing.SignUp"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+
         <activity
             android:launchMode="singleInstance"
             android:name="com.kamitsoft.ecosante.signing.CredentialRestoreActivity"
@@ -56,14 +63,6 @@
         <activity
             android:launchMode="singleInstance"
             android:name=".client.patient.Encounter"
-            android:label="@string/encounter"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
-        <activity
-            android:launchMode="singleInstance"
-            android:name=".client.admin.UserProfileEditor"
             android:label="@string/encounter"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">

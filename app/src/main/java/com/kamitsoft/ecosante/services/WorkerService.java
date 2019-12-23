@@ -15,6 +15,7 @@ import com.kamitsoft.ecosante.model.Act;
 import com.kamitsoft.ecosante.model.Analysis;
 import com.kamitsoft.ecosante.model.Drug;
 import com.kamitsoft.ecosante.model.EntitySync;
+import com.kamitsoft.ecosante.model.repositories.FileRepository;
 
 import java.io.File;
 import java.util.Date;
@@ -41,6 +42,7 @@ public class WorkerService extends IntentService {
     private EcoSanteApp app;
     private Proxy proxy;
     private DiskCache cache;
+    private FileRepository fileRepository;
 
 
     public WorkerService() {
@@ -54,6 +56,7 @@ public class WorkerService extends IntentService {
     public void onCreate() {
         super.onCreate();
         app = (EcoSanteApp) getApplication();
+        this.fileRepository = new FileRepository(app);
         init(getApplicationContext());
     }
     private void init(Context context){
@@ -62,7 +65,7 @@ public class WorkerService extends IntentService {
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(300, TimeUnit.SECONDS)
                 .connectTimeout(300, TimeUnit.SECONDS)
-                .addInterceptor(chain -> {
+                /*.addInterceptor(chain -> {
                     String h = app.getCurrentUser().getUuid();
                     if( h != null) {
                         Request request = chain
@@ -73,7 +76,7 @@ public class WorkerService extends IntentService {
                         return chain.proceed(request);
                     }
                     return chain.proceed(chain.request());
-                }).build();
+                })*/.build();
         proxy =  new Retrofit.Builder()
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(getGsonBuilder()))
@@ -84,7 +87,7 @@ public class WorkerService extends IntentService {
     }
     private Gson getGsonBuilder(){
         return new GsonBuilder() //"2019-06-06 21:25:52"
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .setDateFormat("yyyy-MM-dd HH:mm")
                 .registerTypeAdapter(Date.class, new DateDeserializer())
                 .create();
     }
@@ -182,7 +185,7 @@ public class WorkerService extends IntentService {
 
 
     public void syncFiles(){
-        List<UnsyncFile> files = database.fileDAO().allAvatars();
+ /*       List<UnsyncFile> files = database.fileDAO().allAvatars();
         if(files != null) {
             files.forEach(uf -> {
                 File f = cache.getFile(uf.getFkey());
@@ -220,45 +223,8 @@ public class WorkerService extends IntentService {
                 }
             });
         }
+*/
 
-        files = database.fileDAO().allFiles();
-        if(files != null) {
-            files.forEach(uf -> {
-                File f = cache.getFile(uf.getFkey());
-                if(f.exists()){
-                    RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"),f );
-                    MultipartBody.Part uuid = MultipartBody.Part. createFormData("uuid", uf.getFkey());
-                    MultipartBody.Part file = MultipartBody.Part.createFormData("file", uf.getFkey(), requestFile);
-
-
-                    proxy.uploadDocument(file, uuid).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-
-                            if (response.code() == 200){
-                                cache.remove(uf.getFkey());
-                                database.fileDAO().delete(uf);
-                            }else{
-                                uf.setLastTry(System.currentTimeMillis());
-                                uf.setTries(uf.getTries()+1);
-                                database.fileDAO().update(uf);
-                            }
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            uf.setLastTry(System.currentTimeMillis());
-                            uf.setTries(uf.getTries()+1);
-                            database.fileDAO().update(uf);
-
-                        }
-                    });
-                }else {
-                    database.fileDAO().delete(uf);
-                }
-            });
-        }
     }
 
 

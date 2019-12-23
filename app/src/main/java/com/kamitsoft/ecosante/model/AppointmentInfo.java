@@ -15,7 +15,7 @@ public class AppointmentInfo {
     @NonNull
     private String uuid;
     private String patientUuid;
-    private String userUuid;
+    private String recipientUuid;
     private String userRequestorUuid;
     private int userType;
     private Timestamp updatedAt;
@@ -24,7 +24,7 @@ public class AppointmentInfo {
     private String patientObject;
     private String details;
     private Timestamp date;
-    private Timestamp requestLastestDate;
+    private Timestamp requestLatestDate;
     private String place;
     private float lat,lon;
     private String speciality;
@@ -69,12 +69,12 @@ public class AppointmentInfo {
         this.patientUuid = patientUuid;
     }
 
-    public String getUserUuid() {
-        return userUuid;
+    public String getRecipientUuid() {
+        return recipientUuid;
     }
 
-    public void setUserUuid(String userUuid) {
-        this.userUuid = userUuid;
+    public void setRecipientUuid(String userUuid) {
+        this.recipientUuid = userUuid;
     }
 
     public Timestamp getUpdatedAt() {
@@ -167,12 +167,12 @@ public class AppointmentInfo {
         this.userRequestorUuid = userRequestorUuid;
     }
 
-    public Timestamp getRequestLastestDate() {
-        return requestLastestDate;
+    public Timestamp getRequestLatestDate() {
+        return requestLatestDate;
     }
 
-    public void setRequestLastestDate(Timestamp requestLastestDate) {
-        this.requestLastestDate = requestLastestDate;
+    public void setRequestLatestDate(Timestamp requestLatestDate) {
+        this.requestLatestDate = requestLatestDate;
     }
 
     public int getStatus() {

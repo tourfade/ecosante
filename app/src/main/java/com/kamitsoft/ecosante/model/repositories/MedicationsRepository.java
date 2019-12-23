@@ -19,14 +19,14 @@ public class MedicationsRepository {
     public MedicationsRepository(Application application) {
         app = (EcoSanteApp)application;
         encounterDAO = app.getDb().encounterDAO();
-        encounterMedication = encounterDAO.getMedications(app.getCurrentEncounter().getUuid());
+        encounterMedication = encounterDAO.getMedications();
     }
 
     public LiveData<List<MedicationInfo>> getPatientMedications() {
         return encounterMedication;
     }
 
-    public void insert (MedicationInfo doc) {
+    public void insert (MedicationInfo... doc) {
         new insertAsyncTask(encounterDAO).execute(doc);
     }
 

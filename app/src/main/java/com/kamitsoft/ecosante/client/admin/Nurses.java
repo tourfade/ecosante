@@ -5,17 +5,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.adapters.UserEncountersAdapter;
 import com.kamitsoft.ecosante.client.adapters.UsersAdapter;
 import com.kamitsoft.ecosante.client.patient.PatientActivity;
 import com.kamitsoft.ecosante.constant.UserType;
+import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +33,7 @@ public class Nurses extends BaseFragment {
     private RecyclerView recyclerview;
     private UsersAdapter nursesAdapter;
     private UsersViewModel model;
-    private SwipeRefreshLayout swr;
+    private View add;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,42 +59,62 @@ public class Nurses extends BaseFragment {
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
         recyclerview.setAdapter(nursesAdapter);
-        model.getUsersOfType(UserType.NURSE).observe(this, userInfos -> nursesAdapter.syncData(userInfos));
-        nursesAdapter.setItemClickListener((itemPosition, v) -> {
-            app.setEditingUser(nursesAdapter.getItem(itemPosition));
-            Intent i = new Intent(getContext(),UserProfileEditor.class);
-            i.putExtra(UserProfileEditor.KIND,UserProfileEditor.EDIT_NURSE);
-            startActivityForResult(i,1001);
-            getActivity().overridePendingTransition(R.anim.enter_from_right ,R.anim.exit_to_left);
-
+        model.getUsersOfType(UserType.NURSE).observe(this, userInfos -> {
+            if(UserType.isPhysist(connectedUser.getUserType())){
+                userInfos = userInfos.stream().filter( n-> n.getSupervisor() !=null
+                            && n.getSupervisor().physicianUuid.equals(connectedUser.getUuid()))
+                            .collect(Collectors.toList());
+            }
+            nursesAdapter.syncData(userInfos);
+        });
+        model.getConnectedUser().observe(this, connected->{
+            if(connected !=null) {
+                connectedUser = connected;
+                add.setVisibility(UserType.isAdmin(connected.getUserType()) ? View.VISIBLE : View.GONE);
+            }
 
         });
-        (view.findViewById(R.id.newItem)).setOnClickListener(v -> {
+        nursesAdapter.setItemClickListener((itemPosition, v) -> {
+            if(!UserType.isAdmin(connectedUser.getUserType())){
+                Toast.makeText(contextActivity,"Vous ne pouvez pas changer ces iformations",Toast.LENGTH_LONG).show();
+                return;
+            }
+            app.setEditingUser(nursesAdapter.getItem(itemPosition));
+            contextActivity.showFragment(UserEditor.class,R.anim.slide_in_left,R.anim.exit_to_left);
+
+        });
+        add = view.findViewById(R.id.newItem);
+
+        add.setOnClickListener(v -> {
             UserInfo ui = new UserInfo();
             ui.setUserType(UserType.NURSE.type);
             app.setEditingUser(ui);
-            Intent i = new Intent(getContext(), UserProfileEditor.class);
-            i.putExtra(UserProfileEditor.KIND,UserProfileEditor.NEW_NURSE );
-            startActivityForResult(i,1001);
-            getActivity().overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
+            contextActivity.showFragment(UserEditor.class,R.anim.slide_up,R.anim.fade_out);
 
         });
 
     }
 
-    private void requestSync() {
-        getActivity().runOnUiThread(() -> swr.setRefreshing(false));
+    @Override
+    protected Class<?> getEntity(){
+        return  UserInfo.class;
     }
+
 
     @Override
     public String getTitle() {
         return getString(R.string.nurses);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
-
-
-
+    }
 }

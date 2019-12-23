@@ -21,14 +21,14 @@ public class LabsRepository {
     public LabsRepository(Application application) {
         app = (EcoSanteApp)application;
         encounterDAO = app.getDb().encounterDAO();
-        encounterLabs = encounterDAO.getLabs(app.getCurrentEncounter().getUuid());
+        encounterLabs = encounterDAO.getLabs();
     }
 
     public LiveData<List<LabInfo>> getEncounterLabs() {
         return encounterLabs;
     }
 
-    public void insert (LabInfo doc) {
+    public void insert (LabInfo... doc) {
         new insertAsyncTask(encounterDAO).execute(doc);
     }
 

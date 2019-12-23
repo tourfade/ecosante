@@ -15,15 +15,15 @@ import androidx.lifecycle.MutableLiveData;
 public class AppointmentsRepository {
     private AppointmentDAO dao;
     private LiveData<List<AppointmentInfo>> userData;
-    private LiveData<List<AppointmentInfo>> dirty;
+    private LiveData<List<AppointmentInfo>> data;
     private LiveData<List<AppointmentInfo>> patientData;
     private EcoSanteApp app;
 
     public AppointmentsRepository(Application application) {
         app = (EcoSanteApp)application;
         dao = app.getDb().appointmentDAO();
-        userData = dao.getUserAppointments(app.getCurrentUser().getUuid());
-        dirty = dao.getUnsync();
+        userData = dao.getAppointments();
+        data = dao.getAppointments();
     }
     public LiveData<List<AppointmentInfo>> getPatientAppointments(String uuid) {
         if(uuid == null) {
@@ -34,8 +34,8 @@ public class AppointmentsRepository {
         }
         return patientData;
     }
-    public LiveData<List<AppointmentInfo>> getDirty() {
-        return dirty;
+    public LiveData<List<AppointmentInfo>> getData() {
+        return data;
     }
 
     public LiveData<List<AppointmentInfo>> getUserData() {
@@ -45,7 +45,7 @@ public class AppointmentsRepository {
         return userData;
     }
 
-    public void insert (AppointmentInfo bean) {
+    public void insert (AppointmentInfo... bean) {
         new Insert(dao).execute(bean);
     }
 

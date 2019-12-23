@@ -14,6 +14,8 @@ import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.adapters.DocumentsListAdapter;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.viewmodels.DocumentsViewModel;
+import com.kamitsoft.ecosante.model.viewmodels.FilesViewModel;
+import com.kamitsoft.ecosante.services.UnsyncFile;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -33,6 +35,7 @@ public class DocEditorDialog extends DialogFragment {
     private  String attachment;
     ImagePickerActivity picker;
     private DocumentsViewModel docsModel;
+    private FilesViewModel fileModel;
 
     public DocEditorDialog(int filchooser, DocumentInfo doc, DocumentsListAdapter adapter){
         this.filchooser= filchooser;
@@ -47,6 +50,7 @@ public class DocEditorDialog extends DialogFragment {
             picker = (ImagePickerActivity) getActivity();
         }
         docsModel = ViewModelProviders.of(this).get(DocumentsViewModel.class);
+        fileModel = ViewModelProviders.of(this).get(FilesViewModel.class);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.newDoc);
@@ -54,6 +58,15 @@ public class DocEditorDialog extends DialogFragment {
         alertDialogBuilder.setView(R.layout.dialog_doc_view);
         alertDialogBuilder.setIcon(R.drawable.docs);
         alertDialogBuilder.setPositiveButton("Ajouter",(dialog, which)->{
+            if(attachment !=null && !attachment.equals(doc.getAttachment())){
+                if(doc.getAttachment() !=null)
+                    fileModel.remove(doc.getAttachment());
+                UnsyncFile file = new UnsyncFile();
+                file.setTries(0);
+                file.setFkey(attachment);
+                file.setType(1);
+                fileModel.insert(file);
+            }
             doc.setDocName(title.getText().toString());
             doc.setAttachment(attachment);
             doc.setDate(new Timestamp(calendar.getTimeInMillis()));

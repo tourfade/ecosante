@@ -1,5 +1,8 @@
 package com.kamitsoft.ecosante.model;
 
+import com.kamitsoft.ecosante.model.json.Monitor;
+import com.kamitsoft.ecosante.model.json.Supervisor;
+
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -15,13 +18,13 @@ public class EncounterInfo {
     private String uuid;
     private int patientID;
     private Timestamp createdAt;
-    private float pressusreSystolic;
-    private float pressusreDiastolic;
+    private float pressureSystolic;
+    private float pressureDiastolic;
     private float temperature;
     private int temperatureBodyPart;
     private float weight;
     private float height;
-    private float waistsize;
+    private float waistSize;
     private float glycemy;
     private int glycemyState;
     private int breathRate;
@@ -56,10 +59,10 @@ public class EncounterInfo {
     private boolean hypocaloricDiet;
     private boolean hyposodeDiet;
     private boolean hyperprotidicDiet;
-    private String user;
     private String patientUuid;
     private String userUuid;
-    private String physicianUuid;
+    private Monitor monitor;
+    private Supervisor supervisor;
     private Timestamp updatedAt;
     private boolean deleted;
 
@@ -248,20 +251,20 @@ public class EncounterInfo {
         this.patientID = patientID;
     }
 
-    public float getPressusreSystolic() {
-        return pressusreSystolic;
+    public float getPressureSystolic() {
+        return pressureSystolic;
     }
 
-    public void setPressusreSystolic(float pressusreSystolic) {
-        this.pressusreSystolic = pressusreSystolic;
+    public void setPressureSystolic(float pressureSystolic) {
+        this.pressureSystolic = pressureSystolic;
     }
 
-    public float getPressusreDiastolic() {
-        return pressusreDiastolic;
+    public float getPressureDiastolic() {
+        return pressureDiastolic;
     }
 
-    public void setPressusreDiastolic(float pressusreDiastolic) {
-        this.pressusreDiastolic = pressusreDiastolic;
+    public void setPressureDiastolic(float pressureDiastolic) {
+        this.pressureDiastolic = pressureDiastolic;
     }
 
     public float getTemperature() {
@@ -288,12 +291,12 @@ public class EncounterInfo {
         this.height = height;
     }
 
-    public float getWaistsize() {
-        return waistsize;
+    public float getWaistSize() {
+        return waistSize;
     }
 
-    public void setWaistsize(float waistsize) {
-        this.waistsize = waistsize;
+    public void setWaistSize(float waistSize) {
+        this.waistSize = waistSize;
     }
 
     public float getGlycemy() {
@@ -392,13 +395,6 @@ public class EncounterInfo {
         this.hyperprotidicDiet = hyperprotidicDiet;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String nurse) {
-        this.user = nurse;
-    }
 
     public void setPatientUuid(String patientUuid) {
         this.patientUuid = patientUuid;
@@ -413,21 +409,7 @@ public class EncounterInfo {
         return obj instanceof EncounterInfo ? ((EncounterInfo) obj).uuid.equals(uuid):false;
     }
 
-    public String getUserUuid() {
-        return userUuid;
-    }
 
-    public void setUserUuid(String userUuid) {
-        this.userUuid = userUuid;
-    }
-
-    public void setPhysicianUuid(String physicianUuid) {
-        this.physicianUuid = physicianUuid;
-    }
-
-    public String getPhysicianUuid() {
-        return physicianUuid;
-    }
 
     public Timestamp getUpdatedAt() {
         return updatedAt;
@@ -443,5 +425,31 @@ public class EncounterInfo {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Supervisor getSupervisor() {
+        supervisor = supervisor == null ? new Supervisor(): supervisor;
+        return supervisor;
+    }
+
+    public Monitor getMonitor() {
+        monitor = monitor == null?new Monitor():monitor;
+        return monitor;
+    }
+
+    public void setMonitor(Monitor monitor) {
+        this.monitor = monitor;
+    }
+
+    public void setSupervisor(Supervisor supervisor) {
+        this.supervisor = supervisor;
+    }
+
+    public String getUserUuid() {
+        return userUuid;
+    }
+
+    public void setUserUuid(String userUuid) {
+        this.userUuid = userUuid;
     }
 }

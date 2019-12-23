@@ -14,7 +14,7 @@
 
         <EditText
             android:selectAllOnFocus="true"
-            android:id="@+id/waistsize"
+            android:id="@+id/waistSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="numberDecimal"

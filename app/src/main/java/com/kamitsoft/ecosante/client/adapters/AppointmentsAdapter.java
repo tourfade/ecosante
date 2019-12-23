@@ -1,34 +1,24 @@
 package com.kamitsoft.ecosante.client.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.constant.AppointmentRequestStatus;
-import com.kamitsoft.ecosante.constant.Gender;
-import com.kamitsoft.ecosante.constant.MaritalStatus;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Nullable;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 
 
 public class AppointmentsAdapter extends AbstractAdapter<AppointmentsAdapter.MyHolder>  {
@@ -119,7 +109,7 @@ public class AppointmentsAdapter extends AbstractAdapter<AppointmentsAdapter.MyH
                 myHolder.dateTitle.setText(R.string.appointment_date);
                 myHolder.apptContainer.setVisibility(View.VISIBLE);
             }else{
-                calendar.setTimeInMillis(current.getRequestLastestDate().getTime());
+                calendar.setTimeInMillis(current.getRequestLatestDate().getTime());
                 myHolder.date.setText(Utils.formatDateWithDayOfWeek(context, calendar));
                 myHolder.dateTitle.setText(R.string.select_latest_date);
                 myHolder.apptContainer.setVisibility(View.GONE);

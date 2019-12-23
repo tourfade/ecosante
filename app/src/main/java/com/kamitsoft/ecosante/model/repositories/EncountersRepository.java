@@ -28,9 +28,10 @@ public class EncountersRepository {
     public LiveData<List<EncounterInfo>> getDirty(){
         return  dirty;
     }
+
     public LiveData<List<EncounterHeaderInfo>> getUserEncounterHeader() {
         if(userEncounters ==null){
-            userEncounters = encounterDAO.getUserEncounters(app.getCurrentUser().getUuid());
+            userEncounters = encounterDAO.getEncounterHeaders();
         }
         return userEncounters;
     }
@@ -42,7 +43,7 @@ public class EncountersRepository {
         return patientEncounters;
     }
 
-    public void insert (EncounterInfo doc) {
+    public void insert (EncounterInfo... doc) {
         new insertAsyncTask(encounterDAO).execute(doc);
     }
 

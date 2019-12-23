@@ -9,12 +9,12 @@ import androidx.room.TypeConverter;
 public class DiseaseDataTypeConverter {
 
     @TypeConverter
-    public static ExtraData toDiabeteData(String value) {
+    public static ExtraData json2DiseaseData(String value) {
         return value == null ? null : new Gson().fromJson(value, ExtraData.class);
     }
 
     @TypeConverter
-    public static String toString(ExtraData value) {
+    public static String diseaseData2Json(ExtraData value) {
         return value == null ? null : new Gson().toJson(value);
     }
 }

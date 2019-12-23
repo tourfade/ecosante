@@ -16,8 +16,10 @@ import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.PhysNursPat;
 import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.SyncData;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 
 import java.util.List;
@@ -37,43 +39,38 @@ import retrofit2.http.Path;
 public interface Proxy {
 
 
-    //@POST("api/user/login")5dca3e0033000054003debc7
     @POST("login")
-    Call<UserInfo> login(@Body AuthenticationInfo auth);
+    Call<UserAccountInfo> login(@Body AuthenticationInfo auth);
 
-    @POST("api/user/patientSummaries/sync/")
+    @POST("api/summary/sync/")
     Call<List<SummaryInfo>> syncSummaries(@Body SyncData<List<SummaryInfo>> body);
 
-    @POST("api/user/patientEncounters/sync/")
+    @POST("api/encounter/sync/")
     Call<List<EncounterInfo>> syncEncounters(@Body SyncData<List<EncounterInfo>> body);
 
-    @POST("api/user/patientDocument/sync/")
+    @POST("api/document/sync/")
     Call<List<DocumentInfo>> syncDocuments(@Body SyncData<List<DocumentInfo>> body);
 
-    @POST("api/user/patientEncounters/sync/")
+    @POST("api/lab/sync/")
     Call<List<LabInfo>> syncLabs(@Body SyncData<List<LabInfo>> body);
 
-    @POST("api/user/patientDocument/sync/")
+    @POST("api/medication/sync/")
     Call<List<MedicationInfo>> syncMedications(@Body SyncData<List<MedicationInfo>> body);
 
-    @POST("api/user/appointments/sync/")
+    @POST("api/appointment/sync/")
     Call<List<AppointmentInfo>> syncAppointments(@Body SyncData<List<AppointmentInfo>> body);
 
-    @POST("api/user/patient/sync/")
+    @POST("api/patient/sync/")
     Call<List<PatientInfo>> syncPatients(@Body SyncData<List<PatientInfo>> body);
 
     @POST("api/user/sync/")
-    Call<UserInfo> syncUser(@Body SyncData<UserInfo> body);
+    Call<List<UserInfo>> syncUser(@Body SyncData<List<UserInfo>> body);
 
-    @POST("api/user/users/sync/")
-    Call<List<UserInfo>> syncUserUsers(@Body SyncData<List<UserInfo>> body);
 
-    @POST("api/admin/users/sync/")
-    Call<List<UserInfo>> syncAdminUsers(@Body SyncData<List<UserInfo>> body);
 
     @Multipart
-    @POST("api/documents/upload")
-    Call<Void> uploadDocument(MultipartBody.Part file, MultipartBody.Part uuid);
+    @POST("api/document/upload")
+    Call<String> uploadDocument(@Part MultipartBody.Part file, @Part MultipartBody.Part uuid);
 //----------Worker--------------
     @GET("api/data/drugs/sync/{timestamp}")
     Call<List<Drug>> syncDrugs(@Path("timestamp") long timestamp);
@@ -88,11 +85,6 @@ public interface Proxy {
     @POST("api/avatar/upload")
     Call<Void> uploadAvatar(MultipartBody.Part file, MultipartBody.Part uuid);
 
-
-
-
-    @POST("api/patient/save/")
-    Call<PatientInfo> savePatients(@Body PatientInfo body);
-
-
+    @POST("useraccount/sign-up")
+    Call<Void>  createAccount(@Body UserAccountInfo accountInfo);
 }

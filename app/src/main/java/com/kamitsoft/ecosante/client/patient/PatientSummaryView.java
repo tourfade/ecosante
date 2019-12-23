@@ -24,9 +24,10 @@ import com.kamitsoft.ecosante.client.patient.oracles.PhysistOracleAdapter;
 import com.kamitsoft.ecosante.constant.BloodGroup;
 import com.kamitsoft.ecosante.constant.Gender;
 import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.SummaryInfo;
-import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.json.ExtraData;
+import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -40,6 +41,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.lifecycle.ViewModelProviders;
 
 public class PatientSummaryView extends PatientBaseFragment {
     private EditText doctorCell, doctorEmail,
@@ -52,6 +54,8 @@ public class PatientSummaryView extends PatientBaseFragment {
             glaucoma, hepatitb, hypertyroid, other, menopause, falciform;
     private SummaryInfo currentSummary;
     private PatientInfo currentPatient;
+    private PatientsViewModel model;
+    private boolean initialized;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,27 @@ public class PatientSummaryView extends PatientBaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        model = ViewModelProviders.of(this).get(PatientsViewModel.class);
+
+
+        model.getCurrentPatient().observe(this, patientInfo -> {
+            if(patientInfo == null){
+                return;
+            }
+            this.currentPatient = patientInfo;
+            model.getCurrentSummary(currentPatient.getUuid())
+                    .observe(PatientSummaryView.this, summaryInfo -> {
+                        currentSummary = summaryInfo;
+                        if(currentSummary == null){
+                            currentSummary = new SummaryInfo();
+                            currentSummary.setPatientUuid(currentPatient.getUuid());
+                            currentSummary.setPatientID(currentPatient.getPatientID());
+                        }
+                        initSummaryInfo();
+            });
+
+        });
+
         doctor = view.findViewById(R.id.ecosantedocotor);
         physistOracle = new PhysistOracleAdapter(getActivity());
 
@@ -108,12 +133,14 @@ public class PatientSummaryView extends PatientBaseFragment {
         rhesus = view.findViewById(R.id.gsrh);
         edit(getActivity().getIntent().getBooleanExtra("isNew", false));
 
-
-
-        currentSummary = app.getCurrentSummary();
-        this.currentPatient = app.getCurrentPatient();
-        initSummaryInfo();
         initListeners();
+
+
+    }
+
+    @Override
+    protected Class<?> getEntity() {
+        return SummaryInfo.class;
     }
 
     @Override
@@ -132,7 +159,7 @@ public class PatientSummaryView extends PatientBaseFragment {
                 edit(!super.edit);
                 break;
             case R.id.action_save:
-                app.saveSummary();
+                model.updateSummary(currentSummary);
                 edit(false);
                 break;
         }
@@ -187,17 +214,17 @@ public class PatientSummaryView extends PatientBaseFragment {
 
     private void initListeners() {
         doctor.setOnItemClickListener((parent, view, position, id) -> {
-            UserInfo doc = physistOracle.getItem(position);
+            PhysicianInfo doc = physistOracle.getItem(position);
             String dl = Utils.formatUser(getContext(), doc);
             doctor.setText(dl);
             currentSummary.setDoctor(dl);
-            currentSummary.setDoctorID(doc.getUserID());
+            currentSummary.setDoctorID(doc.userID);
 
-            doctorCell.setText(Utils.niceFormat(doc.getMobilePhone()));
-            currentSummary.setDoctorCell(Utils.niceFormat(doc.getMobilePhone()));
+            doctorCell.setText(Utils.niceFormat(doc.mobilePhone));
+            currentSummary.setDoctorCell(Utils.niceFormat(doc.mobilePhone));
 
-            doctorEmail.setText(Utils.niceFormat(doc.getEmail()));
-            currentSummary.setDoctorEmail(Utils.niceFormat(doc.getEmail()));
+            doctorEmail.setText(Utils.niceFormat(doc.email));
+            currentSummary.setDoctorEmail(Utils.niceFormat(doc.email));
         });
 
         doctorCell.addTextChangedListener(new TextWatchAdapter() {
@@ -359,13 +386,13 @@ public class PatientSummaryView extends PatientBaseFragment {
         });
 
 
-
+        initialized = true;
 
     }
 
 
     private void initSummaryInfo() {
-        if (currentSummary == null || currentPatient == null) {
+        if (!initialized || currentSummary == null || currentPatient == null) {
             return;
         }
         ((View)menopause.getParent()).setVisibility(currentPatient.getSex() == Gender.FEMALE.sex? View.VISIBLE:View.GONE);

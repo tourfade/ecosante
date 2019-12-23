@@ -264,6 +264,7 @@ public class SummaryInfo {
     public ExtraData getFalciform() {
         if(falciform == null){
             falciform = new ExtraData();
+
         }
         return falciform;
     }

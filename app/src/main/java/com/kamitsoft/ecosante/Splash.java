@@ -13,10 +13,14 @@ import android.widget.ImageView;
 
 import com.jackandphantom.blurimage.BlurImage;
 import com.kamitsoft.ecosante.client.EcoSanteActivity;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
+import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 import com.kamitsoft.ecosante.services.WorkerService;
 import com.kamitsoft.ecosante.signing.SignIn;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 /**
  * Created by tourfade on 19-09-02.
@@ -25,8 +29,9 @@ public class Splash extends AppCompatActivity {
 
     /** Duration of wait **/
     private final int SPLASH_DISPLAY_LENGTH = 2000;
-    private EcoSanteApp app;
     private ImageView logo;
+    private UsersViewModel model;
+    private UserAccountInfo account;
 
     /** Called when the activity is first created. */
     @Override
@@ -34,6 +39,10 @@ public class Splash extends AppCompatActivity {
         super.onCreate(icicle);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        model = ViewModelProviders.of(this).get(UsersViewModel.class);
+        model.getConnectedAccount().observe(this, acc->{
+            this.account = acc;
+        });
         setContentView(R.layout.splashscreen);
         ImageView iv = findViewById(R.id.blur_image);
         BlurImage.with(this)
@@ -45,9 +54,7 @@ public class Splash extends AppCompatActivity {
         logo = findViewById(R.id.app_logo);
 
 
-        app = (EcoSanteApp) getApplication();
-        Intent worker = new Intent(this, WorkerService.class);
-        startService(worker);
+
         int[] coords = new int[2];
         logo.post(() -> {
             logo.getLocationOnScreen(coords);
@@ -56,8 +63,10 @@ public class Splash extends AppCompatActivity {
                     .setDuration(SPLASH_DISPLAY_LENGTH)
                     .start();
         });
+
+
         new Handler().postDelayed(() -> {
-            if(Utils.isNullOrEmpty(app.getConnectionToken())){
+            if(account == null || Utils.isNullOrEmpty(account.getJwtToken())){
                 startActivity(new Intent(Splash.this, SignIn.class));
             }else{
                 startActivity(new Intent(Splash.this, EcoSanteActivity.class));
@@ -69,5 +78,10 @@ public class Splash extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent worker = new Intent(this, WorkerService.class);
+        startService(worker);
+    }
 }

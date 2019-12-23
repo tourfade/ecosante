@@ -30,6 +30,10 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.patient.PatientActivity;
+import com.kamitsoft.ecosante.database.KsoftDatabase;
+import com.kamitsoft.ecosante.model.EncounterInfo;
+import com.kamitsoft.ecosante.model.EntitySync;
+import com.kamitsoft.ecosante.model.repositories.EntityRepository;
 
 import java.util.Map;
 
@@ -40,15 +44,20 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 public class FCMService extends FirebaseMessagingService  {
 
     private LocalBroadcastManager lbm;
-    private EcoSanteApp app;
+
     public  static String CAT_PAYMENT_SUCCESS = "paymentsuccess";
     public  static String CAT_PAYMENT_FAILED = "paymentfailed";
     public  static String ACTION_PAYMENT = "payment";
+    public  static String ACTION_SYNC_REQUEST = "syncRequest";
+    public  static String CAT_SYNC_ALL = "paymentfailed";
+    private EntityRepository entityRepository;
 
     @Override
     public void onCreate() {
         super.onCreate();
         lbm = LocalBroadcastManager.getInstance(getApplicationContext());
+        EcoSanteApp app = (EcoSanteApp) getApplication();
+        entityRepository = new EntityRepository(app);
     }
 
 
@@ -63,11 +72,14 @@ public class FCMService extends FirebaseMessagingService  {
         }
 
         if(Boolean.parseBoolean(data.getOrDefault("syncRequest", "false"))){
-            return;
+            String entity = data.get("entity");
+            entityRepository.setDirty(entity);
+            Log.i("XXXX -->en", entity);
         }
-
-        Log.i("XXXX", remoteMessage.getNotification().getBody());
-        notify(remoteMessage.getNotification(), data);
+        RemoteMessage.Notification remote = remoteMessage.getNotification();
+        if(remote!=null && remote.getTitle().trim().length() > 0){
+            notify(remote, data);
+        }
 
     }
 
@@ -75,11 +87,6 @@ public class FCMService extends FirebaseMessagingService  {
     public void onNewToken(String token) {
         Log.i("XXXXXXX->", token);
     }
-
-
-
-
-
 
 
     private void notify(RemoteMessage.Notification remNot, Map<String, String> data) {

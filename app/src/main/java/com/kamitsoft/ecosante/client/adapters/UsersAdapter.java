@@ -107,7 +107,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyHolder>  {
             UserInfo current = mdata.get(position);
             myHolder.title.setText(TitleType.typeOf(current.getTitle()).title);
             myHolder.user.setText(Utils.formatName(context, current.getFirstName()+" "+Utils.niceFormat(current.getMiddleName()),current.getLastName(),-1));
-            myHolder.speciality.setText(Utils.niceFormat(current.getSpeciality()));
+            if(UserType.isPhysist(current.getUserType())) {
+                myHolder.specialityOrSupervisorText.setText(R.string.speciality);
+                myHolder.specialityOrSupervisor.setText(Utils.niceFormat(current.getSpeciality()));
+            }else if(UserType.isNurse(current.getUserType())) {
+                myHolder.specialityOrSupervisorText.setText(R.string.supervisor);
+                myHolder.specialityOrSupervisor.setText(current.getSupervisor() != null? current.getSupervisor().supFullName:"No supervisor");
+            }
             myHolder.mobile.setText(Utils.niceFormat(current.getMobilePhone()));
             myHolder.fix.setText(Utils.niceFormat(current.getFixPhone()));
             myHolder.email.setText(Utils.niceFormat(current.getEmail()));
@@ -150,7 +156,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyHolder>  {
 
     public static class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView title,user,speciality,mobile,fix, email, type;
+        TextView title,user,specialityOrSupervisor,mobile,fix, email, type, specialityOrSupervisorText;
         ImageView avatar;
         // create constructor to get widget reference
         public MyHolder(View itemView) {
@@ -158,7 +164,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyHolder>  {
             avatar = itemView.findViewById(R.id.userPicture);
             title =   itemView.findViewById(R.id.title);
             user = itemView.findViewById(R.id.titlename);
-            speciality = itemView.findViewById(R.id.speciality);
+            specialityOrSupervisorText = itemView.findViewById(R.id.specialityOrSupervisorText);
+            specialityOrSupervisor = itemView.findViewById(R.id.specialityOrSupervisor);
             mobile = itemView.findViewById(R.id.mobile);
             fix = itemView.findViewById(R.id.fixphone);
             email = itemView.findViewById(R.id.email);

@@ -5,8 +5,11 @@ import android.os.AsyncTask;
 
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.database.PatientDAO;
+import com.kamitsoft.ecosante.database.SummaryDAO;
 import com.kamitsoft.ecosante.database.UserDAO;
 import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.SummaryInfo;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +17,20 @@ import androidx.lifecycle.LiveData;
 
 public class PatientsRepository {
     private PatientDAO dao;
+    private SummaryDAO summaryDAO;
     private LiveData<List<PatientInfo>> allData;
     private LiveData<List<PatientInfo>> dirty;
+    private LiveData<List<SummaryInfo>> dirtySummaries;
     private EcoSanteApp app;
 
     public PatientsRepository(Application application) {
         app = (EcoSanteApp)application;
         dao = app.getDb().patientDAO();
+        summaryDAO = app.getDb().summaryDAO();
         allData = dao.getPatients();
         dirty = dao.getUnsync();
+        dirtySummaries = summaryDAO.getUnsync();
+
     }
     public LiveData<List<PatientInfo>> getDirty() {
         return dirty;
@@ -32,7 +40,16 @@ public class PatientsRepository {
         return allData;
     }
 
-    public void insert (PatientInfo bean) {
+    public LiveData<List<SummaryInfo>> getDirtySummaries() {
+        return dirtySummaries;
+    }
+
+    public LiveData<SummaryInfo> getSummary(String uuid) {
+        return summaryDAO.getPatientSummaryLD(uuid);
+    }
+
+
+    public void insert (PatientInfo... bean) {
         new insertAsyncTask(dao).execute(bean);
     }
 
@@ -43,7 +60,9 @@ public class PatientsRepository {
     public void delete(PatientInfo bean) {
         new deleteAsyncTask(dao).execute(bean);
     }
-
+    public void updateSummaries(SummaryInfo... bean) {
+        new SummaryUpdateAsyncTask(summaryDAO).execute(bean);
+    }
 
 
 
@@ -86,6 +105,21 @@ public class PatientsRepository {
         @Override
         protected Void doInBackground(final PatientInfo... params) {
             mAsyncTaskDao.delete(params);
+            return null;
+        }
+    }
+
+    private static class SummaryUpdateAsyncTask extends AsyncTask<SummaryInfo, Void, Void> {
+
+        private SummaryDAO mAsyncTaskDao;
+
+        SummaryUpdateAsyncTask(SummaryDAO dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final SummaryInfo... params) {
+            mAsyncTaskDao.insert(params);
             return null;
         }
     }

@@ -1,12 +1,12 @@
 package com.kamitsoft.ecosante.model;
 
+import com.kamitsoft.ecosante.model.json.Monitor;
+import com.kamitsoft.ecosante.model.json.Supervisor;
+
 import java.sql.Timestamp;
-import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 
 public class EncounterHeaderInfo {
@@ -14,13 +14,11 @@ public class EncounterHeaderInfo {
     private String uuid;
     private int patientID;
     private Timestamp createdAt;
-    private float pressusreSystolic;
-    private float pressusreDiastolic;
+    private float pressureSystolic;
+    private float pressureDiastolic;
     private float glycemy;
     private int glycemyState;
-    private String user;
     private String patientUuid;
-    private String userUuid;
     private String firstName;
     private String middleName;
     private String lastName;
@@ -29,7 +27,24 @@ public class EncounterHeaderInfo {
     private Timestamp dob;
     private String mobile;
     private String  avatar;
+    private Monitor monitor;
+    private Supervisor supervisor;
 
+    public Monitor getMonitor() {
+        return monitor;
+    }
+
+    public void setMonitor(Monitor monitor) {
+        this.monitor = monitor;
+    }
+
+    public Supervisor getSupervisor() {
+        return supervisor;
+    }
+
+    public void setSupervisor(Supervisor supervisor) {
+        this.supervisor = supervisor;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -113,20 +128,20 @@ public class EncounterHeaderInfo {
         this.createdAt = createdAt;
     }
 
-    public float getPressusreSystolic() {
-        return pressusreSystolic;
+    public float getPressureSystolic() {
+        return pressureSystolic;
     }
 
-    public void setPressusreSystolic(float pressusreSystolic) {
-        this.pressusreSystolic = pressusreSystolic;
+    public void setPressureSystolic(float pressureSystolic) {
+        this.pressureSystolic = pressureSystolic;
     }
 
-    public float getPressusreDiastolic() {
-        return pressusreDiastolic;
+    public float getPressureDiastolic() {
+        return pressureDiastolic;
     }
 
-    public void setPressusreDiastolic(float pressusreDiastolic) {
-        this.pressusreDiastolic = pressusreDiastolic;
+    public void setPressureDiastolic(float pressureDiastolic) {
+        this.pressureDiastolic = pressureDiastolic;
     }
 
     public float getGlycemy() {
@@ -145,13 +160,6 @@ public class EncounterHeaderInfo {
         this.glycemyState = glycemyState;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
 
     public String getPatientUuid() {
         return patientUuid;
@@ -164,14 +172,6 @@ public class EncounterHeaderInfo {
     @Override
     public boolean equals(@Nullable Object obj) {
         return obj instanceof EncounterHeaderInfo ? ((EncounterHeaderInfo) obj).uuid.equals(uuid):false;
-    }
-
-    public String getUserUuid() {
-        return userUuid;
-    }
-
-    public void setUserUuid(String userUuid) {
-        this.userUuid = userUuid;
     }
 
 

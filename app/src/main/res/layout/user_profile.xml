@@ -176,7 +176,7 @@
 
                 </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/jobContainner"
+                    android:id="@+id/specSupContainner"
                     android:layout_below="@id/birthContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -191,16 +191,17 @@
                         android:paddingTop="0dp"
                         android:paddingRight="0dp"
                         android:paddingBottom="0dp"
+                        android:id="@+id/specialityOrSupervisorText"
                         android:text="@string/speciality" />
 
                     <AutoCompleteTextView
-                        android:id="@+id/speciality"
+                        android:id="@+id/specialityOrSupervisor"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:inputType="textAutoComplete"
                         android:maxLines="1"
                         android:paddingLeft="7dp"
-                        android:text="Cardiologue" />
+                        android:text="" />
 
                 </LinearLayout>
 
@@ -279,21 +280,21 @@
                 </LinearLayout>
                 <com.google.android.material.textfield.TextInputLayout
 
-                        android:layout_below="@id/phoneContainer"
-                        android:id="@+id/emailContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:hint="@string/email">
+                    android:layout_below="@id/phoneContainer"
+                    android:id="@+id/emailContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/email">
 
-                        <EditText
-                            android:id="@+id/email"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:inputType="textEmailAddress"
-                            android:maxLines="1"
-                            android:padding="8dp"
-                            android:text="ftoure@gmail.com" />
+                    <EditText
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1"
+                        android:padding="8dp"
+                        android:text="ftoure@gmail.com" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 

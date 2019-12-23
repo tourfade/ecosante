@@ -15,6 +15,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
+import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.signing.SignIn;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -47,8 +48,8 @@ public class EcoSanteActivity extends ImagePickerActivity
     private BaseFragment currentFragment;
     private EcoSanteApp app;
     private View header;
-    private boolean back;
     private UsersViewModel model;
+    private UserInfo currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,11 @@ public class EcoSanteActivity extends ImagePickerActivity
         header = navigationView.getHeaderView(0);
         model = ViewModelProviders.of(this).get(UsersViewModel.class);
         model.getConnectedUser().observe(this, userInfo -> {
+            app.setCurrentUser(userInfo);
+            if(userInfo == null){
+                return;
+            }
+            this.currentUser = userInfo;
             initDrawerMenu();
             initHeaderInfo();
         });
@@ -81,8 +87,9 @@ public class EcoSanteActivity extends ImagePickerActivity
 
 
     private void initDrawerMenu() {
-        assert(app.getCurrentUser() != null);
-        switch (UserType.typeOf(app.getCurrentUser().getUserType())){
+        assert(currentUser != null);
+
+        switch (UserType.typeOf(currentUser.getUserType())){
             case PHYSIST:
                 navigationView.getMenu().setGroupVisible(R.id.user_menu,true);
                 navigationView.getMenu().setGroupVisible(R.id.physician_menu, true);
@@ -119,31 +126,28 @@ public class EcoSanteActivity extends ImagePickerActivity
             app.setEditingUser(app.getCurrentUser());
             showFragment(UserProfile.class, R.anim.fade_in, R.anim.fade_out);
         });
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
-        back = true;
         app.exitPatient();
-
     }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (back) {
-            back = false;
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+            getSupportFragmentManager().popBackStack();
+        }else{
             app.setEditingUser(null);
             drawer.openDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
+
     }
-
-
-
 
 
     @Override
@@ -163,6 +167,9 @@ public class EcoSanteActivity extends ImagePickerActivity
                 break;
 
             //physiscian
+            case R.id.supervisednurses:
+                showFragment(Nurses.class,R.anim.fade_in, R.anim.fade_out);
+                break;
             case R.id.encounter_to_reviews:
                 showFragment(MonitoredEncounters.class,R.anim.fade_in, R.anim.fade_out);
                 break;
@@ -176,6 +183,7 @@ public class EcoSanteActivity extends ImagePickerActivity
                  showFragment(Physicians.class,R.anim.fade_in, R.anim.fade_out);
                  break;
 
+
             case R.id.nurses:
                 showFragment(Nurses.class,R.anim.fade_in, R.anim.fade_out);
                 break;
@@ -188,7 +196,7 @@ public class EcoSanteActivity extends ImagePickerActivity
                 showFragment(UserProfile.class, R.anim.fade_in, R.anim.fade_out);
                 break;
             case R.id.nav_disconnect:
-                confirmDeconnection();
+                confirmDisconnecting();
                 break;
 
         }
@@ -198,7 +206,7 @@ public class EcoSanteActivity extends ImagePickerActivity
         return true;
     }
 
-    private void confirmDeconnection() {
+    private void confirmDisconnecting() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(R.string.confirm_logout);
         alertDialogBuilder.setCancelable(true);
@@ -207,10 +215,10 @@ public class EcoSanteActivity extends ImagePickerActivity
         alertDialogBuilder.setPositiveButton("Deconnecter",(dialog, which)->{
 
             model.disconnectUser();
-            app.disconnectUser();
 
             Intent i = new Intent(this, SignIn.class);
             startActivity(i);
+            overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
             finish();
 
         });
@@ -229,12 +237,15 @@ public class EcoSanteActivity extends ImagePickerActivity
             if(currentFragment == null) {
                 currentFragment = fragmentClass.newInstance();
             }
+
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             if(inAnim > 0 && outAnim > 0)
                 ft.setCustomAnimations(inAnim, outAnim);
-
+            if(currentFragment.getNavLevel() > 0){
+                ft.addToBackStack(fragmentClass.getName());
+            }
             ft.replace(R.id.container, currentFragment, fragmentClass.getName());
-            ft.runOnCommit(() -> setTitle(currentFragment.getTitle()));
+            //ft.runOnCommit(() -> setTitle(currentFragment.getTitle()));
             ft.commit();
 
 
@@ -246,5 +257,7 @@ public class EcoSanteActivity extends ImagePickerActivity
         return  currentFragment;
 
     }
+
+
 
 }

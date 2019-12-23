@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.DocumentInfo;
+import com.kamitsoft.ecosante.model.PhysNursPat;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.repositories.DocumentsRepository;
 import com.kamitsoft.ecosante.model.repositories.UsersRepository;
@@ -20,6 +22,7 @@ import androidx.lifecycle.MutableLiveData;
 public class UsersViewModel extends AndroidViewModel {
     private UsersRepository repository;
     private LiveData<UserInfo> connectedUser;
+    private LiveData<UserAccountInfo> connectedAccount;
     private Map<UserType, LiveData<List<UserInfo>>> allUsers;
 
 
@@ -28,6 +31,7 @@ public class UsersViewModel extends AndroidViewModel {
         repository = new UsersRepository(app);
         connectedUser = repository.getConnectedUser();
         allUsers = repository.getUsers();
+        connectedAccount = repository.getAccount();
     }
 
 
@@ -50,15 +54,37 @@ public class UsersViewModel extends AndroidViewModel {
         return connectedUser;
     }
 
+    public LiveData<UserAccountInfo> getConnectedAccount() {
+        return connectedAccount;
+    }
+
 
     public UserInfo getUser(UserType type) {
         return repository.getUser(type);
     }
 
     public void disconnectUser() {
-        UserInfo user = connectedUser.getValue();
-        user.setConnected(false);
-        update(user);
+        repository.disconnectUser();
+    }
+
+    public void connect(UserAccountInfo accountInfo, UserInfo userInfo) {
+        repository.insert(userInfo);
+        repository.connect(accountInfo);
+    }
+
+    public UserInfo getSupervisor(String nurseUuid) {
+        return repository.getSupervisor(nurseUuid);
+    }
+
+    public void setSupervisor(PhysNursPat pn) {
+
+        repository.insert(pn);
+    }
+
+
+
+    public PhysNursPat getNursePnp(String uuid) {
+        return repository.getNursePnp(uuid);
     }
 }
 

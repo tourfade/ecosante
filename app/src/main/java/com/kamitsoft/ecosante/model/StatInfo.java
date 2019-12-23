@@ -32,7 +32,7 @@ public class StatInfo {
     }
     public List<Float[]> getSysDias(){
         return  encounterInfos.stream()
-                .map(e-> new Float[]{e.getPressusreSystolic(),e.getPressusreDiastolic()})
+                .map(e-> new Float[]{e.getPressureSystolic(),e.getPressureDiastolic()})
                 .collect(Collectors.toList());
 
     }
@@ -45,7 +45,7 @@ public class StatInfo {
 
     public List<Float> getWaistsize(){
         return  encounterInfos.stream()
-                .map(e-> e.getWaistsize())
+                .map(e-> e.getWaistSize())
                 .collect(Collectors.toList());
     }
 

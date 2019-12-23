@@ -14,6 +14,7 @@ import com.kamitsoft.ecosante.client.adapters.UserEncountersAdapter;
 import com.kamitsoft.ecosante.client.patient.Encounter;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
+import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
 
 import java.util.stream.Collectors;
@@ -32,7 +33,6 @@ public class UserEncounters extends BaseFragment {
     private RecyclerView recyclerview;
     private UserEncountersAdapter encountersAdapter;
     private EncountersViewModel model;
-    private SwipeRefreshLayout swr;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class UserEncounters extends BaseFragment {
 
             Stream<EncounterHeaderInfo> data = encounters
                     .stream()
-                    .filter(e -> e.getUserUuid().equals(app.getCurrentUser().getUuid()));
+                    .filter(e -> e.getMonitor().monitorUuid.equals(app.getCurrentUser().getUuid()));
             encountersAdapter.syncData(data.collect(Collectors.toList()));
         });
         recyclerview.setAdapter(encountersAdapter);
@@ -70,9 +70,11 @@ public class UserEncounters extends BaseFragment {
         swr.setOnRefreshListener(this::requestSync);
     }
 
-    private void requestSync() {
-        getActivity().runOnUiThread(() -> swr.setRefreshing(false));
+    @Override
+    protected Class<?> getEntity(){
+        return  EncounterInfo.class;
     }
+
 
     @Override
     public String getTitle() {
@@ -80,25 +82,31 @@ public class UserEncounters extends BaseFragment {
     }
 
 
-    class Task extends AsyncTask<EncounterHeaderInfo, Void, Intent> {
+    class Task extends AsyncTask<EncounterHeaderInfo, PatientInfo, EncounterInfo> {
 
         @Override
-        protected Intent doInBackground(EncounterHeaderInfo... encounters) {
+        protected EncounterInfo doInBackground(EncounterHeaderInfo... encounters) {
             EncounterHeaderInfo ehi = encounters[0];
-            app.setCurrentPatient(app.getDb().patientDAO().getPatient(ehi.getPatientUuid()));
-            app.setCurrentEncounter(app.getDb().encounterDAO().getEncounter(ehi.getUuid()));
+            publishProgress(app.getDb().patientDAO().getPatient(ehi.getPatientUuid()));
+
+            return app.getDb().encounterDAO().getEncounter(ehi.getUuid());
+
+        }
+
+        @Override
+        protected void onProgressUpdate(PatientInfo... values) {
+            app.setCurrentPatient(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(EncounterInfo v) {
+            app.setCurrentEncounter(v);
             Intent i = new Intent(getContext(), Encounter.class);
             i.putExtra("isNew",false );
-            return i;
-        }
-
-        @Override
-        protected void onPostExecute(Intent i) {
             startActivity(i);
             getActivity().overridePendingTransition(R.anim.enter_from_right,R.anim.exit_to_left);
+
         }
     };
-
-
 
 }

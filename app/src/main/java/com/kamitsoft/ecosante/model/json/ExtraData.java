@@ -9,6 +9,6 @@ public class ExtraData {
     public int form;
     public String note;
     public String name;
-    public double percent;
+    public double percent = -1;
     public List<ExtraData> items;
 }

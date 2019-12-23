@@ -1,7 +1,7 @@
 package com.kamitsoft.ecosante.model;
 
 
-import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.model.json.Supervisor;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +22,7 @@ public class UserInfo {
     @PrimaryKey
     private String uuid;
     private int userID;
-    private String userName;
+    private String username;
     private int title;
     private String firstName;
     private String middleName;
@@ -34,20 +34,18 @@ public class UserInfo {
 
     private int userType;
     private int status;
-    private int generatedPassword;
     private boolean deleted;
-
+    private int specialityCode;
     private String speciality;
     private String address;
     private String fixPhone;
     private String mobilePhone;
     private String email;
-    private String password;
-    private boolean connected;
     private Timestamp updatedAt;
 
-    private  String avatar;
+    private String avatar;
     private String token;
+    private Supervisor supervisor;
 
     public int getUserID() {
         return userID;
@@ -57,12 +55,12 @@ public class UserInfo {
         this.userID = userID;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public int getTitle() {
@@ -150,13 +148,7 @@ public class UserInfo {
         this.status = status;
     }
 
-    public int getGeneratedPassword() {
-        return generatedPassword;
-    }
 
-    public void setGeneratedPassword(int generatedPassword) {
-        this.generatedPassword = generatedPassword;
-    }
 
     public boolean isDeleted() {
         return deleted;
@@ -224,23 +216,6 @@ public class UserInfo {
         this.email = email;
     }
 
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isConnected() {
-        return connected;
-    }
-
-    public void setConnected(boolean connected) {
-        this.connected = connected;
-    }
-
     public Timestamp getUpdatedAt() {
         return updatedAt;
     }
@@ -268,5 +243,22 @@ public class UserInfo {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public void setSupervisor(Supervisor supervisor) {
+        this.supervisor = supervisor;
+    }
+
+    public Supervisor getSupervisor() {
+        return supervisor;
+    }
+
+
+    public int getSpecialityCode() {
+        return specialityCode;
+    }
+
+    public void setSpecialityCode(int specialityCode) {
+        this.specialityCode = specialityCode;
     }
 }

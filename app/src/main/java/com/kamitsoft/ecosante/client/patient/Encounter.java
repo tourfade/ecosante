@@ -17,7 +17,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,14 +33,16 @@ import com.kamitsoft.ecosante.client.patient.dialogs.MedicationEditorDialog;
 import com.kamitsoft.ecosante.constant.BehaviorType;
 import com.kamitsoft.ecosante.constant.VitalType;
 import com.kamitsoft.ecosante.model.EncounterInfo;
+import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
-import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
+import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.LabsViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.MedicationViewModel;
 
 import java.sql.Timestamp;
+import java.util.stream.Collectors;
 
 
 public class Encounter extends ImagePickerActivity implements View.OnClickListener, CheckBox.OnCheckedChangeListener, AdapterView.OnItemClickListener {
@@ -60,6 +61,8 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     private LabsViewModel labsModel;
     private MedicationViewModel medModel;
     private EncountersViewModel model;
+    private EntitiesViewModel entityModel;
+    private EncountersViewModel encounterModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,12 +82,14 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
         labsModel = ViewModelProviders.of(this).get(LabsViewModel.class);
         medModel = ViewModelProviders.of(this).get(MedicationViewModel.class);
+        entityModel = ViewModelProviders.of(this).get(EntitiesViewModel.class);
+        encounterModel = ViewModelProviders.of(this).get(EncountersViewModel.class);
         pressure = findViewById(R.id.pressure);
         temperature = findViewById(R.id.temperature);
         weight = findViewById(R.id.weight);
         glycemy = findViewById(R.id.glycemy);
         height = findViewById(R.id.height);
-        waist = findViewById(R.id.waistsize);
+        waist = findViewById(R.id.waistSize);
         breath = findViewById(R.id.breathrate);
         heart = findViewById(R.id.heartrate);
         field = findViewById(R.id.field);
@@ -102,8 +107,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         drugs = findViewById(R.id.drugs);
         drugsAdapter = new MedicationsAdapter(this);
         drugs.setAdapter(drugsAdapter);
-        labsModel.getEncounterLabs().observe(this, info -> labsAdapter.syncData(info));
-        medModel.getEncounterMedications().observe(this, info -> drugsAdapter.syncData(info));
+
 
         advisings = findViewById(R.id.advisings);
         diabeticDiet = findViewById(R.id.diabetic_diet);
@@ -137,6 +141,42 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         encounterInfo = app.getCurrentEncounter();
         initViewListeners();
         initValue();
+        labsModel.getEncounterLabs().observe(this, info -> {
+            if(encounterInfo!=null) {
+                labsAdapter.syncData(info.stream().filter(m -> m.getEncounterUuid().equals(encounterInfo.getUuid())).collect(Collectors.toList()));
+            }
+        });
+        medModel.getEncounterMedications().observe(this, info -> {
+            if(encounterInfo!=null) {
+                drugsAdapter.syncData(info.stream().filter(m -> m.getEncounterUuid().equals(encounterInfo.getUuid())).collect(Collectors.toList()));
+            }
+        });
+        encounterModel.getEncounters().observe(this,encounterInfos -> {
+            for(EncounterInfo e:encounterInfos){
+                if(encounterInfo == null || e.getUuid().equals(encounterInfo.getUuid())){
+                    this.encounterInfo = e;
+                    initValue();
+                    break;
+                }
+            }
+        });
+
+
+        entityModel.getDirtyEntities().observe(this, entitySyncs -> {
+            for(EntitySync e:entitySyncs){
+
+                if(e.getEntity().equalsIgnoreCase(MedicationInfo.class.getSimpleName())){
+                    app.service().requestSync(MedicationInfo.class,null);
+                }
+                if( e.getEntity().equalsIgnoreCase(LabInfo.class.getSimpleName())){
+                    app.service().requestSync(LabInfo.class,null);
+                }
+                if( e.getEntity().equalsIgnoreCase(EncounterInfo.class.getSimpleName())){
+                    app.service().requestSync(EncounterInfo.class,null);
+                }
+
+            }
+        });
     }
 
 
@@ -420,8 +460,8 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
                 ((EditText)d.findViewById(R.id.heartrate)).setText(Utils.niceFormat(encounterInfo.getHeartRate()));
                 break;
             case PRESSURE:
-                ((EditText)d.findViewById(R.id.systolic)).setText(Utils.niceFormat(encounterInfo.getPressusreSystolic()));
-                ((EditText)d.findViewById(R.id.diastolic)).setText(Utils.niceFormat(encounterInfo.getPressusreDiastolic()));
+                ((EditText)d.findViewById(R.id.systolic)).setText(Utils.niceFormat(encounterInfo.getPressureSystolic()));
+                ((EditText)d.findViewById(R.id.diastolic)).setText(Utils.niceFormat(encounterInfo.getPressureDiastolic()));
                 break;
             case BREATHRATE:
                 ((EditText)d.findViewById(R.id.breathrate)).setText(Utils.niceFormat(encounterInfo.getBreathRate()));
@@ -438,7 +478,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
                 ((EditText)d.findViewById(R.id.weight)).setText(Utils.niceFormat(encounterInfo.getWeight()));
                 break;
             case WAISTSIZE:
-                ((EditText)d.findViewById(R.id.waistsize)).setText(Utils.niceFormat(encounterInfo.getWaistsize()));
+                ((EditText)d.findViewById(R.id.waistSize)).setText(Utils.niceFormat(encounterInfo.getWaistSize()));
                 break;
 
             case TEMPERATURE:
@@ -485,8 +525,8 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     private void mapVitalDialogValues(VitalType vitalType, AlertDialog d) {
         switch (vitalType){
             case PRESSURE:
-                encounterInfo.setPressusreSystolic(Utils.floatFromEditText(d.findViewById(R.id.systolic)));
-                encounterInfo.setPressusreDiastolic(Utils.floatFromEditText(d.findViewById(R.id.diastolic)));
+                encounterInfo.setPressureSystolic(Utils.floatFromEditText(d.findViewById(R.id.systolic)));
+                encounterInfo.setPressureDiastolic(Utils.floatFromEditText(d.findViewById(R.id.diastolic)));
                 break;
 
             case TEMPERATURE:
@@ -511,7 +551,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
                 break;
 
             case WAISTSIZE:
-                encounterInfo.setWaistsize(Utils.floatFromEditText(d.findViewById(R.id.waistsize)));
+                encounterInfo.setWaistSize(Utils.floatFromEditText(d.findViewById(R.id.waistSize)));
 
                 break;
 
@@ -535,8 +575,8 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     private void setVitalValues(VitalType vitalType) {
         switch (vitalType){
             case PRESSURE:
-                pressure.setText(Utils.format(encounterInfo.getPressusreSystolic())+"/"+
-                        Utils.format(encounterInfo.getPressusreDiastolic())+" "+getString(vitalType.unit));
+                pressure.setText(Utils.format(encounterInfo.getPressureSystolic())+"/"+
+                        Utils.format(encounterInfo.getPressureDiastolic())+" "+getString(vitalType.unit));
                 break;
 
             case TEMPERATURE:
@@ -557,7 +597,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
                 break;
 
             case WAISTSIZE:
-                waist.setText(Utils.format(encounterInfo.getWaistsize())+getString(vitalType.unit));
+                waist.setText(Utils.format(encounterInfo.getWaistSize())+getString(vitalType.unit));
                 break;
 
             case BREATHRATE:

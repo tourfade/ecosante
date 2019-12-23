@@ -17,7 +17,7 @@ import androidx.room.Update;
 @Dao
 public interface AppointmentDAO {
 
-    @Query("SELECT * FROM appointmentinfo WHERE userUuid =:userUuid AND deleted <= 0 ORDER BY createdAt DESC")
+    @Query("SELECT * FROM appointmentinfo WHERE recipientUuid =:userUuid AND deleted <= 0 ORDER BY createdAt DESC")
     LiveData<List<AppointmentInfo>> getUserAppointments(String userUuid);
 
     @Query("SELECT * FROM appointmentinfo WHERE   date >= :todayMin AND date >= :todayMax AND deleted <= 0 ORDER BY date ASC")
@@ -31,8 +31,8 @@ public interface AppointmentDAO {
 
 
 
-    @Query("SELECT * FROM appointmentinfo WHERE updatedAt > (SELECT lastSynced FROM entitysync WHERE entity ='appointmentinfo')")
-    LiveData<List<AppointmentInfo>> getUnsync();
+    @Query("SELECT * FROM appointmentinfo ")
+    LiveData<List<AppointmentInfo>> getAppointments();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(AppointmentInfo... beans);

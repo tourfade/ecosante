@@ -5,6 +5,7 @@ import android.app.Application;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.repositories.LabsRepository;
 import com.kamitsoft.ecosante.model.repositories.PatientsRepository;
 
@@ -19,7 +20,7 @@ public class PatientsViewModel extends AndroidViewModel {
     private PatientsRepository repository;
     private LiveData<List<PatientInfo>> data;
     private MutableLiveData<PatientInfo> currentPatient;
-
+    private LiveData<SummaryInfo> currentSummary;
     public PatientsViewModel(Application app){
         super(app);
         currentPatient = ((EcoSanteApp) app).getCurrentLivePatient();
@@ -29,6 +30,10 @@ public class PatientsViewModel extends AndroidViewModel {
 
     public void setCurrentPatient(PatientInfo p) {
         this.currentPatient.setValue(p); 
+    }
+
+    public MutableLiveData<PatientInfo> getCurrentPatient() {
+        return currentPatient;
     }
 
     public LiveData<List<PatientInfo>> getAllDatas() {
@@ -49,6 +54,19 @@ public class PatientsViewModel extends AndroidViewModel {
     public void delete(PatientInfo bean){
         repository.delete(bean);
     }
+
+    public void updateSummary(SummaryInfo bean) {
+        bean.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        repository.updateSummaries(bean);
+    }
+
+    public LiveData<SummaryInfo> getCurrentSummary(String patientUUID) {
+        currentSummary = repository.getSummary(patientUUID);
+
+        return currentSummary;
+    }
+
+
 }
 
 

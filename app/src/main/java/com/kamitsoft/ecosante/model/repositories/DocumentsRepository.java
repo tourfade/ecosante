@@ -17,14 +17,14 @@ public class DocumentsRepository {
     public DocumentsRepository(Application application) {
         app = (EcoSanteApp)application;
         patientDAO = app.getDb().patientDAO();
-        allPatientDocuments = patientDAO.getDocuments(app.getCurrentPatient().getUuid());
+        allPatientDocuments = patientDAO.getAllDocuments();
     }
 
     public LiveData<List<DocumentInfo>> getPatientDocs() {
         return allPatientDocuments;
     }
 
-    public void insert (DocumentInfo doc) {
+    public void insert (DocumentInfo... doc) {
         new Insert(patientDAO).execute(doc);
     }
 

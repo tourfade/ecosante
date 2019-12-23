@@ -16,6 +16,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kamitsoft.ecosante.ImagePickerActivity;
@@ -23,6 +24,7 @@ import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
+import com.kamitsoft.ecosante.client.patient.oracles.PhysistOracleAdapter;
 import com.kamitsoft.ecosante.client.patient.oracles.SpecialityOracleAdapter;
 import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
 import com.kamitsoft.ecosante.client.user.subscription.PayDunyaProxy;
@@ -36,8 +38,10 @@ import com.kamitsoft.ecosante.client.user.subscription.order.Store;
 import com.kamitsoft.ecosante.constant.Gender;
 import com.kamitsoft.ecosante.constant.TitleType;
 import com.kamitsoft.ecosante.constant.UserType;
+import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.Speciality;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
 import java.sql.Timestamp;
@@ -60,13 +64,18 @@ public class UserProfile extends BaseFragment {
     private ImageView userPicture;
     private EditText firstname, lastname,dob,
     pob, address, fixphone,mobile,email,validityDate;
-    private AutoCompleteTextView speciality;
+    private TextView specialityOrSupervisorText;
+    private AutoCompleteTextView specialityOrSupervisor;
     private Button renewSubscription, updatePassword;
     private AppCompatSpinner sex, title;
     private UserInfo cu;
     private ImagePickerActivity picker;
     private SpecialityOracleAdapter specialityOracle;
+    private PhysistOracleAdapter physistOracle;
     private UsersViewModel model;
+    private View specSupContainner;
+    private UserInfo connectedUser;
+
 
     @Override
     public void onAttach(Context context) {
@@ -94,14 +103,16 @@ public class UserProfile extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        specialityOracle = new SpecialityOracleAdapter(getActivity());
+
         userPicture = view.findViewById(R.id.userPicture);
         title = view.findViewById(R.id.title);
         firstname = view.findViewById(R.id.firstname);
         lastname = view.findViewById(R.id.lastname);
         dob = view.findViewById(R.id.dob);
         pob = view.findViewById(R.id.pob);
-        speciality = view.findViewById(R.id.speciality);
+        specialityOrSupervisorText = view.findViewById(R.id.specialityOrSupervisorText);
+        specialityOrSupervisor = view.findViewById(R.id.specialityOrSupervisor);
+        specSupContainner = view.findViewById(R.id.specSupContainner);
         address = view.findViewById(R.id.address);
         fixphone = view.findViewById(R.id.fixphone);
         mobile = view.findViewById(R.id.mobile);
@@ -111,9 +122,10 @@ public class UserProfile extends BaseFragment {
         sex = view.findViewById(R.id.sex);
         validityDate = view.findViewById(R.id.validity_date);
         cu = app.getEditingUser();
-
+        connectedUser = app.getCurrentUser();
         initListeners();
         initValues();
+
     }
 
 
@@ -141,9 +153,9 @@ public class UserProfile extends BaseFragment {
 
             case R.id.action_save:
                 model.insert(cu);
+                //model.setSupervisor(pnp);
                 edit(false);
                 if(contextActivity ==null){
-
                    getActivity().onBackPressed();
                 }
 
@@ -165,7 +177,7 @@ public class UserProfile extends BaseFragment {
         lastname.setEnabled(edit);
         dob.setEnabled(edit);
         pob.setEnabled(edit);
-        speciality.setEnabled(edit);
+        specialityOrSupervisor.setEnabled(edit);
         address.setEnabled(edit);
         fixphone.setEnabled(edit);
         mobile.setEnabled(edit);
@@ -240,11 +252,28 @@ public class UserProfile extends BaseFragment {
             },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH) );
             datePickerDialog.show();
         });
-        speciality.setOnItemClickListener((parent, view, position, id) -> {
-            Speciality s = specialityOracle.getItem(position);
-            speciality.setText(s.getName());
-            cu.setSpeciality(s.toString());
+
+        specialityOrSupervisor.setOnItemClickListener((parent, view, position, id) -> {
+            if(UserType.isPhysist(cu.getUserType())) {
+                Speciality s = specialityOracle.getItem(position);
+                specialityOrSupervisor.setText(s.getName());
+                cu.setSpeciality(s.toString());
+                cu.setSpecialityCode(s.getFieldvalue());
+            }
+            if(UserType.isNurse(cu.getUserType())) {
+                PhysicianInfo s = physistOracle.getItem(position);
+                String sFullName = Utils.formatUser(getActivity(), s);
+                specialityOrSupervisor.setText(sFullName);
+                Supervisor sup = new Supervisor();
+                sup.nurseUuid = cu.getUuid();
+                sup.accountId = connectedUser.getAccountID();
+                sup.active = true;
+                sup.physicianUuid = s.uuid;
+                sup.supFullName = sFullName;
+                cu.setSupervisor(sup);
+            }
         });
+
 
 
         address.addTextChangedListener(new TextWatchAdapter(){
@@ -321,15 +350,50 @@ public class UserProfile extends BaseFragment {
     private void initValues(){
         edit(false);
         if(cu == null){return;}
+        specSupContainner.setVisibility(View.GONE);
+        if(UserType.isPhysist(cu.getUserType())){
+            specSupContainner.setVisibility(View.VISIBLE);
+            specialityOracle = new SpecialityOracleAdapter(getActivity());
+            specialityOrSupervisor.setAdapter(specialityOracle);
+            specialityOrSupervisorText.setText(R.string.speciality);
+        }
+        if( UserType.isNurse(cu.getUserType())){
+            specialityOrSupervisorText.setText(R.string.supervisor);
+            specSupContainner.setVisibility(View.VISIBLE);
+            if(UserType.isAdmin(connectedUser.getUserType()))
+                physistOracle = new PhysistOracleAdapter(getActivity());
+                specialityOrSupervisor.setAdapter(physistOracle);
+
+            if(UserType.isPhysist(connectedUser.getUserType())){
+                if(cu.getSupervisor() == null){
+                    cu.setSupervisor(new Supervisor());
+                }
+                cu.getSupervisor().accountId = connectedUser.getAccountID();
+                cu.getSupervisor().active = true;
+                cu.getSupervisor().nurseUuid = cu.getUuid();
+                cu.getSupervisor().physicianUuid = connectedUser.getUuid();
+                cu.getSupervisor().supFullName = Utils.formatUser(contextActivity, connectedUser);
+            }
+
+            specialityOrSupervisor.setText(cu.getSupervisor() !=null? cu.getSupervisor().supFullName:"");
+            specialityOrSupervisor.setClickable(UserType.isAdmin(connectedUser.getUserType()));
+
+        }
+
+
         Utils.load(getActivity(),cu.getAvatar(), userPicture,R.drawable.user_avatar,cu.getUserType() == UserType.PHYSIST.type ? R.drawable.physist: R.drawable.nurse);
 
-        speciality.setAdapter(specialityOracle);
         title.setSelection(TitleType.typeOf(cu.getTitle()).index);
         firstname.setText(Utils.niceFormat(cu.getFirstName()));
         lastname.setText(Utils.niceFormat(cu.getLastName()));
         dob.setText(Utils.format(cu.getDob()));
         pob.setText(Utils.niceFormat(cu.getPob()));
-        speciality.setText(Utils.niceFormat(cu.getSpeciality()));
+        if(UserType.isPhysist(cu.getUserType())) {
+            specialityOrSupervisor.setText(Utils.niceFormat(cu.getSpeciality()));
+        }
+
+
+
         address.setText(Utils.niceFormat(cu.getAddress()));
         fixphone.setText(Utils.niceFormat(cu.getFixPhone()));
         mobile.setText(Utils.niceFormat(cu.getMobilePhone()));

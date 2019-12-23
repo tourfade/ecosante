@@ -11,6 +11,7 @@ import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.adapters.UsersAdapter;
 import com.kamitsoft.ecosante.client.patient.PatientActivity;
 import com.kamitsoft.ecosante.constant.UserType;
+import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
@@ -25,7 +26,6 @@ public class Physicians extends BaseFragment {
     private RecyclerView recyclerview;
     private UsersAdapter physicianAdapter;
     private UsersViewModel model;
-    private SwipeRefreshLayout swr;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,27 +54,25 @@ public class Physicians extends BaseFragment {
         model.getUsersOfType(UserType.PHYSIST).observe(this, userInfos -> physicianAdapter.syncData(userInfos));
 
         physicianAdapter.setItemClickListener((itemPosition, v) -> {
-            Intent i = new Intent(getContext(),UserProfileEditor.class);
-            i.putExtra(UserProfileEditor.KIND,UserProfileEditor.EDIT_PHYSICIAN);
             app.setEditingUser(physicianAdapter.getItem(itemPosition));
-            startActivityForResult(i,1001);
-            getActivity().overridePendingTransition(R.anim.enter_from_right,R.anim.exit_to_left);
+            contextActivity.showFragment(UserEditor.class,R.anim.slide_in_left,R.anim.exit_to_left);
         });
+
         (view.findViewById(R.id.newItem)).setOnClickListener(v -> {
             UserInfo ui = new UserInfo();
             ui.setUserType(UserType.PHYSIST.type);
             app.setEditingUser(ui);
-            Intent i = new Intent(getContext(), UserProfileEditor.class);
-            i.putExtra(UserProfileEditor.KIND,UserProfileEditor.NEW_PHYSICIAN );
-            startActivityForResult(i,1001);
-            getActivity().overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
+            contextActivity.showFragment(UserEditor.class,R.anim.slide_up,R.anim.fade_out);
+
 
         });
 
     }
 
-    private void requestSync() {
-        getActivity().runOnUiThread(() -> swr.setRefreshing(false));
+
+    @Override
+    protected Class<?> getEntity(){
+        return  UserInfo.class;
     }
 
     @Override

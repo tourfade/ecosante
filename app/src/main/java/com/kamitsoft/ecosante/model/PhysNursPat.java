@@ -7,29 +7,23 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
-public class PhysicianNurses {
-    @PrimaryKey
-    @NonNull
-    private String uuid;
+@Entity()
+public class PhysNursPat {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    private int accountId;
     private String physicianUuid;
     private String nurseUuid;
+    private String patientUuid;
+    private boolean active;
     private Timestamp createdAt;
     private  Timestamp updatedAt;
 
-    PhysicianNurses(){
-        uuid = UUID.randomUUID().toString();
+    public PhysNursPat(){
         createdAt = new Timestamp(System.currentTimeMillis());
         updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 
     public String getPhysicianUuid() {
         return physicianUuid;
@@ -62,5 +56,37 @@ public class PhysicianNurses {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getPatientUuid() {
+        return patientUuid;
+    }
+
+    public void setPatientUuid(String patientUuid) {
+        this.patientUuid = patientUuid;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

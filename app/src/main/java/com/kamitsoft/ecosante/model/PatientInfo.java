@@ -2,6 +2,7 @@ package com.kamitsoft.ecosante.model;
 
 
 import com.kamitsoft.ecosante.database.PatientDAO;
+import com.kamitsoft.ecosante.model.json.Monitor;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +47,7 @@ public class PatientInfo {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private String avatar;
+    private Monitor monitor;
 
     public PatientInfo(){
         uuid = UUID.randomUUID().toString();
@@ -275,5 +277,14 @@ public class PatientInfo {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Monitor getMonitor() {
+        monitor = monitor == null ? new Monitor():monitor;
+        return monitor;
+    }
+
+    public void setMonitor(Monitor monitor) {
+        this.monitor = monitor;
     }
 }

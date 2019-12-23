@@ -13,8 +13,8 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "SERVER_URL_TEMP", '"http://www.mocky.io/v2/"'
-            buildConfigField "String", "SERVER_URL",'"https://frozen-caverns-89929.herokuapp.com/"'
+            buildConfigField "String", "SERVER_URL",'"http://172.20.10.5:8181/"'
+            //buildConfigField "String", "SERVER_URL",'"https://frozen-caverns-89929.herokuapp.com/"'
         }
         release {
             buildConfigField "String", "SERVER_URL", '"http://daktari-md-test.appspot.com/"'

@@ -55,7 +55,7 @@ public class ApptEditorDialog extends DialogFragment {
             current.setPatientUuid(currentPatient.getUuid());
 
             currentUser = app.getCurrentUser();
-            current.setUserUuid(currentUser.getUuid());
+            current.setRecipientUuid(currentUser.getUuid());
             current.setUserType(currentUser.getUserType());
             current.setUserRequestorUuid(currentUser.getUuid());
             current.setSpeciality(currentUser.getSpeciality());

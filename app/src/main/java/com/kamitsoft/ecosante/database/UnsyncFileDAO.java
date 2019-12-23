@@ -4,6 +4,7 @@ import com.kamitsoft.ecosante.services.UnsyncFile;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -16,7 +17,10 @@ import androidx.room.Update;
 public interface UnsyncFileDAO {
 
     @Query("SELECT * FROM unsyncfile WHERE type = 1")
-    List<UnsyncFile> allFiles();
+    LiveData<List<UnsyncFile>> allDocumentFiles();
+
+    @Query("SELECT * FROM unsyncfile")
+    LiveData<List<UnsyncFile>> allFiles();
 
     @Insert(onConflict= OnConflictStrategy.REPLACE)
     void insert(UnsyncFile... files);
@@ -34,5 +38,8 @@ public interface UnsyncFileDAO {
     List<UnsyncFile> get(String fk);
 
     @Query("SELECT * FROM unsyncfile WHERE type = 0")
-    List<UnsyncFile> allAvatars();
+    LiveData<List<UnsyncFile>> allAvatars();
+
+    @Query("DELETE FROM unsyncfile WHERE fkey IN(:params)")
+    void delete(String... params);
 }

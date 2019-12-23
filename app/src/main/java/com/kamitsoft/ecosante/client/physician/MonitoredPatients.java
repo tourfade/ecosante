@@ -10,9 +10,17 @@ import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.adapters.WaitingPatientAdapter;
 import com.kamitsoft.ecosante.client.patient.PatientActivity;
+import com.kamitsoft.ecosante.constant.UserType;
+import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
+import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
+
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -20,7 +28,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 public class MonitoredPatients extends BaseFragment {
     private RecyclerView recyclerview;
     private WaitingPatientAdapter waitingList;
-    private SwipeRefreshLayout swr;
+    private View add;
+    private PatientsViewModel model;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +54,17 @@ public class MonitoredPatients extends BaseFragment {
         swr.setOnRefreshListener(this::requestSync);
         waitingList = new WaitingPatientAdapter(getActivity());
         recyclerview.setAdapter(waitingList);
+        model = ViewModelProviders.of(this).get(PatientsViewModel.class);
+
+        model.getAllDatas().observe(this, patientInfos -> {
+            patientInfos = patientInfos.stream()
+                    .filter(p-> p.getMonitor() != null
+                        && !p.getMonitor().monitorUuid.equals(connectedUser.getUuid()))
+                    .collect(Collectors.toList());
+             waitingList.syncData(patientInfos);
+        });
+
+
         waitingList.setItemClickListener((itemPosition, v) -> {
             app.setCurrentPatient(waitingList.getItem(itemPosition));
             Intent i = new Intent(getContext(), PatientActivity.class);
@@ -53,20 +73,30 @@ public class MonitoredPatients extends BaseFragment {
             getActivity().overridePendingTransition(R.anim.slide_in_left,R.anim.exit_to_left);
 
         });
+        add = view.findViewById(R.id.newItem);
 
-        (view.findViewById(R.id.newItem)).setOnClickListener(v -> {
+        add.setOnClickListener(v -> {
            app.newPatient();
            Intent i = new Intent(getContext(), PatientActivity.class);
            i.putExtra("isNew",true );
            startActivity(i);
-            getActivity().overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
+           getActivity().overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
 
        });
 
     }
 
-    private void requestSync() {
-        getActivity().runOnUiThread(() -> swr.setRefreshing(false));
+    @Override
+    public void onResume() {
+        super.onResume();
+        add.setVisibility(UserType.isAdmin(connectedUser.getUserType())?View.VISIBLE:View.GONE);
+
+    }
+
+
+    @Override
+    protected Class<?> getEntity(){
+        return  PatientInfo.class;
     }
 
     @Override

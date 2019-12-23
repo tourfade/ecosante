@@ -18,15 +18,16 @@ import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.adapters.WaitingPatientAdapter;
 import com.kamitsoft.ecosante.client.patient.PatientActivity;
+import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class WaitingPatients extends BaseFragment {
     private RecyclerView recyclerview;
     private WaitingPatientAdapter adapter;
-    private SwipeRefreshLayout swr;
     private PatientsViewModel model;
 
     @Override
@@ -47,11 +48,12 @@ public class WaitingPatients extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         model = ViewModelProviders.of(this).get(PatientsViewModel.class);
-        model.getAllDatas().observe(this, new Observer<List<PatientInfo>>() {
-            @Override
-            public void onChanged(List<PatientInfo> patientInfos) {
-                adapter.syncData(patientInfos);
-            }
+        model.getAllDatas().observe(this, patientInfos -> {
+            patientInfos = patientInfos.stream()
+                    .filter(p-> p.getMonitor() != null
+                            && p.getMonitor().monitorUuid.equals(connectedUser.getUuid()))
+                    .collect(Collectors.toList());
+            adapter.syncData(patientInfos);
         });
         recyclerview =  view.findViewById(R.id.recycler_view);
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -79,8 +81,10 @@ public class WaitingPatients extends BaseFragment {
 
     }
 
-    private void requestSync() {
-        getActivity().runOnUiThread(() -> swr.setRefreshing(false));
+
+    @Override
+    protected Class<?> getEntity(){
+        return  PatientInfo.class;
     }
 
     @Override

@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.adapters.AppointmentsAdapter;
+import com.kamitsoft.ecosante.model.AppointmentInfo;
+import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.AppointmentsViewModel;
 
@@ -21,7 +23,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 public class UserAppointments extends BaseFragment {
     private RecyclerView recyclerView;
     private AppointmentsAdapter adapter;
-    private SwipeRefreshLayout swr;
     private AppointmentsViewModel model;
 
     @Override
@@ -66,9 +67,11 @@ public class UserAppointments extends BaseFragment {
 
     }
 
-    private void requestSync() {
-        getActivity().runOnUiThread(() -> swr.setRefreshing(false));
+    @Override
+    protected Class<?> getEntity(){
+        return  AppointmentInfo.class;
     }
+
 
     @Override
     public String getTitle() {

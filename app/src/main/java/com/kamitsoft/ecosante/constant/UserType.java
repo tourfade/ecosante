@@ -7,6 +7,8 @@ import androidx.annotation.StringRes;
 
 import com.kamitsoft.ecosante.R;
 
+import java.text.NumberFormat;
+
 public enum UserType {
     UNDETERMINATED(0, R.string.underterminated),// for user check
     ADMIN(70,R.string.admin),
@@ -27,7 +29,15 @@ public enum UserType {
     }
 
     public static boolean isPhysist(int userType) {
-        return userType == 10;
+        return userType == PHYSIST.type;
+    }
+
+    public static boolean isNurse(int userType) {
+        return userType == NURSE.type;
+    }
+
+    public static boolean isAdmin(int userType) {
+        return userType == ADMIN.type;
     }
 
     public String getLocaleName(Context context){

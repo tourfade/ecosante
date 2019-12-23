@@ -6,22 +6,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -33,11 +27,8 @@ import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.StatInfo;
 import com.kamitsoft.ecosante.model.SummaryInfo;
 
-import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -202,8 +193,8 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.MyHolder>  {
                 myHolder.title.setText("Evolution de la Pression Arterielle");
                 for (int i = 0; i < stat.getEncounterInfos().size(); i++) {
                         EncounterInfo v = stat.getEncounterInfos().get(i);
-                        systo.add(new Entry(i, v.getPressusreSystolic()));
-                        diasto.add(new Entry(i, v.getPressusreDiastolic()));
+                        systo.add(new Entry(i, v.getPressureSystolic()));
+                        diasto.add(new Entry(i, v.getPressureDiastolic()));
                     }
                 LineDataSet systol = new LineDataSet(systo, "Systole");
                 systol.setMode(LineDataSet.Mode.CUBIC_BEZIER);
@@ -239,7 +230,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.MyHolder>  {
                 for (int i = 0; i < stat.getEncounterInfos().size(); i++) {
                     EncounterInfo v = stat.getEncounterInfos().get(i);
                     systo.add(new Entry(i, v.getWeight()));
-                    diasto.add(new Entry(i, adult?v.getWaistsize():v.getHeight()));
+                    diasto.add(new Entry(i, adult?v.getWaistSize():v.getHeight()));
                 }
                 systol = new LineDataSet(systo, "Poids");
                 systol.setCubicIntensity(0.2f);

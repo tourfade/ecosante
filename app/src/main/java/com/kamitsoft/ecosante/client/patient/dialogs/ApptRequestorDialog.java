@@ -2,7 +2,6 @@ package com.kamitsoft.ecosante.client.patient.dialogs;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,6 +17,7 @@ import com.kamitsoft.ecosante.client.patient.oracles.PhysistOracleAdapter;
 import com.kamitsoft.ecosante.constant.AppointmentRequestStatus;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.AppointmentsViewModel;
 
@@ -73,7 +73,7 @@ public class ApptRequestorDialog extends DialogFragment {
         alertDialogBuilder.setView(R.layout.appointment_requestor_dialog);
         alertDialogBuilder.setIcon(R.drawable.appointment);
         alertDialogBuilder.setPositiveButton(readyForNew?"Ajouter":"Modifier",(dialog, which)->{
-                current.setRequestLastestDate(new Timestamp(dateTime.getTimeInMillis()));
+                current.setRequestLatestDate(new Timestamp(dateTime.getTimeInMillis()));
                 current.setDetails(details.getText().toString().trim());
                 current.setPlace(place.getText().toString().trim());
                 current.setStatus(AppointmentRequestStatus.PENDING.status);
@@ -115,9 +115,10 @@ public class ApptRequestorDialog extends DialogFragment {
     }
 
     private void doctorSelect(AdapterView<?> adapterView, View view, int position, long id) {
-        UserInfo physist = physistOracle.getItem(position);
-        current.setUserType(physist.getUserType());
-        current.setSpeciality(physist.getSpeciality());
+        PhysicianInfo physist = physistOracle.getItem(position);
+        current.setUserType(physist.userType);
+        current.setSpeciality(physist.speciality);
+        current.setRecipientUuid(physist.uuid);
         current.setPatientObject(getString(R.string.encounter_with)+" "+Utils.formatUser(getContext(),physist));
         doctor.setText(Utils.formatUser(getContext(),physist));
 

@@ -10,11 +10,9 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.kamitsoft.ecosante.R;
-import com.kamitsoft.ecosante.constant.Gender;
-import com.kamitsoft.ecosante.constant.MaritalStatus;
-import com.kamitsoft.ecosante.constant.TitleType;
-import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.converters.DiseaseDataTypeConverter;
+import com.kamitsoft.ecosante.database.converters.MonitorTypeConverter;
+import com.kamitsoft.ecosante.database.converters.SupervisorTypeConverter;
 import com.kamitsoft.ecosante.database.converters.TimestampTypeConverter;
 import com.kamitsoft.ecosante.model.Act;
 import com.kamitsoft.ecosante.model.Allergen;
@@ -27,19 +25,20 @@ import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
-import com.kamitsoft.ecosante.model.PhysicianNurses;
+import com.kamitsoft.ecosante.model.PhysNursPat;
 import com.kamitsoft.ecosante.model.Speciality;
 import com.kamitsoft.ecosante.model.SummaryInfo;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.services.UnsyncFile;
 
 import java.io.InputStream;
-import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.concurrent.Executors;
 
 
 @Database(entities = {Allergen.class,
+                    UserAccountInfo.class,
                     UnsyncFile.class,
                     AppointmentInfo.class,
                     EntitySync.class,
@@ -50,13 +49,16 @@ import java.util.concurrent.Executors;
                     Drug.class,
                     Speciality.class,
                     MedicationInfo.class,
-                    PhysicianNurses.class,
+                    PhysNursPat.class,
                     UserInfo.class,
                     EncounterInfo.class,
                     SummaryInfo.class,
                     LabInfo.class},
         version = 2,exportSchema = false)
-@TypeConverters({TimestampTypeConverter.class, DiseaseDataTypeConverter.class})
+@TypeConverters({TimestampTypeConverter.class,
+                 DiseaseDataTypeConverter.class,
+                 SupervisorTypeConverter.class,
+                 MonitorTypeConverter.class})
 public abstract class KsoftDatabase extends RoomDatabase {
     private static KsoftDatabase INSTANCE;
 
@@ -109,7 +111,7 @@ public abstract class KsoftDatabase extends RoomDatabase {
                                         Drug.class,
                                         Speciality.class,
                                         MedicationInfo.class,
-                                        PhysicianNurses.class,
+                                        PhysNursPat.class,
                                         UserInfo.class,
                                         EncounterInfo.class,
                                         SummaryInfo.class,
@@ -124,93 +126,7 @@ public abstract class KsoftDatabase extends RoomDatabase {
             i++;
         }
         helper.entityDAO().insert(data);
-        try {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(1977,11,06);
-            UserInfo doctor = new UserInfo();
-            doctor.setUserID(1);
-            doctor.setFirstName("Souleymane");
-            doctor.setLastName("Diop");
-            doctor.setTitle(TitleType.DOCTOR.value);
-            doctor.setDob(new Timestamp(calendar.getTimeInMillis()));
-            doctor.setPob("Dakar");
-            doctor.setUuid("0942db6b-8bb1-4cbe-9268-0e1de9433e20");
-            doctor.setUserType(UserType.PHYSIST.type);
-            helper.userDAO().insert(doctor);
 
-            UserInfo admin = new UserInfo();
-            admin.setUserID(2);
-            admin.setFirstName("Ousmane");
-            admin.setLastName("CAMARA");
-            admin.setTitle(TitleType.MISTER.value);
-            admin.setDob(new Timestamp(calendar.getTimeInMillis()));
-            admin.setPob("Kaedi");
-            admin.setUuid("1042db6b-8bb1-4cbe-9268-0e1de9433e20");
-            admin.setUserType(UserType.ADMIN.type);
-            helper.userDAO().insert(admin);
-
-            UserInfo nurse = new UserInfo();
-            nurse.setUserID(3);
-            nurse.setFirstName("Aicha");
-            nurse.setLastName("FALL");
-            nurse.setTitle(TitleType.MISS.value);
-            nurse.setDob(new Timestamp(calendar.getTimeInMillis()));
-            nurse.setPob("Kaedi");
-            nurse.setUuid("1042db6b-8bb1-4cbe-9268-0e1de9433e2X");
-            nurse.setUserType(UserType.NURSE.type);
-            helper.userDAO().insert(nurse);
-
-
-            PatientInfo pi = new PatientInfo();
-            pi.setFirstName("Fadel");
-            pi.setLastName("TOURE");
-            pi.setDob(new Timestamp(System.currentTimeMillis()));
-            pi.setMiddleName("");
-            pi.setMobile("+221778351734");
-            pi.setPob("Kaedi");
-            pi.setSex(Gender.MALE.sex);
-            pi.setOccupation("Informaticien");
-            pi.setMaritalStatus(MaritalStatus.MARRIED.status);
-            pi.setPatientID(2);
-            pi.setUserName("ftoure");
-
-            helper.patientDAO().insert(pi);
-
-            pi = new PatientInfo();
-            pi.setFirstName("Oumar");
-            pi.setLastName("TALL");
-            pi.setDob(new Timestamp(System.currentTimeMillis()));
-            pi.setMiddleName("");
-            pi.setMobile("+221788311734");
-            pi.setPob("Podor");
-            pi.setSex(Gender.MALE.sex);
-            pi.setOccupation("Mécanicien");
-            pi.setMaritalStatus(MaritalStatus.WIDOW.status);
-            pi.setPatientID(3);
-            pi.setUserName("tallom");
-
-            helper.patientDAO().insert(pi);
-
-            pi = new PatientInfo();
-            pi.setFirstName("Aissata");
-            pi.setLastName("DIOP");
-            pi.setDob(new Timestamp(System.currentTimeMillis()));
-            pi.setMiddleName("");
-            pi.setMobile("+221776311734");
-            pi.setPob("Dakar");
-            pi.setSex(Gender.FEMALE.sex);
-            pi.setOccupation("Assistante");
-            pi.setMaritalStatus(MaritalStatus.DIVORCED.status);
-            pi.setPatientID(3);
-            pi.setUserName("diopa");
-
-            helper.patientDAO().insert(pi);
-
-
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     private static void loadSQLRaw(SupportSQLiteDatabase helper, Context context, @RawRes int sqlRaw) {
