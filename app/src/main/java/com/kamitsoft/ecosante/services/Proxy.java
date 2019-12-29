@@ -87,4 +87,9 @@ public interface Proxy {
 
     @POST("useraccount/sign-up")
     Call<Void>  createAccount(@Body UserAccountInfo accountInfo);
+
+    @POST("useraccount/update")
+    @FormUrlEncoded
+    Call<Void> updateCredentials(@Field("oldPassword") String oldpw,
+                                 @Field("newPassword") String npw);
 }

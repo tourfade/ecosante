@@ -9,6 +9,7 @@ import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -89,4 +90,13 @@ public interface EncounterDAO {
 
     @Query("SELECT * FROM encounterinfo WHERE updatedAt > (SELECT lastSynced FROM entitysync WHERE entity ='encounterinfo')")
     LiveData<List<EncounterInfo>> getUnsync();
+
+    @Query("DELETE FROM encounterinfo WHERE uuid IN(:encounterIds)")
+    void resetEncounters(String... encounterIds);
+
+    @Query("DELETE FROM medicationinfo WHERE encounterUuid IN(:encounterIds)")
+    void resetMedications(String... encounterIds);
+
+    @Query("DELETE FROM medicationinfo WHERE encounterUuid IN(:encounterIds)")
+    void resetLabs(String... encounterIds);
 }

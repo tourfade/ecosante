@@ -7,8 +7,12 @@ import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.database.EncounterDAO;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
+import com.kamitsoft.ecosante.model.LabInfo;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
+import com.kamitsoft.ecosante.model.UserInfo;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.lifecycle.LiveData;
 
@@ -54,6 +58,26 @@ public class EncountersRepository {
     public void delete(EncounterInfo doc) {
         new deleteAsyncTask(encounterDAO).execute(doc);
     }
+
+    public void reset(UserAccountInfo accountInfo) {
+
+        List<EncounterInfo> values = encounterDAO.getAllEncounters().getValue();
+        if(values != null) {
+            List<String> todel = values.parallelStream().filter(e ->
+                    !accountInfo.getUserUuid().equals(e.getMonitor().monitorUuid)
+                            && !accountInfo.getUserUuid().equals(e.getSupervisor().nurseUuid)
+                            && !accountInfo.getUserUuid().equals(e.getSupervisor().physicianUuid))
+                    .map(e -> e.getUuid())
+                    .collect(Collectors.toList());
+
+            String[] ids = todel.toArray(new String[]{});
+            encounterDAO.resetEncounters(ids);
+            encounterDAO.resetLabs(ids);
+            encounterDAO.resetMedications(ids);
+        }
+
+    }
+
 
     private static class insertAsyncTask extends AsyncTask<EncounterInfo, Void, Void> {
 

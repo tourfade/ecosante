@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp">
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/weigtContainner"
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:layout_centerHorizontal="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Poids en Kg">
+        android:orientation="vertical">
+    <TextView
+        style="@style/TextView.InputLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:text="Poids en Kg" />
 
         <EditText
+            android:textAlignment="center"
             android:selectAllOnFocus="true"
             android:id="@+id/weight"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="numberDecimal"
+            android:textSize="48sp"
+            android:textColor="#6D6A6A"
+            android:imeOptions="actionDone"
             android:maxLines="1"
-            android:padding="8dp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:padding="8dp"
+            android:text="87" />
 
-
-</RelativeLayout>
+</LinearLayout>

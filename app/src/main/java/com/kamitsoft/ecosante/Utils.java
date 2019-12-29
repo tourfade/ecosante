@@ -34,6 +34,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 public class Utils {
     private static DateFormat df = DateFormat.getDateInstance();
     private static DecimalFormat fmt = new DecimalFormat("#.#");
+    private static DecimalFormat fmt0 = new DecimalFormat("#");
     static final long DAY_MS = 24 * 3600000;
     private static final int PICTURE_WIDTH = 230;
 
@@ -106,6 +107,10 @@ public class Utils {
     }
     public static String niceFormat(double value) {
         return value <= 0 ?"":String.valueOf(value);
+    }
+
+    public static String niceFormat0(double value) {
+        return value <= 0 ?"":fmt0.format(value);
     }
 
     public static String niceFormat(String value) {
@@ -378,7 +383,6 @@ public class Utils {
 
     public static Gson  getGsonBuilder(){
             return new GsonBuilder() //"2019-06-06 21:25:52"
-                    .setDateFormat("yyyy-MM-dd HH:mm")
                     .registerTypeAdapter(Date.class, new DateDeserializer())
                     .create();
 

@@ -13,6 +13,7 @@ import com.kamitsoft.ecosante.model.UserInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -90,10 +91,22 @@ public class UsersRepository {
         return userDAO.getNursePnp( uuid) ;
     }
 
-    public LiveData<List<PhysNursPat>> getPnpLinks() {
-        return links;
-    }
 
+    public void reset(UserAccountInfo accountInfo) {
+
+        List<UserInfo> todel = userDAO.getAllUsers();
+        if(todel != null) {
+            todel= todel.parallelStream()
+                    .filter(u ->
+                            !(u.getUuid().equals(accountInfo.getUserUuid())
+                                    || u.getSupervisor() == null
+                                    || accountInfo.equals(u.getSupervisor().physicianUuid)
+                                    || accountInfo.equals(u.getSupervisor().nurseUuid)))
+                    .collect(Collectors.toList());
+            userDAO.delete(todel.toArray(new UserInfo[]{}));
+        }
+
+    }
 
 
     private static class DisconnectAsyncTask extends AsyncTask<Void, Void, Void> {

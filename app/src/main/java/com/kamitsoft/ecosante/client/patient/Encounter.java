@@ -1,11 +1,15 @@
 package com.kamitsoft.ecosante.client.patient;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -25,17 +29,21 @@ import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.VitalFilter;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
 import com.kamitsoft.ecosante.client.adapters.LabsAdapter;
 import com.kamitsoft.ecosante.client.adapters.MedicationsAdapter;
 import com.kamitsoft.ecosante.client.patient.dialogs.LabEditorDialog;
 import com.kamitsoft.ecosante.client.patient.dialogs.MedicationEditorDialog;
 import com.kamitsoft.ecosante.constant.BehaviorType;
+import com.kamitsoft.ecosante.constant.StatusConstant;
+import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.constant.VitalType;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
+import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.LabsViewModel;
@@ -63,6 +71,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     private EncountersViewModel model;
     private EntitiesViewModel entityModel;
     private EncountersViewModel encounterModel;
+    private View editActions, reviesActions;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +93,8 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         medModel = ViewModelProviders.of(this).get(MedicationViewModel.class);
         entityModel = ViewModelProviders.of(this).get(EntitiesViewModel.class);
         encounterModel = ViewModelProviders.of(this).get(EncountersViewModel.class);
+        editActions = findViewById(R.id.editActions);
+        reviesActions = findViewById(R.id.reviewActions);
         pressure = findViewById(R.id.pressure);
         temperature = findViewById(R.id.temperature);
         weight = findViewById(R.id.weight);
@@ -123,6 +134,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         dysphnea = findViewById(R.id.dysphnea);
         autonomy = findViewById(R.id.autonomy);
         orientation = findViewById(R.id.orientation);
+        encounterInfo = app.getCurrentEncounter();
 
         findViewById(R.id.cancel).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
@@ -131,14 +143,24 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         });
         findViewById(R.id.save).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
-            final EncounterInfo ce = app.getCurrentEncounter();
-            final Timestamp now = new Timestamp(System.currentTimeMillis());
-            ce.setUpdatedAt(now);
-            model.insert(ce);
+            model.insert(encounterInfo);
             app.exitEncounter();
             finish();
         });
-        encounterInfo = app.getCurrentEncounter();
+        findViewById(R.id.reject).setOnClickListener(v->{
+            setResult(Activity.RESULT_OK);
+            encounterInfo.setCurrentStatus(StatusConstant.REJECTED);
+            model.insert(encounterInfo);
+            app.exitEncounter();
+            finish();
+        });
+        findViewById(R.id.accept).setOnClickListener(v->{
+            setResult(Activity.RESULT_OK);
+            encounterInfo.setCurrentStatus(StatusConstant.ACCEPTED);
+            model.insert(encounterInfo);
+            app.exitEncounter();
+            finish();
+        });
         initViewListeners();
         initValue();
         labsModel.getEncounterLabs().observe(this, info -> {
@@ -282,7 +304,13 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     }
 
     private  void initValue(){
-
+        UserInfo user = app.getCurrentUser();
+        if(user !=null){
+            reviesActions.setVisibility(user.getUserType() == UserType.PHYSIST.type?View.VISIBLE:View.GONE);
+            editActions.setVisibility(user.getUserType() == UserType.NURSE.type?View.VISIBLE:View.GONE);
+        }else {
+            reviesActions.setVisibility(View.GONE);
+        }
         field.setText(encounterInfo.getField());
         runningTreatment.setText(encounterInfo.getRunningTreatment());
         advisings.setText(encounterInfo.getAdvising());
@@ -396,7 +424,6 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         alertDialogBuilder.setIcon(behave.icon);
         alertDialogBuilder.setPositiveButton("Ok",(dialog, which)->{
             mapDialogBehaveValues(behave, ((AlertDialog) dialog));
-            setBehaviorsValues(behave);
         });
         alertDialogBuilder.setNegativeButton("Annuler", (dialog, which) -> dialog.cancel());
         AlertDialog alertDialog = alertDialogBuilder.create();
@@ -424,28 +451,37 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
             AlertDialog d = (AlertDialog)dialog;
             initVitalDialog(vitalType,d);
         });
+
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         alertDialog.show();
     }
 
     private void initBehaveDialog(BehaviorType behave, AlertDialog d) {
+        EditText bq = d.findViewById(R.id.behaveQuantity);
+        bq.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE){
+                mapDialogBehaveValues(behave, d);
+                d.dismiss();
+            }
+            return false;
+        });
         switch (behave){
             case SMOKING:
-                ((EditText)d.findViewById(R.id.behaveQuantity)).setText(Utils.niceFormat(encounterInfo.getSmokeNbCigarettes()));
+                bq.setText(Utils.niceFormat(encounterInfo.getSmokeNbCigarettes()));
                 break;
             case ETHYLISM:
-                ((EditText)d.findViewById(R.id.behaveQuantity)).setText(Utils.niceFormat(encounterInfo.getAlcoholNbCups()));
+                bq.setText(Utils.niceFormat(encounterInfo.getAlcoholNbCups()));
                 break;
             case TEA:
-                ((EditText)d.findViewById(R.id.behaveQuantity)).setText(Utils.niceFormat(encounterInfo.getTeaNbCups()));
+                bq.setText(Utils.niceFormat(encounterInfo.getTeaNbCups()));
                 break;
             case OTHERBEHAVIORS:
-                ((EditText)d.findViewById(R.id.behaveQuantity)).setText(Utils.niceFormat(encounterInfo.getOtherBehaviorsNotes()));
+                bq.setText(Utils.niceFormat(encounterInfo.getOtherBehaviorsNotes()));
                 break;
 
             case DURATION:
-                ((EditText)d.findViewById(R.id.behaveQuantity)).setText(Utils.niceFormat(encounterInfo.getRunningTreatmentDuration()));
+                bq.setText(Utils.niceFormat(encounterInfo.getRunningTreatmentDuration()));
                 ((AppCompatSpinner)d.findViewById(R.id.durationUnit)).setSelection(encounterInfo.getRunningTreatmentDurationUnit(), true);
 
                 break;
@@ -457,33 +493,121 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         switch (vitalType){
             case HEARTRATE:
                 ((AppCompatSpinner)d.findViewById(R.id.heartRateBodySite)).setSelection(encounterInfo.getHeartRateSite(), true);
-                ((EditText)d.findViewById(R.id.heartrate)).setText(Utils.niceFormat(encounterInfo.getHeartRate()));
+                EditText hr = d.findViewById(R.id.heartrate);
+                hr.setFilters(new InputFilter[]{new VitalFilter(35, 280)});
+                hr.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE){
+                        mapVitalDialogValues(vitalType, d );
+                        d.dismiss();
+                    }
+                    return false;
+                });
+                hr.setText(Utils.niceFormat(encounterInfo.getHeartRate()));
                 break;
             case PRESSURE:
-                ((EditText)d.findViewById(R.id.systolic)).setText(Utils.niceFormat(encounterInfo.getPressureSystolic()));
-                ((EditText)d.findViewById(R.id.diastolic)).setText(Utils.niceFormat(encounterInfo.getPressureDiastolic()));
+                EditText sys = d.findViewById(R.id.systolic);
+                EditText dias = d.findViewById(R.id.diastolic);
+                sys.addTextChangedListener(new TextWatchAdapter() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                      if(s.toString().length() >= 3){
+                          dias.requestFocus();
+                      }
+
+                    }
+                });
+                sys.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT)
+                        dias.requestFocus();
+                    return false;
+                });
+                dias.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE){
+                        mapVitalDialogValues(vitalType, d );
+                        d.dismiss();
+                    }
+                    return false;
+                });
+                sys.setFilters(new InputFilter[]{new VitalFilter(80, 300)});
+                dias.setFilters(new InputFilter[]{new VitalFilter(50, 100)});
+                sys.setText(Utils.niceFormat0(encounterInfo.getPressureSystolic()));
+                dias.setText(Utils.niceFormat0(encounterInfo.getPressureDiastolic()));
                 break;
             case BREATHRATE:
-                ((EditText)d.findViewById(R.id.breathrate)).setText(Utils.niceFormat(encounterInfo.getBreathRate()));
+                EditText breath = d.findViewById(R.id.breathrate);
+                breath.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE){
+                        mapVitalDialogValues(vitalType, d );
+                        d.dismiss();
+                    }
+                    return false;
+                });
+                breath.setFilters(new InputFilter[]{new VitalFilter(10, 80)});
+                breath.setText(Utils.niceFormat0(encounterInfo.getBreathRate()));
                 break;
             case GLYCEMY:
+                EditText glyc = d.findViewById(R.id.glycemy);
+                glyc.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE){
+                        mapVitalDialogValues(vitalType, d );
+                        d.dismiss();
+                    }
+                    return false;
+                });
+                glyc.setFilters(new InputFilter[]{new VitalFilter(50, 180)});
                 ((AppCompatSpinner)d.findViewById(R.id.glycemyState)).setSelection(encounterInfo.getGlycemyState(), true);
-                ((EditText)d.findViewById(R.id.glycemy)).setText(Utils.niceFormat(encounterInfo.getGlycemy()));
+                glyc.setText(Utils.niceFormat(encounterInfo.getGlycemy()));
                 break;
 
             case HEIGHT:
-                ((EditText)d.findViewById(R.id.height)).setText(Utils.niceFormat(encounterInfo.getHeight()));
+                EditText heigh = d.findViewById(R.id.height);
+                heigh.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE){
+                        mapVitalDialogValues(vitalType, d );
+                        d.dismiss();
+                    }
+                    return false;
+                });
+                heigh.setFilters(new InputFilter[]{new VitalFilter(50, 230)});
+                heigh.setText(Utils.niceFormat(encounterInfo.getHeight()));
                 break;
             case WEIGHT:
-                ((EditText)d.findViewById(R.id.weight)).setText(Utils.niceFormat(encounterInfo.getWeight()));
+                EditText weight = d.findViewById(R.id.weight);
+                weight.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE){
+                        mapVitalDialogValues(vitalType, d );
+                        d.dismiss();
+                    }
+                    return false;
+                });
+                weight.setFilters(new InputFilter[]{new VitalFilter(50, 600)});
+                weight.setText(Utils.niceFormat(encounterInfo.getWeight()));
                 break;
             case WAISTSIZE:
-                ((EditText)d.findViewById(R.id.waistSize)).setText(Utils.niceFormat(encounterInfo.getWaistSize()));
+                EditText waistSize = d.findViewById(R.id.waistSize);
+                waistSize.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE){
+                        mapVitalDialogValues(vitalType, d );
+                        d.dismiss();
+                    }
+                    return false;
+                });
+                waistSize.setFilters(new InputFilter[]{new VitalFilter(30, 180)});
+                waistSize.setText(Utils.niceFormat(encounterInfo.getWaistSize()));
                 break;
 
             case TEMPERATURE:
+                EditText temperature = d.findViewById(R.id.temperature);
+                temperature.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE){
+                        mapVitalDialogValues(vitalType, d );
+                        d.dismiss();
+                    }
+                    return false;
+                });
+                temperature.setFilters(new InputFilter[]{new VitalFilter(24, 42)});
                 ((AppCompatSpinner)d.findViewById(R.id.temperatureBodyPart)).setSelection(encounterInfo.getTemperatureBodyPart(), true);
-                ((EditText)d.findViewById(R.id.temperature)).setText(Utils.niceFormat(encounterInfo.getTemperature()));
+                temperature.setText(Utils.niceFormat(encounterInfo.getTemperature()));
                 break;
         }
     }
@@ -521,7 +645,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
                 encounterInfo.setRunningTreatmentDurationUnit(unit);
                 break;
         }
+        setBehaviorsValues(behave);
     }
+
     private void mapVitalDialogValues(VitalType vitalType, AlertDialog d) {
         switch (vitalType){
             case PRESSURE:

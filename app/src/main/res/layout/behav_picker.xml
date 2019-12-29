@@ -10,9 +10,9 @@
         android:layout_centerVertical="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="20dp"
         android:hint="Nombre de Cigarettes par Jour">
 
         <EditText
@@ -20,7 +20,11 @@
             android:id="@+id/behaveQuantity"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="numberDecimal"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textSize="48sp"
+            android:textColor="#6D6A6A"
+            android:imeOptions="actionDone"
             android:maxLines="1"
             android:padding="8dp" />
     </com.google.android.material.textfield.TextInputLayout>

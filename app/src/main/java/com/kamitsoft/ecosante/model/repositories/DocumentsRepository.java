@@ -5,8 +5,13 @@ import android.os.AsyncTask;
 
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.database.PatientDAO;
+import com.kamitsoft.ecosante.model.AppointmentInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
+
 import java.util.List;
+import java.util.stream.Collectors;
+
 import androidx.lifecycle.LiveData;
 
 public class DocumentsRepository {
@@ -35,6 +40,9 @@ public class DocumentsRepository {
     public void delete(DocumentInfo doc) {
         new deleteAsyncTask(patientDAO).execute(doc);
     }
+
+
+
 
     private static class Insert extends AsyncTask<DocumentInfo, Void, Void> {
 

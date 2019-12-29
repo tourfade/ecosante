@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.text.Editable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.repositories.AppointmentsRepository;
 import com.kamitsoft.ecosante.model.repositories.DocumentsRepository;
 import com.kamitsoft.ecosante.model.repositories.EncountersRepository;
+import com.kamitsoft.ecosante.model.repositories.EntityRepository;
 import com.kamitsoft.ecosante.model.repositories.FileRepository;
 import com.kamitsoft.ecosante.model.repositories.LabsRepository;
 import com.kamitsoft.ecosante.model.repositories.MedicationsRepository;
@@ -68,6 +70,9 @@ public class ApiSyncService extends Service {
     private DocumentsRepository documentRepository;
     private AppointmentsRepository appointmentRepository;
     private FileRepository fileRepository;
+    private EntityRepository entityRepository;
+
+
 
 
     public class LocalBinder extends Binder {
@@ -89,17 +94,9 @@ public class ApiSyncService extends Service {
         void onReady(@Nullable T... data);
     }
 
-
-
-    private LocalBroadcastManager lbm;
-    // Object to use as a thread-safe lock
-    private static final Object lock = new Object();
-
-
     @Override
     public void onCreate() {
         app = (EcoSanteApp) getApplication();
-        lbm = LocalBroadcastManager.getInstance(getApplicationContext());
         database = KsoftDatabase.getInstance(getApplicationContext());
         cache = new DiskCache(getApplicationContext());
 
@@ -114,6 +111,11 @@ public class ApiSyncService extends Service {
         userRepository.getAccount().observeForever(accountInfo->{
             if(accountInfo != null) {
                 init(accountInfo);
+                userRepository.reset(accountInfo);
+                encounterRepository.reset(accountInfo);
+                patientRepository.reset(accountInfo);
+                appointmentRepository.reset(accountInfo);
+                entityRepository.reset();
             }
         });
 
@@ -220,6 +222,7 @@ public class ApiSyncService extends Service {
 
 
         });
+
         appointmentRepository.getData().observeForever(labs -> {
             if(proxy == null){
                 return;
@@ -233,14 +236,16 @@ public class ApiSyncService extends Service {
                 syncAppointments(entitySycn, toSynch, null);
         });
 
-
-
     }
 
     public void requestSync(Class<?> beanClass, Completion completion) {
+        //Log.i("XXXXXXXXX--->",beanClass+"");
         EntitySync entitySync = getEntity(beanClass);
-        entitySync.setLastSynced(0);
-        if(beanClass == PatientInfo.class){
+        if(entitySync==null ||  !entitySync.isDirty()){
+            return;
+        }
+        //entitySync.setLastSynced(entitySync.getLastSynced()-1000);
+        if(beanClass == PatientInfo.class ){
             syncPatients(entitySync,new ArrayList<>(),completion);
         }
         if(beanClass == EncounterInfo.class){
@@ -275,7 +280,23 @@ public class ApiSyncService extends Service {
         documentRepository = new DocumentsRepository(app);
         appointmentRepository = new AppointmentsRepository(app);
         fileRepository = new FileRepository(app);
+        entityRepository = new EntityRepository(app);
 
+    }
+
+    public void updatePassword(String oldpw, String npw, CompletionWithData<Boolean> completion) {
+        proxy.updateCredentials(oldpw,npw).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                completion.onReady(response.code() == 200);
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                completion.onReady(false);
+            }
+        });
     }
 
     private void syncUsers(EntitySync entitySync, List<UserInfo> dirty, Completion completion) {
@@ -302,6 +323,7 @@ public class ApiSyncService extends Service {
             }
             @Override
             public void onFailure(Call<List<UserInfo>> call, Throwable t) {
+                t.printStackTrace();
                 Log.i("XXXXX user", t.toString()+"->"+t.getMessage());
 
                 Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
@@ -330,7 +352,12 @@ public class ApiSyncService extends Service {
                                 p.setUpdatedAt(new Timestamp(data.timestamp));
                             });
                             patientRepository.insert(response.body().toArray(new PatientInfo[]{}));
-                            database.entityDAO().insert(entitySync);
+                            entityRepository.update(entitySync);
+                            if(response.body().size() > 0) {
+                                entityRepository.setDirty(DocumentInfo.class.getSimpleName());
+                                entityRepository.setDirty(MedicationInfo.class.getSimpleName());
+                                entityRepository.setDirty(LabInfo.class.getSimpleName());
+                            }
                         }
                         if(completion !=null){
                             completion.onReady();
@@ -365,9 +392,11 @@ public class ApiSyncService extends Service {
                 if (response.code() == 200){
                     response.body().stream().forEach(e->{
                         e.setUpdatedAt(new Timestamp(data.timestamp));
+
                     });
                     encounterRepository.insert(response.body().toArray(new EncounterInfo[]{}));
-                    database.entityDAO().insert(entitySync);
+                    entityRepository.update(entitySync);
+
 
                 }
                 if(completion !=null){
@@ -406,7 +435,8 @@ public class ApiSyncService extends Service {
                         e.setUpdatedAt(new Timestamp(data.timestamp));
                     });
                     patientRepository.updateSummaries(response.body().toArray(new SummaryInfo[]{}));
-                    database.entityDAO().insert(entitySync);
+                    entityRepository.update(entitySync);
+
 
                 }
                 if(completion !=null){
@@ -446,7 +476,8 @@ public class ApiSyncService extends Service {
                         e.setUpdatedAt(new Timestamp(data.timestamp));
                     });
                     medicationRepository.insert(response.body().toArray(new MedicationInfo[]{}));
-                    database.entityDAO().insert(entitySync);
+                    entityRepository.update(entitySync);
+
 
                 }
                 if(completion !=null){
@@ -486,7 +517,8 @@ public class ApiSyncService extends Service {
                         e.setUpdatedAt(new Timestamp(data.timestamp));
                     });
                     labRepository.insert(response.body().toArray(new LabInfo[]{}));
-                    database.entityDAO().insert(entitySync);
+                    entityRepository.update(entitySync);
+
 
                 }
                 if(completion !=null){
@@ -526,7 +558,8 @@ public class ApiSyncService extends Service {
                         e.setUpdatedAt(new Timestamp(data.timestamp));
                     });
                     documentRepository.insert(response.body().toArray(new DocumentInfo[]{}));
-                    database.entityDAO().insert(entitySync);
+                    entityRepository.update(entitySync);
+
 
                 }
                 if(completion !=null){
@@ -589,7 +622,8 @@ public class ApiSyncService extends Service {
                         e.setUpdatedAt(new Timestamp(data.timestamp));
                     });
                     appointmentRepository.insert(response.body().toArray(new AppointmentInfo[]{}));
-                    database.entityDAO().insert(entitySync);
+                    entityRepository.update(entitySync);
+
 
                 }
                 if(completion !=null){
@@ -631,7 +665,6 @@ public class ApiSyncService extends Service {
                                 public void onResponse(Call<String> call, Response<String> response) {
 
                                     if (response.code() == 200) {
-                                        Log.i("XXXXX", "c bo");
                                         cache.remove(uf.getFkey());
                                         fileRepository.remove(uf.getFkey());
                                     } else {
@@ -665,7 +698,15 @@ public class ApiSyncService extends Service {
 
 
     private EntitySync getEntity(Class<?> beanClass){
-        return database.entityDAO().getEntitySync(beanClass.getSimpleName().toLowerCase());
+        assert (beanClass !=null);
+        EntitySync e = database.entityDAO().getEntitySync(beanClass.getSimpleName().toLowerCase());
+        if(e== null){
+            e = new EntitySync();
+            e.setEntity(beanClass.getSimpleName().toLowerCase());
+            e.setDirty(true);
+            e.setLastSynced(0L);
+        }
+        return e;
     }
 
     private void init(UserAccountInfo accountInfo){

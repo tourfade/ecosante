@@ -6,10 +6,14 @@ import android.os.AsyncTask;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.database.EncounterDAO;
 import com.kamitsoft.ecosante.database.PatientDAO;
+import com.kamitsoft.ecosante.model.AppointmentInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
+import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.LabInfo;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.lifecycle.LiveData;
 
@@ -39,6 +43,9 @@ public class LabsRepository {
     public void delete(LabInfo doc) {
         new deleteAsyncTask(encounterDAO).execute(doc);
     }
+
+
+
 
     private static class insertAsyncTask extends AsyncTask<LabInfo, Void, Void> {
 

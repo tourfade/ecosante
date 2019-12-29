@@ -4,10 +4,44 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp">
 
+    <LinearLayout
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/value"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextView.InputLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:text="Valeur # bat/mn" />
+
+
+        <EditText
+            android:textAlignment="center"
+            android:id="@+id/heartrate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:textSize="48sp"
+            android:textColor="#6D6A6A"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:text="23"
+            android:selectAllOnFocus="true" />
+    </LinearLayout>
+
+
 
     <LinearLayout
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/value"
         android:id="@+id/bodySiteContainer"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -27,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/body_site_heartrate"
+
             android:paddingLeft="0dp"
             android:paddingTop="10dp"
             android:paddingRight="0dp"
@@ -35,23 +70,6 @@
 
 
     </LinearLayout>
-    <com.google.android.material.textfield.TextInputLayout
-
-        android:layout_below="@id/bodySiteContainer"
-        android:id="@+id/heartRateContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nombre de Battements par mn">
-
-        <EditText
-            android:selectAllOnFocus="true"
-            android:id="@+id/heartrate"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:padding="8dp" />
-    </com.google.android.material.textfield.TextInputLayout>
 
 
 

@@ -6,10 +6,13 @@ import android.os.AsyncTask;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.database.EncounterDAO;
 import com.kamitsoft.ecosante.database.EntityDAO;
+import com.kamitsoft.ecosante.model.AppointmentInfo;
 import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.LabInfo;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.lifecycle.LiveData;
 
@@ -28,13 +31,21 @@ public class EntityRepository {
         return entities;
     }
 
-
+    public void justSynced(EntitySync doc) {
+        doc.setDirty(false);
+        doc.setLastSynced(System.currentTimeMillis());
+        new insertAsyncTask(dao).execute(doc);
+    }
     public void update(EntitySync doc) {
         new insertAsyncTask(dao).execute(doc);
     }
 
     public void setDirty(String entity) {
         new dirtyAsyncTask(dao).execute(entity);
+    }
+
+    public void reset() {
+        dao.resetAll();
     }
 
 
@@ -63,6 +74,10 @@ public class EntityRepository {
         @Override
         protected Void doInBackground(final String... params) {
             EntitySync e = dao.getEntitySync(params[0]);
+            if(e==null){
+                e = new EntitySync();
+                e.setEntity(params[0]);
+            }
             e.setDirty(true);
             dao.insert(e);
             return null;

@@ -72,4 +72,8 @@ public interface UserDAO {
 
     @Query("SELECT * FROM useraccountinfo LIMIT 1")
     LiveData<UserAccountInfo> getConnectedAccount();
+
+
+    @Query("SELECT * FROM userinfo ")
+    List<UserInfo> getAllUsers();
 }

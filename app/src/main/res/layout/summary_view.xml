@@ -1,179 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    <androidx.cardview.widget.CardView
-        android:id="@+id/patientDoctorCard"
-        android:layout_margin="10dp"
-        android:padding="10dp"
+    android:addStatesFromChildren="false"
+    android:descendantFocusability="blocksDescendants">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="4dp"
-        app:cardCornerRadius="5dp">
-        <RelativeLayout
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/patientDoctorCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_margin="10dp"
+            android:elevation="4dp"
+            android:padding="10dp"
+            app:cardCornerRadius="5dp">
 
-            <LinearLayout
-                android:id="@+id/ecosantedocotorContainer"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:orientation="vertical">
+                android:padding="10dp">
 
-                <TextView
-                    style="@style/TextView.InputLabel"
+                <LinearLayout
+                    android:id="@+id/ecosantedocotorContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="7dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingBottom="0dp"
-                    android:text="Medecin Traitant ÉcoSanté" />
+                    android:layout_marginLeft="2dp"
+                    android:orientation="vertical">
 
-                <AutoCompleteTextView
-                    android:id="@+id/ecosantedocotor"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="textAutoComplete"
-                    android:maxLines="1"
-                    android:paddingLeft="7dp"
-                    android:text="Dr Habib Dieye" />
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="7dp"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="Medecin Traitant ÉcoSanté" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_below="@id/ecosantedocotorContainer"
-                android:id="@+id/ecosantedocotorContactContainer"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:hint="Cellulaire">
-
-                    <EditText
-                        android:id="@+id/ecosantedocotorMobile"
+                    <AutoCompleteTextView
+                        android:id="@+id/ecosantedocotor"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:inputType="textAutoComplete"
                         android:maxLines="1"
-                        android:padding="8dp"
-                        android:inputType="phone"
-                        android:text="819 445 3434" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                        android:paddingLeft="7dp"
+                        android:text="Dr Habib Dieye" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ecosantedocotorContactContainer"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email">
+                    android:layout_below="@id/ecosantedocotorContainer"
+                    android:orientation="horizontal">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Cellulaire">
+
+                        <EditText
+                            android:id="@+id/ecosantedocotorMobile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="phone"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="819 445 3434" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Email">
+
+                        <EditText
+                            android:id="@+id/ecosantedocotorEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="ftoure@gmail.com" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/specialistdocotorContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ecosantedocotorContactContainer"
+                    android:hint="Medecin Spécialiste Traitant">
 
                     <EditText
-                        android:id="@+id/ecosantedocotorEmail"
+                        android:id="@+id/specialistdocotor"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:inputType="textCapWords"
                         android:maxLines="1"
-                        android:inputType="textEmailAddress"
                         android:padding="8dp"
-                        android:text="ftoure@gmail.com" />
+                        android:text="Dr Habib Dieye" />
                 </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/specialistdocotorContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ecosantedocotorContactContainer"
-                android:hint="Medecin Spécialiste Traitant">
-
-                <EditText
-                    android:id="@+id/specialistdocotor"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:inputType="textCapWords"
-                    android:text="Dr Habib Dieye" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:layout_below="@id/specialistdocotorContainer"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:hint="Cellulaire">
-
-                <EditText
-                    android:id="@+id/specialistdocotorMobile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:inputType="phone"
-                    android:text="819 445 3434" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:hint="Email">
-
-                    <EditText
-                        android:id="@+id/specialistdocotorEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:maxLines="1"
-                        android:inputType="textEmailAddress"
-                        android:padding="8dp"
-                        android:text="ftoure@gmail.com" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_below="@id/patientDoctorCard"
-        android:id="@+id/patientAntecedentCard"
-        android:layout_margin="10dp"
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="4dp"
-        app:cardCornerRadius="5dp">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <LinearLayout
-                android:id="@+id/line0.9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
+                    android:layout_below="@id/specialistdocotorContainer"
+                    android:orientation="horizontal">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Cellulaire">
+
+                        <EditText
+                            android:id="@+id/specialistdocotorMobile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="phone"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="819 445 3434" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Email">
+
+                        <EditText
+                            android:id="@+id/specialistdocotorEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="ftoure@gmail.com" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/patientAntecedentCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/patientDoctorCard"
+            android:layout_margin="10dp"
+            android:elevation="4dp"
+            android:padding="10dp"
+            app:cardCornerRadius="5dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:id="@+id/line0.9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/surgeries" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/surgeries"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/line0.95"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line0.9"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
@@ -185,17 +229,57 @@
                         android:paddingTop="0dp"
                         android:paddingRight="0dp"
                         android:paddingBottom="0dp"
-                        android:text="@string/surgeries" />
+                        android:text="@string/falls" />
 
                     <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/surgeries"
-                        android:clickable="false"
+                        android:id="@+id/falls"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:clickable="false"
                         android:paddingLeft="0dp"
                         android:paddingTop="7dp"
                         android:paddingRight="0dp"
                         android:paddingBottom="7dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/line1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/line0.95"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/idm" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/idm"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
 
                         <View
                             android:layout_width="match_parent"
@@ -203,703 +287,658 @@
                             android:background="@color/colorAccent" />
                     </LinearLayout>
 
-            </LinearLayout>
-            <LinearLayout
-                android:layout_below="@id/line0.9"
-                android:id="@+id/line0.95"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/TextView.InputLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="7dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingBottom="0dp"
-                    android:text="@string/falls" />
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/falls"
-                    android:clickable="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="0dp"
-                    android:paddingTop="7dp"
-                    android:paddingRight="0dp"
-                    android:paddingBottom="7dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorAccent" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_below="@id/line0.95"
-                android:layout_marginTop="10dp"
-                android:id="@+id/line1"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/idm" />
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/idm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/cva" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/avc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/cva" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/avc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-                </LinearLayout>
-            </LinearLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_below="@id/line1"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/firstnameContainer"
-                android:hint="@string/long_terme_treatment">
-
-                <EditText
-                    android:id="@+id/longTermTreatment"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/firstnameContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="textAutoCorrect|textWebEditText|textMultiLine"
-                    android:maxLines="4"
-                    android:padding="8dp"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation " />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line1"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/long_terme_treatment">
 
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
+                    <EditText
+                        android:id="@+id/longTermTreatment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textAutoCorrect|textWebEditText|textMultiLine"
+                        android:maxLines="4"
+                        android:padding="8dp"
+                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation " />
+                </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.cardview.widget.CardView
-        android:layout_below="@id/patientAntecedentCard"
-        android:id="@+id/patientDiseaseCard"
-        android:layout_margin="10dp"
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="4dp"
-        app:cardCornerRadius="5dp">
-        <RelativeLayout
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/patientDiseaseCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:id="@+id/line1.7"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            android:layout_below="@id/patientAntecedentCard"
+            android:layout_margin="10dp"
+            android:elevation="4dp"
+            android:padding="10dp"
+            app:cardCornerRadius="5dp">
 
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/diabetes" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/diabetes"
-                        android:clickable="false"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                <TextView
-                    style="@style/TextView.InputLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="7dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingBottom="0dp"
-                    android:text="@string/hta" />
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/hta"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="0dp"
-                    android:paddingTop="7dp"
-                    android:paddingRight="0dp"
-                    android:paddingBottom="7dp" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-
-            </LinearLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_below="@id/line1.7"
-                android:id="@+id/line1.8"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="Drépanocytose" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/falciformanemia"
-                        android:clickable="false"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/allergy" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/allergy"
-                        android:clickable="false"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_below="@id/line1.8"
-                android:id="@+id/line2"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/goutte" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/drop"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/dementia" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/dementia"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-                </LinearLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/line2"
-                android:id="@+id/line3"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/irc" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/irc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/ashmatic" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/ashmatic"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/line3"
-                android:id="@+id/line4"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/hepatitis" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/hepatitis"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/hyperthyroidism" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/hyperthyroidism"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/line4"
-                android:id="@+id/line45"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/glaucoma" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/glaucoma"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/epilepsy" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/epilespy"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/line45"
-                android:id="@+id/line5"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:selectAllOnFocus="true"
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/menopause" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/menopause"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="7dp"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/others" />
-
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/others"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="0dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/line5"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:padding="10dp">
 
-                <TextView
-                    style="@style/TextView.InputLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="7dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingBottom="0dp"
-                    android:text="@string/gsrh" />
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/gsrh"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/gsrh"
-                    android:paddingBottom="7dp"
-                    android:paddingTop="7dp"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:spinnerMode="dropdown" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorAccent" />
-            </LinearLayout>
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_below="@id/patientDiseaseCard"
-        android:layout_margin="10dp"
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="4dp"
-        app:cardCornerRadius="5dp">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/addressContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:hint="@string/notes">
-
-                <EditText
-                    android:id="@+id/diseasenotes"
+                <LinearLayout
+                    android:id="@+id/line1.7"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="textWebEditText|textMultiLine|textCapSentences|textAutoComplete|textImeMultiLine"
-                    android:padding="8dp"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/diabetes" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/diabetes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/hta" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/hta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/line1.8"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/line1.7"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="Drépanocytose" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/falciformanemia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/allergy" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/allergy"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/line2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/line1.8"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/goutte" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/drop"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/dementia" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/dementia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/line3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/line2"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/irc" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/irc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/ashmatic" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/ashmatic"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/line4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/line3"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/hepatitis" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/hepatitis"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/hyperthyroidism" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/hyperthyroidism"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/line45"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/line4"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/glaucoma" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/glaucoma"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/epilepsy" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/epilespy"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/line5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/line45"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:selectAllOnFocus="true"
+                            android:text="@string/menopause" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/menopause"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/others" />
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/others"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/line5"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="7dp"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="@string/gsrh" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/gsrh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/gsrh"
+                        android:paddingLeft="0dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="7dp"
+                        android:spinnerMode="dropdown" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent" />
+                </LinearLayout>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/patientDiseaseCard"
+            android:layout_margin="10dp"
+            android:elevation="4dp"
+            android:padding="10dp"
+            app:cardCornerRadius="5dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/addressContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:hint="@string/notes">
+
+                    <EditText
+                        android:id="@+id/diseasenotes"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textWebEditText|textMultiLine|textCapSentences|textAutoComplete|textImeMultiLine"
+                        android:padding="8dp"
+                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." />
+                </com.google.android.material.textfield.TextInputLayout>
 
 
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-</RelativeLayout>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 </ScrollView>

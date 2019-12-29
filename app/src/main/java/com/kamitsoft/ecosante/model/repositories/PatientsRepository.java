@@ -7,11 +7,14 @@ import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.database.PatientDAO;
 import com.kamitsoft.ecosante.database.SummaryDAO;
 import com.kamitsoft.ecosante.database.UserDAO;
+import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.SummaryInfo;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import androidx.lifecycle.LiveData;
 
@@ -64,6 +67,12 @@ public class PatientsRepository {
         new SummaryUpdateAsyncTask(summaryDAO).execute(bean);
     }
 
+    public void reset(UserAccountInfo accountInfo) {
+
+        dao.resetePatientsSet();
+        dao.reseteDocumentsSet();
+        summaryDAO.resetSummariesSet();
+    }
 
 
     private static class insertAsyncTask extends AsyncTask<PatientInfo, Void, Void> {

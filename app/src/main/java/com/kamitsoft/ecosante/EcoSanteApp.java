@@ -19,6 +19,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.multidex.MultiDexApplication;
 
 import com.facebook.stetho.Stetho;
+import com.kamitsoft.ecosante.client.patient.Encounter;
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
 import com.kamitsoft.ecosante.model.DocumentInfo;
@@ -28,6 +30,7 @@ import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.json.Status;
 import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 import com.kamitsoft.ecosante.services.ApiSyncService;
 import com.kamitsoft.ecosante.services.WorkerService;
@@ -194,7 +197,9 @@ public class EcoSanteApp extends MultiDexApplication {
         this.currentEncounter.setValue(currentEncounter);
     }
     public void setNewEncounter() {
-        currentEncounter.setValue(new EncounterInfo());
+        EncounterInfo e = new EncounterInfo();
+        e.getStatus().add(new Status(StatusConstant.NEW.status));
+        currentEncounter.setValue(e);
 
 
     }

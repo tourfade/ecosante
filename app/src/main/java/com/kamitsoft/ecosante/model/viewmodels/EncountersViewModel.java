@@ -9,8 +9,10 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.kamitsoft.ecosante.EcoSanteApp;
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
+import com.kamitsoft.ecosante.model.json.Status;
 import com.kamitsoft.ecosante.model.repositories.EncountersRepository;
 import com.kamitsoft.ecosante.services.ApiSyncService;
 
@@ -51,6 +53,10 @@ public class EncountersViewModel extends AndroidViewModel {
 
     public void insert(EncounterInfo doc){
         doc.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        Status status = doc.currentStatus();
+        if(status.status == StatusConstant.NEW.status){
+            doc.setCurrentStatus(StatusConstant.PENDING);
+        }
         repository.insert(doc);
     }
     public void update(EncounterInfo doc){

@@ -1,9 +1,13 @@
 package com.kamitsoft.ecosante.model;
 
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.model.json.Monitor;
+import com.kamitsoft.ecosante.model.json.Status;
 import com.kamitsoft.ecosante.model.json.Supervisor;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -30,7 +34,7 @@ public class EncounterInfo {
     private int breathRate;
     private int heartRate;
     private int heartRateSite;
-
+    private List<Status> status;
     private boolean anorexia;
     private boolean asthenia;
     private boolean dysphnea;
@@ -452,4 +456,32 @@ public class EncounterInfo {
     public void setUserUuid(String userUuid) {
         this.userUuid = userUuid;
     }
+
+    public List<Status> getStatus() {
+        if(status == null){
+            status = new ArrayList<>();
+            status.add(new Status());
+        }
+        return status;
+    }
+
+    public void setStatus(List<Status> status) {
+        this.status = status;
+    }
+
+    public Status currentStatus(){
+        Status current = getStatus().get(0);
+        for(Status s:status)
+            if(s.date != null && s.date.after(current.date)){
+                current = s;
+            }
+
+        return current;
+    }
+
+    public void setCurrentStatus(StatusConstant statusConstant){
+
+        getStatus().add(0,new Status(statusConstant.status));
+    }
+
 }

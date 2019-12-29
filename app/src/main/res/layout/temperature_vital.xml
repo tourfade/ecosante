@@ -3,11 +3,43 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp">
+    <LinearLayout
+        android:padding="10dp"
+        android:id="@+id/temperatureContainner"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextView.InputLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:text="Température en °C" />
+        <EditText
+            android:textAlignment="center"
+            android:id="@+id/temperature"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:textSize="48sp"
+            android:textColor="#6D6A6A"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:text="87"
+            android:selectAllOnFocus="true" />
+    </LinearLayout>
 
 
     <LinearLayout
+        android:paddingRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/temperatureContainner"
         android:id="@+id/bodySiteContainer"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -35,22 +67,7 @@
 
 
     </LinearLayout>
-    <com.google.android.material.textfield.TextInputLayout
 
-        android:layout_below="@id/bodySiteContainer"
-        android:id="@+id/temperatureContainner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Température en °C">
-
-        <EditText
-            android:id="@+id/temperature"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:padding="8dp" />
-    </com.google.android.material.textfield.TextInputLayout>
 
 
 

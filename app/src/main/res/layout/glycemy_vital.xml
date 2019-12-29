@@ -3,13 +3,46 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp">
-
     <LinearLayout
-        android:id="@+id/stateC"
+        android:padding="10dp"
+        android:layout_centerHorizontal="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/glycemyContainner"
         android:orientation="vertical">
 
+        <TextView
+            style="@style/TextView.InputLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:text="Glycémie" />
+        <EditText
+            android:textAlignment="center"
+            android:id="@+id/glycemy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:textSize="48sp"
+            android:textColor="#6D6A6A"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:text="87"
+            android:selectAllOnFocus="true" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:paddingRight="10dp"
+        android:layout_below="@id/glycemyContainner"
+        android:layout_alignParentRight="true"
+        android:id="@+id/stateC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <TextView
             style="@style/TextView.InputLabel"
             android:layout_width="match_parent"
@@ -19,7 +52,6 @@
             android:paddingRight="0dp"
             android:paddingBottom="0dp"
             android:text="@string/state" />
-
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/glycemyState"
             style="@style/Widget.AppCompat.Spinner.Underlined"
@@ -31,28 +63,7 @@
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
             android:spinnerMode="dropdown"/>
-
-
     </LinearLayout>
-    <com.google.android.material.textfield.TextInputLayout
-
-        android:layout_below="@id/stateC"
-        android:id="@+id/glycemyContainner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Glycémie">
-
-        <EditText
-            android:selectAllOnFocus="true"
-            android:id="@+id/glycemy"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:padding="8dp" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
 
 
 

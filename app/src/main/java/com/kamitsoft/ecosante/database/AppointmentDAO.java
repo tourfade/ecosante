@@ -29,8 +29,6 @@ public interface AppointmentDAO {
     @Query("SELECT * FROM appointmentinfo WHERE patientUuid=:uuid AND deleted <= 0")
     LiveData<List<AppointmentInfo>> getPatientAppointments(String uuid);
 
-
-
     @Query("SELECT * FROM appointmentinfo ")
     LiveData<List<AppointmentInfo>> getAppointments();
 

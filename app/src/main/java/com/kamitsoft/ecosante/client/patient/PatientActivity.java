@@ -104,6 +104,7 @@ public class PatientActivity extends ImagePickerActivity implements TabLayout.Ba
         }
 
 
+
         @Override
         public Fragment getItem(int position) {
             try {

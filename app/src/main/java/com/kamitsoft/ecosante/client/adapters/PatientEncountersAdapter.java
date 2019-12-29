@@ -1,6 +1,7 @@
 package com.kamitsoft.ecosante.client.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.constant.VitalType;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 
@@ -20,6 +22,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import androidx.appcompat.app.AppCompatActivity;
+import top.defaults.drawabletoolbox.DrawableBuilder;
 
 /**
  * Created by hassa on 01/06/2017.
@@ -105,6 +108,8 @@ public class PatientEncountersAdapter extends AbstractAdapter<PatientEncountersA
             myHolder.pressure.setText(Utils.format(current.getPressureSystolic())+"/"+
                     Utils.format(current.getPressureDiastolic())+" "+context.getString(VitalType.PRESSURE.unit));
 
+            myHolder.status.setBackground(StatusConstant.ofStatus(current.currentStatus().status).drawable);
+
         }else {
         }
         setAnimation(myHolder.itemView,position);
@@ -139,6 +144,7 @@ public class PatientEncountersAdapter extends AbstractAdapter<PatientEncountersA
     public  class MyHolder extends AbstractAdapter.EdtiableHolder {
 
         TextView date, nurse, pressure,glycemy, heartrate;
+        View status;
         // create constructor to get widget reference
         public MyHolder(View itemView) {
              super(itemView);
@@ -147,6 +153,7 @@ public class PatientEncountersAdapter extends AbstractAdapter<PatientEncountersA
              pressure = itemView.findViewById(R.id.pressure);
              glycemy = itemView.findViewById(R.id.glycemy);
              heartrate = itemView.findViewById(R.id.heartrate);
+             status = itemView.findViewById(R.id.status);
 
         }
 

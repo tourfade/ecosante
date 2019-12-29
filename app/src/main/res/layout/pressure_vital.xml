@@ -1,41 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp"
+    android:layout_gravity="center_horizontal"
+    android:orientation="horizontal"
     android:layout_margin="10dp">
 
-    <com.google.android.material.textfield.TextInputLayout
+
+    <LinearLayout
         android:id="@+id/systoliqueContainner"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:hint="Systolique en cmHg">
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextView.InputLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:text="Systol(cmHg)" />
 
         <EditText
-            android:selectAllOnFocus="true"
             android:id="@+id/systolic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="numberDecimal"
             android:maxLines="1"
-            android:padding="8dp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:minWidth="70dp"
+            android:padding="8dp"
+            android:selectAllOnFocus="true"
+            android:text="89"
+            android:imeOptions="actionNext"
+            android:textAlignment="center"
+            android:textColor="#6D6A6A"
+            android:textSize="48sp" />
+    </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+
+    <LinearLayout
         android:id="@+id/diastoliqueContainner"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_below="@id/systoliqueContainner"
-        android:hint="Diastolique en cmHg">
+        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@id/systoliqueContainner"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextView.InputLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:text="Diastol(cmHg)" />
 
         <EditText
-            android:selectAllOnFocus="true"
             android:id="@+id/diastolic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="numberDecimal"
             android:maxLines="1"
-            android:padding="8dp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:minWidth="70dp"
+            android:padding="8dp"
+            android:selectAllOnFocus="true"
+            android:text="114"
+            android:imeOptions="actionDone"
+            android:textAlignment="center"
+            android:textColor="#6D6A6A"
+            android:textSize="48sp" />
+    </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

@@ -91,9 +91,9 @@ public class PatientProfileView extends PatientBaseFragment  {
         perosnContactAddress = view.findViewById(R.id.perosnContactAddress);
         //currentPatient = app.getCurrentPatient();
         isNew = getActivity().getIntent().getBooleanExtra("isNew", false);
-        edit(isNew);
 
         initListeners();
+        edit(isNew);
 
         model.getCurrentPatient().observe(this, patientInfo -> {
             if (patientInfo == null) { return;}
@@ -162,7 +162,7 @@ public class PatientProfileView extends PatientBaseFragment  {
 
         firstName.setEnabled(editable);
         lastName.setEnabled(editable);
-        //dob.setEnabled(editable);
+        dob.setEnabled(editable);
 
         pob.setEnabled(editable);
         sex.setEnabled(editable);
@@ -362,6 +362,7 @@ public class PatientProfileView extends PatientBaseFragment  {
         });
 
         dob.setOnClickListener(v->{
+
             final  Calendar calendar = Calendar.getInstance();
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
                 calendar.set(Calendar.YEAR, year);
@@ -372,6 +373,7 @@ public class PatientProfileView extends PatientBaseFragment  {
             },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH) );
 
             datePickerDialog.show();
+            
         });
     }
 

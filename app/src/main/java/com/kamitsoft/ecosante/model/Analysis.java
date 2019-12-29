@@ -14,6 +14,16 @@ public class Analysis {
     private  int labNumber;
     private  int viewModel;
     private  String labName;
+    /*private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+*/
 
     @Override
     public boolean equals(@Nullable Object obj) {

@@ -56,4 +56,11 @@ public interface PatientDAO {
     @Query("SELECT * FROM patientinfo WHERE updatedAt > (SELECT lastSynced FROM entitysync WHERE entity ='patientinfo')")
     LiveData<List<PatientInfo>>  getUnsync();
 
+    @Query("DELETE FROM patientinfo ")
+    void resetePatientsSet();
+
+    @Query("DELETE FROM documentinfo ")
+    void reseteDocumentsSet();
+
+
 }

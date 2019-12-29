@@ -12,6 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.database.converters.DiseaseDataTypeConverter;
 import com.kamitsoft.ecosante.database.converters.MonitorTypeConverter;
+import com.kamitsoft.ecosante.database.converters.StatusTypeConverter;
 import com.kamitsoft.ecosante.database.converters.SupervisorTypeConverter;
 import com.kamitsoft.ecosante.database.converters.TimestampTypeConverter;
 import com.kamitsoft.ecosante.model.Act;
@@ -58,7 +59,8 @@ import java.util.concurrent.Executors;
 @TypeConverters({TimestampTypeConverter.class,
                  DiseaseDataTypeConverter.class,
                  SupervisorTypeConverter.class,
-                 MonitorTypeConverter.class})
+                 MonitorTypeConverter.class,
+                 StatusTypeConverter.class})
 public abstract class KsoftDatabase extends RoomDatabase {
     private static KsoftDatabase INSTANCE;
 

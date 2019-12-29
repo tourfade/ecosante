@@ -31,6 +31,9 @@ public interface EntityDAO {
     @Query("UPDATE   entitysync SET lastSynced = 0, isDirty = 0 WHERE entity =:entity")
     void reset(String entity);
 
+    @Query("UPDATE   entitysync SET lastSynced = 0, isDirty = 1")
+    void resetAll();
+
     @Query("UPDATE   entitysync SET isDirty = 1 WHERE entity =:entity")
     void setDirty(String entity);
 

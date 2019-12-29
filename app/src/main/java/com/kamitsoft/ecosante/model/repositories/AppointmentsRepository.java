@@ -6,8 +6,10 @@ import android.os.AsyncTask;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.database.AppointmentDAO;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -57,7 +59,18 @@ public class AppointmentsRepository {
         new Delete(dao).execute(bean);
     }
 
+    public void reset(UserAccountInfo accountInfo) {
+        List<AppointmentInfo> toDelete = dao.getAppointments().getValue();
+        if(toDelete != null) {
+            toDelete = toDelete.parallelStream().filter(a ->
+                    !(accountInfo.getUserUuid().equals(a.getRecipientUuid())
+                            || accountInfo.getUserUuid().equals(a.getUserRequestorUuid())))
+                    .collect(Collectors.toList());
 
+            if (toDelete != null && toDelete.size() > 0)
+                dao.delete(toDelete.toArray(new AppointmentInfo[]{}));
+        }
+    }
 
 
     private static class Insert extends AsyncTask<AppointmentInfo, Void, Void> {

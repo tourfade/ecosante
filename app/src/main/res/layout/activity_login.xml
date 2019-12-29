@@ -23,18 +23,18 @@
              tools:srcCompat="@drawable/faveks" />
          <TextView
              android:layout_below="@id/app_logo"
-            android:id="@+id/connexion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/dmi"
-            android:textColor="@color/colorAccent"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+             android:id="@+id/connexion"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_centerHorizontal="true"
+             android:layout_marginStart="10dp"
+             android:layout_marginTop="10dp"
+             android:layout_marginEnd="10dp"
+             android:layout_marginBottom="10dp"
+             android:text="@string/dmi"
+             android:textColor="@color/colorAccent"
+             android:textSize="30sp"
+             android:textStyle="bold" />
 
 
         <androidx.cardview.widget.CardView

@@ -1178,34 +1178,68 @@
 
     <androidx.cardview.widget.CardView
         android:layout_below="@id/bilanandrecommandation"
-        android:id="@+id/actions"
+        android:id="@+id/editActions"
         android:layout_margin="10dp"
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp"
         app:cardCornerRadius="5dp">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp">
-        <Button
-            android:textColor="@color/colorAccent"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/consultationAction"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/cancel"
-            android:text="Annuler"/>
-        <Button
-            android:textColor="@color/colorAccent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:id="@+id/save"
-            android:text="Sauvegarder"/>
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <Button
+                android:textColor="@color/colorAccent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/cancel"
+                android:text="Annuler"/>
+
+            <Button
+                android:textColor="@color/colorAccent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:id="@+id/save"
+                android:text="Sauvegarder"/>
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+                android:layout_below="@id/editActions"
+                android:id="@+id/reviewActions"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                app:cardCornerRadius="5dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+                    <Button
+                        android:textColor="@color/colorAccent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/reject"
+                        android:text="Rejeter"/>
+
+                    <Button
+                        android:textColor="@color/colorAccent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:id="@+id/accept"
+                        android:text="Signer"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
     </RelativeLayout>
 </ScrollView>
 </RelativeLayout>

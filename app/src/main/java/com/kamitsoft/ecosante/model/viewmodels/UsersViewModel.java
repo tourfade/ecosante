@@ -68,6 +68,7 @@ public class UsersViewModel extends AndroidViewModel {
     }
 
     public void connect(UserAccountInfo accountInfo, UserInfo userInfo) {
+
         repository.insert(userInfo);
         repository.connect(accountInfo);
     }

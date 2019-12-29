@@ -279,7 +279,11 @@ public class PatientSummaryView extends PatientBaseFragment {
         });
 
         idm.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
             currentSummary.setIdm(isChecked);
+            if(!buttonView.isPressed()) {
+                return;
+            }
             if(isChecked){
                 Utils.manageDataPicker(getActivity(), currentSummary.getIdmDate(), date -> {
                     idm.setText(Utils.niceFormat(Utils.format(date)));
@@ -292,6 +296,9 @@ public class PatientSummaryView extends PatientBaseFragment {
         });
         avc.setOnCheckedChangeListener((buttonView, isChecked) -> {
             currentSummary.setAvc(isChecked);
+            if(!buttonView.isPressed()) {
+                return;
+            }
             if(isChecked){
                 Utils.manageDataPicker(getActivity(),currentSummary.getIdmDate(),date -> {
                     avc.setText(Utils.niceFormat(Utils.format(date)));
@@ -358,6 +365,9 @@ public class PatientSummaryView extends PatientBaseFragment {
 
         menopause.setOnCheckedChangeListener((buttonView, isChecked) -> {
             currentSummary.setMenopause(isChecked);
+            if(!buttonView.isPressed()) {
+                return;
+            }
             if(isChecked){
                 Utils.manageDataPicker(getActivity(),
                         currentSummary.getMenopauseDate(),

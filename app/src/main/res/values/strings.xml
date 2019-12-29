@@ -249,5 +249,9 @@
     <string name="connection_credential">connexion_credential</string>
     <string name="supervisor">Médecin Superviseur</string>
     <string name="supervised_nurses">Infirmiers Supervisés</string>
+    <string name="reviewed">Revisé</string>
+    <string name="archived">Archivé</string>
+    <string name="deleted">effacé</string>
+    <string name="newStatus">Nouveau</string>
 
 </resources>

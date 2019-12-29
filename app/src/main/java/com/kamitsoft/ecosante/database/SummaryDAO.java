@@ -39,4 +39,7 @@ public interface SummaryDAO {
 
     @Query("SELECT * FROM summaryinfo WHERE updatedAt > (SELECT lastSynced FROM entitysync WHERE entity ='summaryinfo')")
     LiveData<List<SummaryInfo>> getUnsync();
+
+    @Query("DELETE FROM summaryinfo ")
+    void resetSummariesSet();
 }

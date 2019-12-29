@@ -55,9 +55,7 @@ public class SignIn extends AppCompatActivity {
         password = findViewById(R.id.input_password);
         progressBar = findViewById(R.id.progressBar);
         model = ViewModelProviders.of(this).get(UsersViewModel.class);
-        if(getIntent().hasExtra("username")){
-            username.setText(getIntent().getExtras().getString("username", ""));
-        }
+
         findViewById(R.id.btn_login).setOnClickListener(v -> {
             v.setEnabled(false);
             progressBar.setVisibility(View.VISIBLE);
@@ -98,7 +96,9 @@ public class SignIn extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
-
+        if(getIntent().hasExtra("username")){
+            username.setText(getIntent().getExtras().getString("username", ""));
+        }
     }
 
     private void login(String account, String email, String password, final ApiSyncService.CompletionWithData<Boolean> completion ){

@@ -18,7 +18,6 @@ import androidx.room.Update;
 public interface AllergenDAO {
 
 
-
     @Insert(onConflict= OnConflictStrategy.REPLACE)
     void insert(Allergen... allergens);
 
