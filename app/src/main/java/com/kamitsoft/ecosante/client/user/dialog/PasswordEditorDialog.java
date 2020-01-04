@@ -1,6 +1,7 @@
 package com.kamitsoft.ecosante.client.user.dialog;
 
 import android.app.Dialog;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.KeyEvent;
@@ -16,14 +17,17 @@ import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 import com.kamitsoft.ecosante.services.ApiSyncService;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 
 public class PasswordEditorDialog extends DialogFragment {
 
-    private final UserInfo userInfo;
+    private  UserInfo userInfo;
+    private  UsersViewModel model;
     private EditText oldPassword, newPassword, confirmPassword;
     private TextInputLayout oldpasswordContainer;
     private TextView errorMessage;
@@ -31,8 +35,7 @@ public class PasswordEditorDialog extends DialogFragment {
     private View progress;
 
     public PasswordEditorDialog(UserInfo userInfo){
-        this.userInfo = userInfo;
-
+       this.userInfo = userInfo;
     }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -120,6 +123,7 @@ public class PasswordEditorDialog extends DialogFragment {
             }
         });
     }
+
 
 
 }

@@ -67,7 +67,9 @@ public class PatientDocuments extends PatientBaseFragment {
             PatientInfo p = app.getCurrentPatient();
             if(p != null) {
                 docAdapter.syncData(documentInfos.parallelStream()
-                        .filter(d -> app.getCurrentPatient()!=null &&  d.getPatientUuid().equals(p.getUuid()))
+                        .filter(d -> app.getCurrentPatient()!=null &&
+                                !d.getDeleted() &&
+                                d.getPatientUuid().equals(p.getUuid()))
                         .collect(Collectors.toList()));
             }
 

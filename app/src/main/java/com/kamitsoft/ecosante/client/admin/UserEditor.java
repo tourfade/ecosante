@@ -33,6 +33,7 @@ import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
@@ -98,10 +99,18 @@ public class UserEditor extends BaseFragment {
         mobile = view.findViewById(R.id.mobile);
         email = view.findViewById(R.id.email);
         sex = view.findViewById(R.id.sex);
+
         currentEditing = app.getEditingUser();
+
         connectedUser = app.getCurrentUser();
-        initListeners();
-        initValues();
+        if(connectedUser !=null) {
+            initListeners();
+            initValues();
+        }
+
+
+
+
 
         switch (UserType.typeOf(currentEditing.getUserType())){
             case PHYSIST:
@@ -158,6 +167,8 @@ public class UserEditor extends BaseFragment {
                 break;
 
             case R.id.action_save:
+                currentEditing.setAccountID(connectedUser.getAccountID());
+
                 model.insert(currentEditing);
                 //model.setSupervisor(pnp);
                 edit(false);
@@ -249,14 +260,12 @@ public class UserEditor extends BaseFragment {
             }
         });
         dob.setOnClickListener(v->{
-            final Calendar calendar = Calendar.getInstance();
+            int[] d = currentEditing.getDob();
+            d = d!=null && d.length == 3? d:Utils.toArray(Calendar.getInstance());
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                dob.setText(Utils.niceFormat(Utils.format(calendar.getTime())));
-                currentEditing.setDob(new Timestamp(calendar.getTimeInMillis()));
-            },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH) );
+                currentEditing.setDob(new int[]{year, month, dayOfMonth});
+                dob.setText(Utils.format(currentEditing.getDob()));
+            },d[0],d[1],d[2]);
             datePickerDialog.show();
         });
 

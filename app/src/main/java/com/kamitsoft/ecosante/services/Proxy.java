@@ -17,6 +17,7 @@ import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.PhysNursPat;
+import com.kamitsoft.ecosante.model.RestoreInfo;
 import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.SyncData;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
@@ -88,8 +89,12 @@ public interface Proxy {
     @POST("useraccount/sign-up")
     Call<Void>  createAccount(@Body UserAccountInfo accountInfo);
 
+    @POST("useraccount/restore")
+    Call<Void>  restoreAccountPassword(@Body RestoreInfo accountInfo);
+
+
     @POST("useraccount/update")
     @FormUrlEncoded
-    Call<Void> updateCredentials(@Field("oldPassword") String oldpw,
+    Call<UserAccountInfo> updateCredentials(@Field("oldPassword") String oldpw,
                                  @Field("newPassword") String npw);
 }

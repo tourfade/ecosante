@@ -15,6 +15,8 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
+import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
+import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.signing.SignIn;
 import com.kamitsoft.ecosante.R;
@@ -50,6 +52,7 @@ public class EcoSanteActivity extends ImagePickerActivity
     private View header;
     private UsersViewModel model;
     private UserInfo currentUser;
+    private UserAccountInfo account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +73,19 @@ public class EcoSanteActivity extends ImagePickerActivity
             this.currentUser = userInfo;
             initDrawerMenu();
             initHeaderInfo();
+            if(account!=null && account.getGenPassword() && currentUser !=null){
+                new PasswordEditorDialog(currentUser)
+                        .show(getSupportFragmentManager(), "PasswordEditorDialog");
+            }
         });
 
+        model.getConnectedAccount().observe(this, account->{
+            this.account = account;
+            if(account!=null && account.getGenPassword() && currentUser !=null){
+                new PasswordEditorDialog(currentUser)
+                        .show(getSupportFragmentManager(), "PasswordEditorDialog");
+            }
+        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

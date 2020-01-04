@@ -28,7 +28,7 @@ public interface SummaryDAO {
     void insert(SummaryInfo... summary);
 
     @Delete
-    void delete(SummaryInfo summary);
+    void delete(SummaryInfo... summary);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     int update(SummaryInfo... summary);

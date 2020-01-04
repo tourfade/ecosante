@@ -41,7 +41,6 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     private final NumberFormat decimalFormatf;
    // private final EcoSanteApp app;
 
-    private DateFormat df = DateFormat.getDateInstance();
     private Context context;
     private List<MedicationInfo> mdata;
     static ItemClickListener myClickListener;

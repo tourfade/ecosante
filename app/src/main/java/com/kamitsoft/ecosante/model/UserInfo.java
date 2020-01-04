@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class UserInfo {
     private String lang;
     private int sex;
     private String pob;
-    private Timestamp dob;
+    private int[] dob;
 
     private int userType;
     private int status;
@@ -124,11 +125,11 @@ public class UserInfo {
         this.pob = pob;
     }
 
-    public Timestamp getDob() {
+    public int[] getDob() {
         return dob;
     }
 
-    public void setDob(Timestamp dob) {
+    public void setDob(int[] dob) {
         this.dob = dob;
     }
 

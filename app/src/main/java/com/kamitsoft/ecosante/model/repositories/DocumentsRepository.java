@@ -37,7 +37,7 @@ public class DocumentsRepository {
         new updateAsyncTask(patientDAO).execute(doc);
     }
 
-    public void delete(DocumentInfo doc) {
+    public void delete(DocumentInfo... doc) {
         new deleteAsyncTask(patientDAO).execute(doc);
     }
 

@@ -172,15 +172,31 @@ public class PatientSummaryView extends PatientBaseFragment {
     public void edit(boolean editable) {
         super.edit = editable;
         doctor.setEnabled(editable);
+        doctor.setError(null);
+
         doctorCell.setEnabled(editable);
+        doctorCell.setError(null);
+
         doctorEmail.setEnabled(editable);
+        doctorEmail.setError(null);
+
 
         specialist.setEnabled(editable);
+        specialist.setError(null);
+
         specialistCell.setEnabled(editable);
+        specialistCell.setError(null);
+
         specialistEmail.setEnabled(editable);
+        specialistEmail.setError(null);
+
 
         longTermTreatment.setEnabled(editable);
+        longTermTreatment.setError(null);
+
         notes.setEnabled(editable);
+        notes.setError(null);
+
         idm.setEnabled(editable);
         avc.setEnabled(editable);
         //((View)falls.getParent()).setEnabled(editable);

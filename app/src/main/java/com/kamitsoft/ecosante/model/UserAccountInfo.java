@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 public class UserAccountInfo {
     @PrimaryKey
     private int id;
+    private String account;
     private int accountId;
     private String userUuid;
     private String username;
@@ -17,6 +18,7 @@ public class UserAccountInfo {
 
     @Ignore
     private UserInfo userInfo;
+    private boolean genPassword;
 
     public int getId() {
         return id;
@@ -81,5 +83,21 @@ public class UserAccountInfo {
 
     public void setUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public boolean getGenPassword() {
+        return genPassword;
+    }
+
+    public void setGenPassword(boolean genPassword) {
+        this.genPassword = genPassword;
     }
 }

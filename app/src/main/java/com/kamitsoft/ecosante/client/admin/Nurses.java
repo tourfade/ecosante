@@ -75,6 +75,9 @@ public class Nurses extends BaseFragment {
 
         });
         nursesAdapter.setItemClickListener((itemPosition, v) -> {
+            if(connectedUser ==null){
+                return;
+            }
             if(!UserType.isAdmin(connectedUser.getUserType())){
                 Toast.makeText(contextActivity,"Vous ne pouvez pas changer ces iformations",Toast.LENGTH_LONG).show();
                 return;

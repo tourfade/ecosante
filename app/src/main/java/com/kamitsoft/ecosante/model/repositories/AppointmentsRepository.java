@@ -55,7 +55,7 @@ public class AppointmentsRepository {
         new Update(dao).execute(bean);
     }
 
-    public void delete(AppointmentInfo bean) {
+    public void delete(AppointmentInfo... bean) {
         new Delete(dao).execute(bean);
     }
 

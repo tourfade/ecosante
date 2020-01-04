@@ -33,7 +33,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyHolder>  {
     private static final int VIEW_TYPE_NORMAL = 0;
     private static final int VIEW_TYPE_EMPTY = 1;
 
-    private DateFormat df = DateFormat.getDateInstance();
     private Context context;
     private EcoSanteApp app;
     private List<UserInfo> mdata;

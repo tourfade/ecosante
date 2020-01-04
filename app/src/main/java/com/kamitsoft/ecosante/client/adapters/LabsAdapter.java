@@ -41,7 +41,6 @@ public class LabsAdapter extends RecyclerView.Adapter<LabsAdapter.MyHolder>  {
     private final NumberFormat decimalFormatf;
     private final EcoSanteApp app;
 
-    private DateFormat df = DateFormat.getDateInstance();
     private Context context;
     private List<LabInfo> mdata;
     static ItemClickListener myClickListener;

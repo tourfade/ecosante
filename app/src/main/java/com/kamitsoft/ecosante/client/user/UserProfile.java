@@ -44,6 +44,7 @@ import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.UUID;
@@ -242,14 +243,12 @@ public class UserProfile extends BaseFragment {
             }
         });
         dob.setOnClickListener(v->{
-            final Calendar calendar = Calendar.getInstance();
+            int[] d = cu.getDob();
+            d = d!=null && d.length == 3? d:Utils.toArray(Calendar.getInstance());
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                dob.setText(Utils.niceFormat(Utils.format(calendar.getTime())));
-                cu.setDob(new Timestamp(calendar.getTimeInMillis()));
-            },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH) );
+                cu.setDob(new int[]{year, month, dayOfMonth});
+                dob.setText(Utils.format(cu.getDob()));
+            },d[0],d[1],d[2]);
             datePickerDialog.show();
         });
 

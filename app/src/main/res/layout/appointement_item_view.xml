@@ -214,6 +214,9 @@
         android:padding="5dp">
 
         <ImageButton
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:descendantFocusability="blocksDescendants"
             android:id="@+id/item_edit"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -227,6 +230,9 @@
             android:src="@android:drawable/ic_menu_edit" />
 
         <ImageButton
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:descendantFocusability="blocksDescendants"
             android:id="@+id/item_delete"
             android:layout_width="0dp"
             android:layout_height="match_parent"

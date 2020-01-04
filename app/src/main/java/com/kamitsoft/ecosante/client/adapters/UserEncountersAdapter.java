@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
@@ -31,13 +32,12 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by fadel on 01/09/2019.
  */
 
-public class UserEncountersAdapter extends RecyclerView.Adapter<UserEncountersAdapter.MyHolder>  {
+public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter.MyHolder>  {
 
     private static final int VIEW_TYPE_NORMAL = 0;
     private static final int VIEW_TYPE_EMPTY = 1;
     private final EcoSanteApp app;
 
-    private DateFormat df = DateFormat.getDateInstance();
     private Context context;
     private List<EncounterHeaderInfo> mdata;
 
@@ -99,19 +99,20 @@ public class UserEncountersAdapter extends RecyclerView.Adapter<UserEncountersAd
             // Get current position of item in recyclerview to bind data and assign values from list
 
             EncounterHeaderInfo current = mdata.get(position);
+            myHolder.title.setText("Consultation du "+Utils.format(current.getCreatedAt()));
             myHolder.patient.setText(Utils.formatName(context, current.getFirstName()+" "+Utils.niceFormat(current.getMiddleName()),current.getLastName(),-1));
             myHolder.dobpob.setText(Utils.formatAge(current.getDob())+" né(é) à "+Utils.niceFormat(current.getPob()));
             myHolder.mobile.setText(current.getMobile());
             myHolder.date.setText(Utils.format(current.getCreatedAt()));
+            myHolder.status.setBackground(StatusConstant.ofStatus(current.currentStatus().status).drawable);
+
             if(UserType.isNurse(app.getCurrentUser().getUserType())){
                 myHolder.monitorTitle.setText("Supervisé par:");
                 myHolder.monitor.setText(Utils.niceFormat(current.getSupervisor().supFullName));
-
             }
             if(UserType.isPhysist(app.getCurrentUser().getUserType())){
                 myHolder.monitorTitle.setText("Rencontre avec:");
                 myHolder.monitor.setText(Utils.niceFormat(current.getMonitor().monitorFullName));
-
             }
 
 
@@ -157,19 +158,22 @@ public class UserEncountersAdapter extends RecyclerView.Adapter<UserEncountersAd
         return mdata.get(itemPosition);
     }
 
-    public static class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public  class MyHolder extends AbstractAdapter.EdtiableHolder  implements View.OnClickListener {
 
-        TextView date,patient,dobpob,mobile, monitorTitle, monitor;
+        TextView date,patient,dobpob,mobile,title, monitorTitle, monitor;
         ImageView avatar;
+        View status;
         // create constructor to get widget reference
         public MyHolder(View itemView) {
              super(itemView);
+             status = itemView.findViewById(R.id.status);
+             title =  itemView.findViewById(R.id.title);
              avatar = itemView.findViewById(R.id.patientImg);
-             date = itemView.findViewById(R.id.date);
-             patient = itemView.findViewById(R.id.patient);
+             date =   itemView.findViewById(R.id.date);
+             patient =itemView.findViewById(R.id.patient);
              dobpob = itemView.findViewById(R.id.dobpob);
              mobile = itemView.findViewById(R.id.mobile);
-             monitor = itemView.findViewById(R.id.monitor);
+             monitor =itemView.findViewById(R.id.monitor);
              monitorTitle = itemView.findViewById(R.id.monitorTitle);
 
             itemView.setOnClickListener(this);

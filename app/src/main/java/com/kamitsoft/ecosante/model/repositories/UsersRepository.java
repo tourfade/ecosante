@@ -58,7 +58,7 @@ public class UsersRepository {
         new updateAsyncTask(userDAO).execute(doc);
     }
 
-    public void delete(UserInfo doc) {
+    public void delete(UserInfo... doc) {
         new deleteAsyncTask(userDAO).execute(doc);
     }
 
@@ -107,6 +107,7 @@ public class UsersRepository {
         }
 
     }
+
 
 
     private static class DisconnectAsyncTask extends AsyncTask<Void, Void, Void> {

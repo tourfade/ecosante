@@ -31,6 +31,7 @@ import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.json.Monitor;
 import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
@@ -161,27 +162,50 @@ public class PatientProfileView extends PatientBaseFragment  {
         patientPicture.setClickable(editable);
 
         firstName.setEnabled(editable);
+        firstName.setError(null);
         lastName.setEnabled(editable);
+        lastName.setError(null);
         dob.setEnabled(editable);
+        dob.setError(null);
 
         pob.setEnabled(editable);
+        pob.setError(null);
+
         sex.setEnabled(editable);
 
         status.setEnabled(editable);
 
         occupation.setEnabled(editable);
+        occupation.setError(null);
+
         retired.setEnabled(editable);
         ipres.setEnabled(editable);
         fnr.setEnabled(editable);
         official.setEnabled(editable);
         address.setEnabled(editable);
+        address.setError(null);
+
         fixPhone.setEnabled(editable);
+        fixPhone.setError(null);
+
         mobile.setEnabled(editable);
+        mobile.setError(null);
+
         email.setEnabled(editable);
+        email.setError(null);
+
         contactPerson.setEnabled(editable);
+        contactPerson.setError(null);
+
         personContactphone1.setEnabled(editable);
+        perosnContactAddress.setError(null);
+
         personContactphone2.setEnabled(editable);
+        personContactphone2.setError(null);
+
         perosnContactAddress.setEnabled(editable);
+        perosnContactAddress.setError(null);
+
     }
 
     private void initListeners() {
@@ -363,15 +387,12 @@ public class PatientProfileView extends PatientBaseFragment  {
 
         dob.setOnClickListener(v->{
 
-            final  Calendar calendar = Calendar.getInstance();
+            int[] d = currentPatient.getDob();
+            d = d!=null && d.length == 3? d:Utils.toArray(Calendar.getInstance());
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                dob.setText(Utils.niceFormat(Utils.format(calendar.getTime())));
-                currentPatient.setDob(new Timestamp(calendar.getTimeInMillis()));
-            },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH) );
-
+                currentPatient.setDob(new int[]{year, month, dayOfMonth});
+                dob.setText(Utils.format(currentPatient.getDob()));
+            },d[0],d[1],d[2]);
             datePickerDialog.show();
             
         });

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -68,6 +69,7 @@ public class SignIn extends AppCompatActivity {
                             overridePendingTransition(R.anim.fade_in,R.anim.slide_down);
                             finish();
                         }else{
+                            password.requestFocus();
                             v.setEnabled(true);
                         }
 
@@ -96,12 +98,19 @@ public class SignIn extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
-        if(getIntent().hasExtra("username")){
-            username.setText(getIntent().getExtras().getString("username", ""));
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.hasExtra("username")){
+            username.setText(intent.getStringExtra("username"));
         }
     }
 
     private void login(String account, String email, String password, final ApiSyncService.CompletionWithData<Boolean> completion ){
+        hideSoftKeyBoard();
         proxy.login(new AuthenticationInfo(account, email, password))
                 .enqueue(new Callback<UserAccountInfo>() {
                     @Override
@@ -175,5 +184,11 @@ public class SignIn extends AppCompatActivity {
 
     }
 
+    private void hideSoftKeyBoard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
+        if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
 }

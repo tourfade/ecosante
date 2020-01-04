@@ -56,7 +56,9 @@ public class PatientAppointments extends BaseFragment {
         model.getPatientData().observe(this, appointmentInfos ->  {
             currentPatient = app.getCurrentPatient();
             if(currentPatient != null) {
-                adapter.syncData(appointmentInfos.parallelStream().filter(d -> d.getPatientUuid().equals(currentPatient.getUuid())).collect(Collectors.toList()));
+                adapter.syncData(appointmentInfos.parallelStream()
+                        .filter(d -> !d.isDeleted() && d.getPatientUuid().equals(currentPatient.getUuid()))
+                        .collect(Collectors.toList()));
             }
         });
         recyclerView =  view.findViewById(R.id.recycler_view);

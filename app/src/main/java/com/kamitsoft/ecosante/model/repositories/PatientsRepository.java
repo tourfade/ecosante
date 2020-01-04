@@ -59,8 +59,10 @@ public class PatientsRepository {
     public void update(PatientInfo bean) {
         new updateAsyncTask(dao).execute(bean);
     }
-
-    public void delete(PatientInfo bean) {
+    public void delete(SummaryInfo... summaryInfos) {
+        new SummaryDeleteAsyncTask(summaryDAO).execute(summaryInfos);
+    }
+    public void delete(PatientInfo... bean) {
         new deleteAsyncTask(dao).execute(bean);
     }
     public void updateSummaries(SummaryInfo... bean) {
@@ -73,6 +75,8 @@ public class PatientsRepository {
         dao.reseteDocumentsSet();
         summaryDAO.resetSummariesSet();
     }
+
+
 
 
     private static class insertAsyncTask extends AsyncTask<PatientInfo, Void, Void> {
@@ -129,6 +133,21 @@ public class PatientsRepository {
         @Override
         protected Void doInBackground(final SummaryInfo... params) {
             mAsyncTaskDao.insert(params);
+            return null;
+        }
+    }
+
+    private static class SummaryDeleteAsyncTask extends AsyncTask<SummaryInfo, Void, Void> {
+
+        private SummaryDAO mAsyncTaskDao;
+
+        SummaryDeleteAsyncTask(SummaryDAO dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final SummaryInfo... params) {
+            mAsyncTaskDao.delete(params);
             return null;
         }
     }

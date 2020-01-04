@@ -20,6 +20,7 @@ import androidx.multidex.MultiDexApplication;
 
 import com.facebook.stetho.Stetho;
 import com.kamitsoft.ecosante.client.patient.Encounter;
+import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
 import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
@@ -82,7 +83,9 @@ public class EcoSanteApp extends MultiDexApplication {
             }
             currentUser = userInfo;
 
+
         });
+
         currentPatient.observeForever(patientInfo -> {
             if(patientInfo == null){
                 this.currentEncounter.setValue(null);

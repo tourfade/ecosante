@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.DiskCache;
 import com.kamitsoft.ecosante.EcoSanteApp;
+import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
 import com.kamitsoft.ecosante.model.Act;
 import com.kamitsoft.ecosante.model.Analysis;
@@ -79,18 +80,13 @@ public class WorkerService extends IntentService {
                 })*/.build();
         proxy =  new Retrofit.Builder()
                 .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create(getGsonBuilder()))
+                .addConverterFactory(GsonConverterFactory.create(Utils.getGsonBuilder()))
                 .baseUrl(BuildConfig.SERVER_URL)
                 .build().create(Proxy.class);
 
         cache = new DiskCache(context);
     }
-    private Gson getGsonBuilder(){
-        return new GsonBuilder() //"2019-06-06 21:25:52"
-                .setDateFormat("yyyy-MM-dd HH:mm")
-                .registerTypeAdapter(Date.class, new DateDeserializer())
-                .create();
-    }
+
     private  void updateSync(EntitySync entity){
         entity.setLastSynced(System.currentTimeMillis());
         database.entityDAO().insert(entity);

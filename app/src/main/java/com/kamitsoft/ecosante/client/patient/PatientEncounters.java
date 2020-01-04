@@ -59,7 +59,10 @@ public class PatientEncounters extends PatientBaseFragment {
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
         model.getEncounters().observe(this, encounters-> {
-            Stream<EncounterInfo> data = encounters.stream().filter(e -> e.getPatientUuid().equals(app.getCurrentPatient().getUuid()));
+            Stream<EncounterInfo> data = encounters
+                    .stream()
+                    .filter(e -> !e.isDeleted()
+                            && e.getPatientUuid().equals(app.getCurrentPatient().getUuid()));
             encounterAdapter.syncData(data.collect(Collectors.toList()));
         });
 
@@ -77,11 +80,12 @@ public class PatientEncounters extends PatientBaseFragment {
             Intent i = new Intent(getContext(), Encounter.class);
             app.setCurrentEncounter(encounterAdapter.getItem(itemPosition));
             startActivityForResult(i,102);
-            getActivity().overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
+            getActivity().overridePendingTransition(R.anim.enter_from_right,R.anim.exit_to_left);
         });
         newEncounter = view.findViewById(R.id.newItem);
         newEncounter.setOnClickListener((View v)-> {
             Intent i = new Intent(getContext(), Encounter.class);
+            i.putExtra("isNew", true);
             app.setNewEncounter();
             startActivityForResult(i,101);
             getActivity().overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
@@ -105,4 +109,6 @@ public class PatientEncounters extends PatientBaseFragment {
         super.onDetach();
         encounterAdapter.removeListener();
     }
+
+
 }

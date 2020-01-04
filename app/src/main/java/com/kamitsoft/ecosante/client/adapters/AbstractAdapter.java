@@ -11,8 +11,8 @@ import com.kamitsoft.ecosante.R;
 import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class AbstractAdapter<T extends AbstractAdapter.EdtiableHolder> extends RecyclerView.Adapter<T>  {
-     ItemClickListener myClickListener;
-     AnimatorSet anset;
+    protected ItemClickListener myClickListener;
+    protected AnimatorSet anset;
 
     public   class EdtiableHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

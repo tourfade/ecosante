@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -75,6 +76,7 @@ public class SignUp extends AppCompatActivity {
                             overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
                             finish();
                         }else{
+                            password.requestFocus();
                             v.setEnabled(true);
                         }
 
@@ -103,6 +105,7 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void createAccount(UserAccountInfo accountInfo, final ApiSyncService.CompletionWithData<Boolean> completion ){
+        hideSoftKeyBoard();
         proxy.createAccount(accountInfo)
                 .enqueue(new Callback<Void>() {
                     @Override
@@ -140,5 +143,11 @@ public class SignUp extends AppCompatActivity {
 
     }
 
+    private void hideSoftKeyBoard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
+        if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
 }

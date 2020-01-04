@@ -55,7 +55,7 @@ public class EncountersRepository {
         new updateAsyncTask(encounterDAO).execute(doc);
     }
 
-    public void delete(EncounterInfo doc) {
+    public void delete(EncounterInfo... doc) {
         new deleteAsyncTask(encounterDAO).execute(doc);
     }
 

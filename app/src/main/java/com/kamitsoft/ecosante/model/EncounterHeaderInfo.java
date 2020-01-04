@@ -1,9 +1,12 @@
 package com.kamitsoft.ecosante.model;
 
 import com.kamitsoft.ecosante.model.json.Monitor;
+import com.kamitsoft.ecosante.model.json.Status;
 import com.kamitsoft.ecosante.model.json.Supervisor;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +32,7 @@ public class EncounterHeaderInfo {
     private String  avatar;
     private Monitor monitor;
     private Supervisor supervisor;
+    private List<Status> status;
 
     public Monitor getMonitor() {
         return monitor;
@@ -180,5 +184,27 @@ public class EncounterHeaderInfo {
     }
     public void  setAvatar(String av) {
          avatar = av;
+    }
+
+    public List<Status> getStatus() {
+        if(status == null){
+            status = new ArrayList<>();
+            status.add(new Status());
+        }
+        return status;
+    }
+
+    public void setStatus(List<Status> status) {
+        this.status = status;
+    }
+
+    public Status currentStatus(){
+        Status current = getStatus().get(0);
+        for(Status s:status)
+            if(s.date != null && s.date.after(current.date)){
+                current = s;
+            }
+
+        return current;
     }
 }

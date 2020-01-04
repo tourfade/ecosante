@@ -35,7 +35,6 @@ public class WaitingPatientAdapter extends RecyclerView.Adapter<WaitingPatientAd
     private static final int VIEW_TYPE_EMPTY = 1;
     private final EcoSanteApp app;
 
-    private DateFormat df = DateFormat.getDateInstance();
     private Context context;
     private List<PatientInfo> mdata;
 
@@ -103,7 +102,7 @@ public class WaitingPatientAdapter extends RecyclerView.Adapter<WaitingPatientAd
 
             myHolder.fname.setText(current.getFirstName() + " "+ Utils.niceFormat(current.getMiddleName()));
             myHolder.lname.setText(current.getLastName());
-            myHolder.dob.setText(current.getDob()==null?"N/A":df.format(current.getDob()));
+            myHolder.dob.setText(current.getDob()==null?"N/A":Utils.format(current.getDob()));
             myHolder.pob.setText(current.getPob());
             myHolder.sex.setText(Gender.sex(current.getSex()).title);
             myHolder.mobile.setText(current.getMobile());

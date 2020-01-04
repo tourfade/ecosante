@@ -139,27 +139,27 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         findViewById(R.id.cancel).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
             app.exitEncounter();
-            finish();
+            onBackPressed();
         });
         findViewById(R.id.save).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
             model.insert(encounterInfo);
             app.exitEncounter();
-            finish();
+            onBackPressed();
         });
         findViewById(R.id.reject).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
             encounterInfo.setCurrentStatus(StatusConstant.REJECTED);
             model.insert(encounterInfo);
             app.exitEncounter();
-            finish();
+            onBackPressed();
         });
         findViewById(R.id.accept).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
             encounterInfo.setCurrentStatus(StatusConstant.ACCEPTED);
             model.insert(encounterInfo);
             app.exitEncounter();
-            finish();
+            onBackPressed();
         });
         initViewListeners();
         initValue();

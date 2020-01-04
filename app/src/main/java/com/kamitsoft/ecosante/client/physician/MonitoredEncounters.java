@@ -64,6 +64,7 @@ public class MonitoredEncounters extends BaseFragment {
         model.getUserEncounters().observe(this, encounters-> {
             encountersAdapter.syncData(encounters);
         });
+
         encountersAdapter.setItemClickListener((itemPosition, v) -> new Task().execute(encountersAdapter.getItem(itemPosition)));
 
 

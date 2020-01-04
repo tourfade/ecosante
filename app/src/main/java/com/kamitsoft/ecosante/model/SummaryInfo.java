@@ -56,6 +56,7 @@ public class SummaryInfo {
     private Timestamp avcDate;
     private Timestamp menopauseDate;
     private ExtraData allergies;
+    private boolean deleted;
 
 
     public SummaryInfo(){
@@ -405,5 +406,13 @@ public class SummaryInfo {
 
     public void setAllergies(ExtraData allergies) {
         this.allergies = allergies;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

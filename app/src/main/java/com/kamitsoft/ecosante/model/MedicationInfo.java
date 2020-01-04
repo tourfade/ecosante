@@ -152,5 +152,7 @@ public class MedicationInfo {
     public boolean getDeleted() {
         return deleted;
     }
+
+
 }
 

@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ public class PatientInfo {
     private String lastName;
     private int sex;
     private String pob;
-    private Timestamp dob;
+    private int[] dob;
     private int maritalStatus;
     private String occupation;
     private String mobile;
@@ -48,6 +49,7 @@ public class PatientInfo {
     private Timestamp updatedAt;
     private String avatar;
     private Monitor monitor;
+    private boolean deleted;
 
     public PatientInfo(){
         uuid = UUID.randomUUID().toString();
@@ -105,11 +107,11 @@ public class PatientInfo {
         this.pob = pob;
     }
 
-    public Timestamp getDob() {
+    public int[] getDob() {
         return dob;
     }
 
-    public void setDob(Timestamp dob) {
+    public void setDob(int[] dob) {
         this.dob = dob;
     }
 
@@ -286,5 +288,13 @@ public class PatientInfo {
 
     public void setMonitor(Monitor monitor) {
         this.monitor = monitor;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

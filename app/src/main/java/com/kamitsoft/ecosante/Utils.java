@@ -37,6 +37,7 @@ public class Utils {
     private static DecimalFormat fmt0 = new DecimalFormat("#");
     static final long DAY_MS = 24 * 3600000;
     private static final int PICTURE_WIDTH = 230;
+    private static String[] MONTHES = new String[]{"janv.", "fevr.", "mars","avril", "mai", "juin", "juil.", "aout", "sept.", "octb.", "nov.", "dec."};
 
     public static String formatUser(Context context, UserInfo user) {
         return  formatName(context,
@@ -290,25 +291,45 @@ public class Utils {
 
     }
 
-    public static double ageOf(Timestamp dob) {
-        if(dob == null ){
-            return 0.0;
+
+    public static double ageOf(int[] date) {
+        if(date == null || date.length != 3){
+            return 0;
+        }
+        Calendar cal = Calendar.getInstance();
+        int age = cal.get(Calendar.YEAR)-date[0];
+        int nbm = cal.get(Calendar.MONTH)-date[1];
+        return age+(nbm/12.0);
+    }
+
+    public static String formattedAgeOf(int[] date){
+        return formattedAgeOf(date, Calendar.getInstance());
+    }
+    public static String formattedAgeOf(int[] date,  Calendar cal) {
+        if(date == null || date.length != 3){
+            return "";
+        }
+        int age = cal.get(Calendar.YEAR)-date[0];
+        String ageans="";
+        if(age > 1 ){
+            ageans = age+"ans";
+        }else if(age == 1 ){
+            ageans = age+"an";
+        }
+        int nbm = cal.get(Calendar.MONTH)-date[1];
+        String month="";
+        if(nbm > 1 ) {
+            month = " "+nbm+"mois";
         }
 
-        return ageOf(dob.getTime());
-    }
-    public static double ageOf(long ms) {
-
-        return 1.0*((System.currentTimeMillis() / DAY_MS) - (ms / DAY_MS)) / 365;
-    }
-
-    public static String formattedAgeOf(Timestamp date) {
-
-        return formattedAgeOf(date == null ? System.currentTimeMillis():date.getTime());
+        return ageans+month;
     }
     public static String formattedAgeOf(long ms) {
-        double age = ageOf(ms);
-        return fmt.format(ageOf(ms))+(age > 1? "ans":"an");
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        cal.setTimeInMillis(ms);
+        return  formattedAgeOf(new int[]{year, month, 0},cal );
     }
 
 
@@ -387,6 +408,21 @@ public class Utils {
                     .create();
 
     }
+
+    public static String format(int[] dob) {
+        return dob == null ? "":dob[2]+" "+MONTHES[dob[1]]+" "+dob[0];
+    }
+
+    public static int[] toArray(Calendar calendar) {
+        return new int[]{ calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)};
+    }
+    public static void toCalendar(int[] date, Calendar calendar) {
+        calendar.setTimeInMillis(0);
+        calendar.set(Calendar.YEAR, date[0]);
+        calendar.set(Calendar.MONTH, date[1]);
+        calendar.set(Calendar.DAY_OF_MONTH, date[2]);
+    }
+
 
     @FunctionalInterface
     public interface OnDateSelectedListener{

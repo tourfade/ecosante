@@ -40,7 +40,7 @@ public class LabsRepository {
         new updateAsyncTask(encounterDAO).execute(doc);
     }
 
-    public void delete(LabInfo doc) {
+    public void delete(LabInfo... doc) {
         new deleteAsyncTask(encounterDAO).execute(doc);
     }
 

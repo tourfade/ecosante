@@ -31,7 +31,7 @@ public interface EncounterDAO {
             "e.monitor,e.createdAt, " +
             "e.pressureSystolic,e.pressureDiastolic, " +
             "e.glycemy, e.glycemyState,  p.patientID, " +
-            "e.supervisor, e.patientUuid, " +
+            "e.supervisor, e.patientUuid, e.status, " +
             "p.firstName, p.lastName, p.middleName, " +
             "p.sex, p.pob, p.dob, p.mobile, p.avatar " +
            " FROM encounterinfo e LEFT JOIN patientinfo p ON e.patientUuid = p.uuid" +

@@ -149,5 +149,7 @@ public class LabInfo {
     public boolean getDeleted() {
         return deleted;
     }
+
+
 }
 
