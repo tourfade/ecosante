@@ -16,6 +16,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -47,7 +48,6 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.MyHolder>  {
 
     private final EcoSanteApp app;
 
-    private DateFormat df = DateFormat.getDateInstance();
     private Context context;
     private List<Object> mdata;
     static ItemClickListener myClickListener;
@@ -73,7 +73,6 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.MyHolder>  {
     public @LayoutRes int getItemViewType(int position) {
         if(position < mdata.size()) {
             Object o = mdata.get(position);
-            Log.i("XXXXXX", ""+o);
             if (o instanceof PatientInfo) {
                 return R.layout.patient_item_view;
             }
@@ -115,13 +114,15 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.MyHolder>  {
         if(current == null){return;}
         myHolder.fname.setText(current.getFirstName() + " "+ Utils.niceFormat(current.getMiddleName()));
         myHolder.lname.setText(current.getLastName());
-        myHolder.dob.setText(current.getDob()==null?"N/A":df.format(current.getDob()));
+        myHolder.dob.setText(current.getDob()==null?"N/A":Utils.format(current.getDob()));
         myHolder.pob.setText(current.getPob());
         myHolder.sex.setText(Gender.sex(current.getSex()).title);
         myHolder.mobile.setText(current.getMobile());
         myHolder.status.setText(MaritalStatus.status(current.getMaritalStatus()).title);
         myHolder.occupation.setText(current.getOccupation());
-        Utils.load(context,current.getAvatar(),myHolder.avatar,R.drawable.user_avatar,R.drawable.patient);
+        int res = Gender.FEMALE.sex==current.getSex()?R.drawable.patient_f:R.drawable.patient;
+
+        Utils.load(context, BuildConfig.AVATAR_BUCKET, current.getAvatar(),myHolder.avatar,res,res);
 
     }
 

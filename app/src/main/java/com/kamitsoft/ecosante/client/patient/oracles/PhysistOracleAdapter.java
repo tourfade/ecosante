@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.constant.Gender;
+import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
 import com.kamitsoft.ecosante.database.UserDAO;
 import com.kamitsoft.ecosante.model.PhysicianInfo;
@@ -82,7 +84,8 @@ public class PhysistOracleAdapter extends ArrayAdapter {
         PhysicianInfo user = getItem(position);
         speciality.setText(Utils.niceFormat(user.speciality));
         fullName.setText(Utils.formatUser(getContext(), user));
-        Utils.load(getContext(),user.avatar,avatar,R.drawable.user_avatar,R.drawable.physist);
+
+        Utils.load(getContext(),BuildConfig.AVATAR_BUCKET, user.avatar,avatar,R.drawable.phys,R.drawable.phys);
 
         return view;
     }

@@ -12,6 +12,8 @@ import com.kamitsoft.ecosante.client.adapters.AppointmentsAdapter;
 import com.kamitsoft.ecosante.client.patient.dialogs.ApptEditorDialog;
 import com.kamitsoft.ecosante.client.patient.dialogs.ApptRequestorDialog;
 import com.kamitsoft.ecosante.client.patient.dialogs.DocEditorDialog;
+import com.kamitsoft.ecosante.constant.PointOfView;
+import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
@@ -65,7 +67,9 @@ public class PatientAppointments extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
-        adapter = new AppointmentsAdapter(getActivity(), true);
+
+
+        adapter = new AppointmentsAdapter(getActivity(),connectedUser.getUserType());
         recyclerView.setAdapter(adapter);
         newDoc = view.findViewById(R.id.newItem);
         newDoc.setImageResource(R.drawable.appointment);

@@ -58,15 +58,7 @@ public class DocEditorDialog extends DialogFragment {
         alertDialogBuilder.setView(R.layout.dialog_doc_view);
         alertDialogBuilder.setIcon(R.drawable.docs);
         alertDialogBuilder.setPositiveButton("Ajouter",(dialog, which)->{
-            if(attachment !=null && !attachment.equals(doc.getAttachment())){
-                if(doc.getAttachment() !=null)
-                    fileModel.remove(doc.getAttachment());
-                UnsyncFile file = new UnsyncFile();
-                file.setTries(0);
-                file.setFkey(attachment);
-                file.setType(1);
-                fileModel.insert(file);
-            }
+            picker.syncAvatar(attachment, doc.getAttachment(),1);
             doc.setDocName(title.getText().toString());
             doc.setAttachment(attachment);
             doc.setDate(new Timestamp(calendar.getTimeInMillis()));
@@ -95,7 +87,6 @@ public class DocEditorDialog extends DialogFragment {
     }
 
     void initVars(AlertDialog d) {
-
         title = d.findViewById(R.id.docname);
         docPreview = d.findViewById(R.id.docImg);
         date = d.findViewById(R.id.docdate);

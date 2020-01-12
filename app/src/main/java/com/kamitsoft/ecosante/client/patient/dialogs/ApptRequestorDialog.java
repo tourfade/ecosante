@@ -20,6 +20,7 @@ import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.AppointmentsViewModel;
+import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -42,6 +43,7 @@ public class ApptRequestorDialog extends DialogFragment {
     private UserInfo currentUser;
     PhysistOracleAdapter physistOracle;
     private AutoCompleteTextView doctor;
+    private UsersViewModel usermodel;
 
     public ApptRequestorDialog(boolean isNew, AppointmentInfo appointmentInfo){
         this.readyForNew = isNew;
@@ -56,6 +58,7 @@ public class ApptRequestorDialog extends DialogFragment {
         physistOracle = new PhysistOracleAdapter(getActivity());
         // Use the Builder class for convenient dialog construction
         model = ViewModelProviders.of(this).get(AppointmentsViewModel.class);
+        usermodel = ViewModelProviders.of(this).get(UsersViewModel.class);
         if(readyForNew){
             current = model.newAppointment();
             currentPatient = app.getCurrentPatient();
@@ -77,6 +80,7 @@ public class ApptRequestorDialog extends DialogFragment {
                 current.setDetails(details.getText().toString().trim());
                 current.setPlace(place.getText().toString().trim());
                 current.setStatus(AppointmentRequestStatus.PENDING.status);
+                current.setPatient(Utils.formatPatient(getContext(),currentPatient));
                 model.insert(current);
         });
 
@@ -98,7 +102,6 @@ public class ApptRequestorDialog extends DialogFragment {
         doctor = view.findViewById(R.id.doctor);
         doctor.setAdapter(physistOracle);
         date = view.findViewById(R.id.latest_date);
-
         details = view.findViewById(R.id.details);
         place = view.findViewById(R.id.place);
         locateMe = view.findViewById(R.id.locateme);
@@ -120,7 +123,8 @@ public class ApptRequestorDialog extends DialogFragment {
         current.setSpeciality(physist.speciality);
         current.setRecipientUuid(physist.uuid);
         current.setPatientObject(getString(R.string.encounter_with)+" "+Utils.formatUser(getContext(),physist));
-        doctor.setText(Utils.formatUser(getContext(),physist));
+        current.setRecipient(Utils.formatUser(getContext(),physist));
+        doctor.setText(current.getRecipient());
 
     }
 
@@ -133,6 +137,8 @@ public class ApptRequestorDialog extends DialogFragment {
         date.setText(Utils.formatDateWithDayOfWeek(getContext(),calendar));
         details.setText(Utils.niceFormat(current.getDetails()));
         place.setText(Utils.niceFormat(current.getPlace()));
+        doctor.setText(current.getRecipient());
+
     }
 
     private void locateMe(View view) {

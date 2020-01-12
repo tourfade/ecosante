@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.kamitsoft.ecosante.client.HasFinishedSelection;
 import com.kamitsoft.ecosante.client.patient.PatientProfileView;
+import com.kamitsoft.ecosante.model.viewmodels.FilesViewModel;
+import com.kamitsoft.ecosante.services.UnsyncFile;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -29,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
@@ -40,11 +43,15 @@ public class ImagePickerActivity extends AppCompatActivity {
     protected boolean square;
     private View view;
     protected String mimeType;
-
+    protected String bucket;
+    protected FilesViewModel fileModel;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cache = new DiskCache(this);
+        bucket = BuildConfig.AVATAR_BUCKET;
+        fileModel = ViewModelProviders.of(this).get(FilesViewModel.class);
+
     }
 
     public void setPlaceholder(int placeholder) {
@@ -212,12 +219,14 @@ public class ImagePickerActivity extends AppCompatActivity {
                 mimeType = "image/png";
                 if(!square) {
                     Utils.load(getApplicationContext(),
+                            bucket,
                             avatar,
                             imageView,
                             R.drawable.broken_mage,
                             placeholder);
                 }else {
                     Utils.loadSquare(getApplicationContext(),
+                            bucket,
                             avatar,
                             imageView,
                             R.drawable.broken_mage,
@@ -231,6 +240,16 @@ public class ImagePickerActivity extends AppCompatActivity {
     }
 
 
-
+    public void syncAvatar(String newuuid , String olduuid, int type){
+        if(newuuid !=null && !newuuid.equals(olduuid)){
+            if(olduuid !=null)
+                fileModel.remove(olduuid);
+            UnsyncFile file = new UnsyncFile();
+            file.setTries(0);
+            file.setFkey(newuuid);
+            file.setType(type);
+            fileModel.insert(file);
+        }
+    }
 
 }

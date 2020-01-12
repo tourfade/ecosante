@@ -262,4 +262,6 @@ public class UserInfo {
     public void setSpecialityCode(int specialityCode) {
         this.specialityCode = specialityCode;
     }
+
+
 }

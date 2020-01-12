@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.model.DocumentInfo;
@@ -77,7 +78,7 @@ public class DocumentsListAdapter extends AbstractAdapter<DocumentsListAdapter.M
                 myHolder.title.setText(Utils.niceFormat(current.getDocName()));
                 myHolder.date.setText(Utils.format(current.getDate()));
                 if(Utils.isPicutre(current.getMimeType())) {
-                    Utils.loadSquare(context, current.getAttachment(), myHolder.document, R.drawable.ic_menu_gallery, R.drawable.pdf);
+                    Utils.loadSquare(context, BuildConfig.DOCUMENT_BUCKET, current.getAttachment(), myHolder.document, R.drawable.ic_menu_gallery, R.drawable.pdf);
                 }else{
                     myHolder.document.setImageResource(Utils.getPicture(current.getMimeType()));
 

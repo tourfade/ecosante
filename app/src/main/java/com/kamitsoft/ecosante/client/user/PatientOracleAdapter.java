@@ -10,6 +10,7 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.constant.Gender;
@@ -76,7 +77,9 @@ public class PatientOracleAdapter extends ArrayAdapter {
         mobile.setText(current.getMobile());
         status.setText(MaritalStatus.status(current.getMaritalStatus()).title);
         occupation.setText(current.getOccupation());
-        Utils.load(getContext(),current.getAvatar(),avatar,R.drawable.user_avatar,R.drawable.physist);
+        int res = Gender.FEMALE.sex==current.getSex()?R.drawable.patient_f:R.drawable.patient;
+
+        Utils.load(getContext(), BuildConfig.AVATAR_BUCKET, current.getAvatar(),avatar,res,res);
 
         return view;
     }

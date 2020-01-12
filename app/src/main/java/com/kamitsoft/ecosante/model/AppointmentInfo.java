@@ -30,6 +30,8 @@ public class AppointmentInfo {
     private String speciality;
     private boolean deleted;
     private int status;
+    private String recipient;
+    private String patient;
 
     public String getUserObject() {
         return userObject;
@@ -184,4 +186,19 @@ public class AppointmentInfo {
     }
 
 
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
+    }
+
+    public String getRecipient() {
+        return recipient;
+    }
+
+    public void setPatient(String patient) {
+        this.patient = patient;
+    }
+
+    public String getPatient() {
+        return patient;
+    }
 }

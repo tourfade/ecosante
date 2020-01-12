@@ -20,6 +20,7 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -46,6 +47,7 @@ public class PatientProfileView extends PatientBaseFragment  {
     private ImagePickerActivity picker;
     private PatientsViewModel model;
     private boolean isNew;
+    private String oldavatar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +100,7 @@ public class PatientProfileView extends PatientBaseFragment  {
 
         model.getCurrentPatient().observe(this, patientInfo -> {
             if (patientInfo == null) { return;}
-
+            oldavatar = patientInfo.getAvatar();
             this.currentPatient = patientInfo;
             initPatientInfo();
         });
@@ -153,6 +155,8 @@ public class PatientProfileView extends PatientBaseFragment  {
 
     private void save() {
         model.insert(currentPatient);
+        picker.syncAvatar(currentPatient.getAvatar(),oldavatar, 0);
+
         //model.setCurrentPatient(currentPatient);
     }
 
@@ -409,7 +413,12 @@ public class PatientProfileView extends PatientBaseFragment  {
             currentPatient.getMonitor().monitorFullName = Utils.formatUser(getContext(),app.getCurrentUser());
 
         }
-        Utils.load(getContext(),currentPatient.getAvatar(),patientPicture,R.drawable.user_avatar,R.drawable.patient);
+        int res = Gender.FEMALE.sex==currentPatient.getSex()?R.drawable.patient_f:R.drawable.patient;
+
+        Utils.load(getContext(),
+                BuildConfig.AVATAR_BUCKET,
+                currentPatient.getAvatar(),
+                patientPicture,res,res);
 
 
         firstName.setText(Utils.niceFormat(currentPatient.getFirstName()));

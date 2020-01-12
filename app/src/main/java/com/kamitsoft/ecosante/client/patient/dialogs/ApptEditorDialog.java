@@ -60,8 +60,11 @@ public class ApptEditorDialog extends DialogFragment {
             current.setUserRequestorUuid(currentUser.getUuid());
             current.setSpeciality(currentUser.getSpeciality());
             current.setStatus(AppointmentRequestStatus.ACCEPTED.status);
+            current.setPatient(Utils.formatPatient(getContext(),currentPatient));
             current.setPatientObject(getString(R.string.encounter_with)+" "+Utils.formatUser(getContext(),currentUser));
             current.setUserObject(getString(R.string.encounter_with)+" "+Utils.formatPatient(getContext(),currentPatient));
+
+
         }
 
         alertDialogBuilder = new AlertDialog.Builder(getActivity());

@@ -13,11 +13,17 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
+import com.kamitsoft.ecosante.client.nurse.Supervisors;
 import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
+import com.kamitsoft.ecosante.constant.UserStatusConstant;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.services.FirebaseChannels;
+import com.kamitsoft.ecosante.services.Proxy;
 import com.kamitsoft.ecosante.signing.SignIn;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -38,10 +44,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class EcoSanteActivity extends ImagePickerActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -102,24 +113,41 @@ public class EcoSanteActivity extends ImagePickerActivity
 
     private void initDrawerMenu() {
         assert(currentUser != null);
-
+        navigationView.getMenu().setGroupVisible(R.id.nurse_menu, false);
+        navigationView.getMenu().setGroupVisible(R.id.user_menu, false);
+        navigationView.getMenu().setGroupVisible(R.id.physician_menu,false);
+        navigationView.getMenu().setGroupVisible(R.id.adminmenu, false);
         switch (UserType.typeOf(currentUser.getUserType())){
             case PHYSIST:
-                navigationView.getMenu().setGroupVisible(R.id.user_menu,true);
+                navigationView.getMenu().setGroupVisible(R.id.user_menu, true);
                 navigationView.getMenu().setGroupVisible(R.id.physician_menu, true);
-                navigationView.getMenu().setGroupVisible(R.id.adminmenu, false);
                 break;
             case NURSE:
                 navigationView.getMenu().setGroupVisible(R.id.user_menu, true);
-                navigationView.getMenu().setGroupVisible(R.id.physician_menu, false);
-                navigationView.getMenu().setGroupVisible(R.id.adminmenu, false);
+                navigationView.getMenu().setGroupVisible(R.id.nurse_menu, true);
                 break;
             case ADMIN:
-                navigationView.getMenu().setGroupVisible(R.id.user_menu, false);
-                navigationView.getMenu().setGroupVisible(R.id.physician_menu,false);
-                navigationView.getMenu().setGroupVisible(R.id.adminmenu, true);
+               navigationView.getMenu().setGroupVisible(R.id.adminmenu, true);
                 break;
         }
+        Switch switchView = navigationView.getMenu()
+                .findItem(R.id.nav_available)
+                .getActionView()
+                .findViewById(R.id.availability);
+        switchView.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked){
+                Utils.subscribe(currentUser);
+
+                subscribe();
+            }else{
+                Utils.unSubscribe(currentUser);
+            }
+            int status =  isChecked? UserStatusConstant.AVAILABLE.status:UserStatusConstant.UNAVAILABLE.status;
+            model.status(currentUser.getUuid(), isChecked? UserStatusConstant.AVAILABLE.status:UserStatusConstant.UNAVAILABLE.status);
+            app.syncStatus(currentUser.getUuid(),status);
+
+        });
+
     }
 
     public void initHeaderInfo() {
@@ -132,8 +160,12 @@ public class EcoSanteActivity extends ImagePickerActivity
         ImageView headerIv = header.findViewById(R.id.imageViewHeader);
 
         if(headerIv !=null) {
-            Utils.load(this,app.getCurrentUser().getAvatar(),
-                     headerIv,R.drawable.user_avatar,R.drawable.physist);
+            //R.drawable.user_avatar,R.drawable.physist
+            UserInfo user = app.getCurrentUser();
+            UserType type = UserType.typeOf(user.getUserType());
+            Utils.load(this,BuildConfig.AVATAR_BUCKET,
+                     user.getAvatar(),
+                     headerIv,type.placeholder,type.placeholder );
         }
 
         header.setOnClickListener(v->{
@@ -179,6 +211,9 @@ public class EcoSanteActivity extends ImagePickerActivity
             case R.id.nav_waiting_list:
                 showFragment(WaitingPatients.class, R.anim.fade_in, R.anim.fade_out);
                 break;
+            case R.id.nav_supervisors:
+                showFragment(Supervisors.class, R.anim.fade_in, R.anim.fade_out);
+                break;
 
             //physiscian
             case R.id.supervisednurses:
@@ -212,6 +247,8 @@ public class EcoSanteActivity extends ImagePickerActivity
             case R.id.nav_disconnect:
                 confirmDisconnecting();
                 break;
+
+            case R.id.nav_available:
 
         }
 
@@ -272,6 +309,21 @@ public class EcoSanteActivity extends ImagePickerActivity
 
     }
 
+    public void subscribe() {
+        FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.ACCOUNT+currentUser.getAccountID());
+
+        switch (UserType.typeOf(currentUser.getUserType())){
+            case PHYSIST:
+                break;
+            case NURSE:
+                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSES_OF+currentUser.getSupervisor().physicianUuid);
+                break;
+            case ADMIN:
+                break;
+
+        }
+
+    }
 
 
 }

@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.adapters.AppointmentsAdapter;
 import com.kamitsoft.ecosante.client.patient.dialogs.ApptEditorDialog;
 import com.kamitsoft.ecosante.client.patient.dialogs.ApptRequestorDialog;
+import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
@@ -57,7 +59,7 @@ public class UserAppointments extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
-        adapter = new AppointmentsAdapter(getActivity(), false);
+        adapter = new AppointmentsAdapter(getActivity(), connectedUser.getUserType());
         recyclerView.setAdapter(adapter);
         adapter.setItemClickListener(this::handleItem);
 

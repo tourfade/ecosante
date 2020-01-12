@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -76,6 +77,7 @@ public class UserProfile extends BaseFragment {
     private UsersViewModel model;
     private View specSupContainner;
     private UserInfo connectedUser;
+    private String oldAvatar;
 
 
     @Override
@@ -123,6 +125,7 @@ public class UserProfile extends BaseFragment {
         sex = view.findViewById(R.id.sex);
         validityDate = view.findViewById(R.id.validity_date);
         cu = app.getEditingUser();
+        oldAvatar = cu.getAvatar();
         connectedUser = app.getCurrentUser();
         initListeners();
         initValues();
@@ -154,7 +157,7 @@ public class UserProfile extends BaseFragment {
 
             case R.id.action_save:
                 model.insert(cu);
-                //model.setSupervisor(pnp);
+                contextActivity.syncAvatar(cu.getAvatar(),oldAvatar, 0);
                 edit(false);
                 if(contextActivity ==null){
                    getActivity().onBackPressed();
@@ -379,8 +382,11 @@ public class UserProfile extends BaseFragment {
 
         }
 
+        UserType type = UserType.typeOf(cu.getUserType());
 
-        Utils.load(getActivity(),cu.getAvatar(), userPicture,R.drawable.user_avatar,cu.getUserType() == UserType.PHYSIST.type ? R.drawable.physist: R.drawable.nurse);
+        Utils.load(getActivity(), BuildConfig.AVATAR_BUCKET, cu.getAvatar(), userPicture,
+                type.placeholder,
+                type.placeholder);
 
         title.setSelection(TitleType.typeOf(cu.getTitle()).index);
         firstname.setText(Utils.niceFormat(cu.getFirstName()));

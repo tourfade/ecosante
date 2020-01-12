@@ -24,10 +24,12 @@ import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.S3BucketUrl;
 import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.SyncData;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.repositories.AppointmentsRepository;
 import com.kamitsoft.ecosante.model.repositories.DocumentsRepository;
 import com.kamitsoft.ecosante.model.repositories.EncountersRepository;
@@ -41,7 +43,9 @@ import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -242,6 +246,9 @@ public class ApiSyncService extends Service {
         //Log.i("XXXXXXXXX--->",beanClass+"");
         EntitySync entitySync = getEntity(beanClass);
         if(entitySync==null ||  !entitySync.isDirty()){
+            if(completion != null){
+                completion.onReady();
+            }
             return;
         }
         //entitySync.setLastSynced(entitySync.getLastSynced()-1000);
@@ -332,9 +339,6 @@ public class ApiSyncService extends Service {
             }
             @Override
             public void onFailure(Call<List<UserInfo>> call, Throwable t) {
-                t.printStackTrace();
-                Log.i("XXXXX user", t.toString()+"->"+t.getMessage());
-
                 Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
                 if(completion !=null){
                     completion.onReady();
@@ -384,13 +388,13 @@ public class ApiSyncService extends Service {
                     }
                     @Override
                     public void onFailure(Call<List<PatientInfo>> call, Throwable t) {
-                        Log.i("XXXXX00", t.toString()+"->"+t.getMessage());
                         Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
                         if(completion !=null){
                             completion.onReady();
                         }
 
                     }
+
                 });
 
 
@@ -478,8 +482,6 @@ public class ApiSyncService extends Service {
             }
             @Override
             public void onFailure(Call<List<SummaryInfo>> call, Throwable t) {
-                Log.i("XXXXX00", t.toString()+"->"+t.getMessage());
-
                 Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
                 if(completion !=null){
                     completion.onReady();
@@ -527,8 +529,6 @@ public class ApiSyncService extends Service {
             }
             @Override
             public void onFailure(Call<List<MedicationInfo>> call, Throwable t) {
-                Log.i("XXXXX00", t.toString()+"->"+t.getMessage());
-
                 Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
                 if(completion !=null){
                     completion.onReady();
@@ -574,7 +574,6 @@ public class ApiSyncService extends Service {
             }
             @Override
             public void onFailure(Call<List<LabInfo>> call, Throwable t) {
-                Log.i("XXXXX00", t.toString()+"->"+t.getMessage());
 
                 Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
                 if(completion !=null){
@@ -621,7 +620,6 @@ public class ApiSyncService extends Service {
             }
             @Override
             public void onFailure(Call<List<DocumentInfo>> call, Throwable t) {
-                Log.i("XXXXX00", t.toString()+"->"+t.getMessage());
 
                 Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
                 if(completion !=null){
@@ -668,8 +666,6 @@ public class ApiSyncService extends Service {
             }
             @Override
             public void onFailure(Call<List<AppointmentInfo>> call, Throwable t) {
-                Log.i("XXXXX00", t.toString()+"->"+t.getMessage());
-
                 Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
                 if(completion !=null){
                     completion.onReady();
@@ -682,6 +678,39 @@ public class ApiSyncService extends Service {
 
     }
 
+    public void syncStatus(String uuid, int status) {
+        SyncData<Map<String, Integer>> body = new SyncData<>();
+        body.data = new HashMap<>();
+        body.data.put(uuid, status);
+        proxy.syncStatus(body).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                //Log.i("XXXXXXX", "xxok"+response.toString());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                t.printStackTrace();
+                //Log.i("XXXXXXX", "xxe"+t.getMessage());
+            }
+        });
+
+    }
+
+    public void getAvailableSupervisors() {
+        proxy.getAvailableSupervisors().enqueue(new Callback<List<Supervisor>>() {
+            @Override
+            public void onResponse(Call<List<Supervisor>> call, Response<List<Supervisor>> response) {
+                //Log.i("XXXXXXX", "xxok"+response.toString());
+            }
+
+            @Override
+            public void onFailure(Call<List<Supervisor>> call, Throwable t) {
+                t.printStackTrace();
+                //Log.i("XXXXXXX", "xxe"+t.getMessage());
+            }
+        });
+    }
     private void observFiles(){
         fileRepository.getFiles().observeForever(files -> {
             if (files != null) {
@@ -693,35 +722,59 @@ public class ApiSyncService extends Service {
                             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), f);
                             MultipartBody.Part uuid = MultipartBody.Part.createFormData("doid", uf.getFkey());
                             MultipartBody.Part file = MultipartBody.Part.createFormData("file", uf.getFkey(), requestFile);
+                            if(uf.getType() == 0) {
+                                proxy.uploadAvatar(file, uuid).enqueue(new Callback<S3BucketUrl>() {
+                                    @Override
+                                    public void onResponse(Call<S3BucketUrl> call, Response<S3BucketUrl> response) {
 
+                                        if (response.code() == 200) {
+                                            cache.remove(uf.getFkey());
+                                            fileRepository.remove(uf.getFkey());
+                                        } else {
 
-                            proxy.uploadDocument(file, uuid).enqueue(new Callback<String>() {
-                                @Override
-                                public void onResponse(Call<String> call, Response<String> response) {
+                                            uf.setLastTry(System.currentTimeMillis());
+                                            uf.setTries(uf.getTries() + 1);
+                                            fileRepository.insert(uf);
+                                        }
 
-                                    if (response.code() == 200) {
-                                        cache.remove(uf.getFkey());
-                                        fileRepository.remove(uf.getFkey());
-                                    } else {
-                                        Log.i("XXXXXEr", "response.code()"+ response.code());
-
-                                        uf.setLastTry(System.currentTimeMillis());
-                                        uf.setTries(uf.getTries() + 1);
-                                        fileRepository.insert(uf);
                                     }
 
-                                }
+                                    @Override
+                                    public void onFailure(Call<S3BucketUrl> call, Throwable t) {
+                                        t.printStackTrace();
+                                        uf.setLastTry(System.currentTimeMillis());
+                                        uf.setTries(uf.getTries() + 1);
+                                        database.fileDAO().update(uf);
 
-                                @Override
-                                public void onFailure(Call<String> call, Throwable t) {
-                                    Log.i("XXXXXERRR", ""+t.getMessage());
-                                    t.printStackTrace();
-                                    uf.setLastTry(System.currentTimeMillis());
-                                    uf.setTries(uf.getTries() + 1);
-                                    database.fileDAO().update(uf);
+                                    }
+                                });
+                            }else {
+                                proxy.uploadDocument(file, uuid).enqueue(new Callback<S3BucketUrl>() {
+                                    @Override
+                                    public void onResponse(Call<S3BucketUrl> call, Response<S3BucketUrl> response) {
 
-                                }
-                            });
+                                        if (response.code() == 200) {
+                                            cache.remove(uf.getFkey());
+                                            fileRepository.remove(uf.getFkey());
+                                        } else {
+
+                                            uf.setLastTry(System.currentTimeMillis());
+                                            uf.setTries(uf.getTries() + 1);
+                                            fileRepository.insert(uf);
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<S3BucketUrl> call, Throwable t) {
+                                        t.printStackTrace();
+                                        uf.setLastTry(System.currentTimeMillis());
+                                        uf.setTries(uf.getTries() + 1);
+                                        database.fileDAO().update(uf);
+
+                                    }
+                                });
+                            }
                         } else {
                             database.fileDAO().delete(uf);
                         }
@@ -777,14 +830,10 @@ public class ApiSyncService extends Service {
     }
 
 
-
-
-
     public void unSubscribe(int account) {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+account);
         FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.PHYSISTS_OF+account);
-
-
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.ACCOUNT+account);
     }
 
 

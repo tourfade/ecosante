@@ -119,7 +119,7 @@ public class SignIn extends AppCompatActivity {
                         if (response.code() == 200){
                             UserAccountInfo ua = response.body();
                             model.connect(ua, ua.getUserInfo());
-                            subscribe(ua);
+                            Utils.subscribe(ua.getUserInfo());
 
                             if(completion != null){
                                 completion.onReady(true);
@@ -148,39 +148,6 @@ public class SignIn extends AppCompatActivity {
                     }
                 });
 
-
-    }
-    public void subscribe(UserAccountInfo userInfo) {
-        switch (UserType.typeOf(userInfo.getUserType())){
-            case PHYSIST:
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+userInfo.getAccountId());
-                FirebaseMessaging.getInstance()
-                        .subscribeToTopic(FirebaseChannels.PHYSISTS_OF+userInfo.getAccountId())
-                        .addOnCompleteListener(task -> {
-                            if (!task.isSuccessful()) {
-
-                            }
-
-                        });
-                FirebaseMessaging.getInstance()
-                        .subscribeToTopic(FirebaseChannels.PHYSIST+userInfo.getUserUuid())
-                        .addOnCompleteListener(task -> {
-                            if (!task.isSuccessful()) {
-                            }
-                        });
-
-                break;
-            case NURSE:
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.PHYSISTS_OF+userInfo.getAccountId());
-                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSES_OF+userInfo.getAccountId());
-                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSE+userInfo.getUserUuid());
-                break;
-            case ADMIN:
-                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.PHYSISTS_OF+userInfo.getAccountId());
-                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSES_OF+userInfo.getAccountId());
-                break;
-
-        }
 
     }
 

@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.DiskCache;
 import com.kamitsoft.ecosante.R;
+import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.PatientBaseFragment;
 import com.kamitsoft.ecosante.client.adapters.DocumentsListAdapter;
 import com.kamitsoft.ecosante.client.patient.dialogs.DocEditorDialog;
@@ -138,11 +140,10 @@ public class PatientDocuments extends PatientBaseFragment {
         }
         app.setCurrentDoc(item);
 
-        Uri uri =   FileProvider.getUriForFile(getContext(),"com.kamitsoft.dmi.fileprovider",
-                cache.getFile(item.getAttachment()));
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.setDataAndType(uri, item.getMimeType());
+        intent.setDataAndType(Utils.getUri(getContext(), BuildConfig.DOCUMENT_BUCKET,item.getAttachment()), item.getMimeType());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {

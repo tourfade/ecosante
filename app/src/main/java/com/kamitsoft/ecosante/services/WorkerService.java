@@ -129,7 +129,6 @@ public class WorkerService extends IntentService {
             @Override
             public void onFailure(Call<List<Drug>> call, Throwable t) {
                 t.printStackTrace();
-                Log.i("XXXXX", "syncDrugs error->"+t.getMessage());
 
             }
         });
@@ -152,7 +151,6 @@ public class WorkerService extends IntentService {
             @Override
             public void onFailure(Call<List<Act>> call, Throwable t) {
                 t.printStackTrace();
-                Log.i("XXXXX", "syncActs error->"+t.getMessage());
 
             }
         });
@@ -173,7 +171,6 @@ public class WorkerService extends IntentService {
             @Override
             public void onFailure(Call<List<Analysis>> call, Throwable t) {
                 t.printStackTrace();
-                Log.i("XXXXX", "syncAnalysis error->"+t.getMessage());
 
             }
         });

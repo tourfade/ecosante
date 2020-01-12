@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/swiperefresh">
         <androidx.recyclerview.widget.RecyclerView
+            android:descendantFocusability="blocksDescendants"
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

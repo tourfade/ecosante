@@ -267,8 +267,7 @@ public class EcoSanteApp extends MultiDexApplication {
     }
 
 
-
-
-
-
+    public void syncStatus(String uuid, int status) {
+        service().syncStatus(uuid, status);
+    }
 }

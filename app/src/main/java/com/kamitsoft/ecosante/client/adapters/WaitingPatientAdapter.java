@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -108,7 +109,9 @@ public class WaitingPatientAdapter extends RecyclerView.Adapter<WaitingPatientAd
             myHolder.mobile.setText(current.getMobile());
             myHolder.status.setText(MaritalStatus.status(current.getMaritalStatus()).title);
             myHolder.occupation.setText(current.getOccupation());
-            Utils.load(context,current.getAvatar(),myHolder.avatar,R.drawable.user_avatar,R.drawable.patient);
+            int res = Gender.FEMALE.sex==current.getSex()?R.drawable.patient_f:R.drawable.patient;
+
+            Utils.load(context, BuildConfig.AVATAR_BUCKET, current.getAvatar(),myHolder.avatar,res,res);
 
 
 

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -58,6 +59,7 @@ public class UserEditor extends BaseFragment {
     private View specSupContainner;
     private UserInfo connectedUser;
     private Button save;
+    private String oldavatar;
 
 
     @Override
@@ -101,7 +103,7 @@ public class UserEditor extends BaseFragment {
         sex = view.findViewById(R.id.sex);
 
         currentEditing = app.getEditingUser();
-
+        oldavatar = currentEditing.getAvatar();
         connectedUser = app.getCurrentUser();
         if(connectedUser !=null) {
             initListeners();
@@ -170,6 +172,8 @@ public class UserEditor extends BaseFragment {
                 currentEditing.setAccountID(connectedUser.getAccountID());
 
                 model.insert(currentEditing);
+                picker.syncAvatar(currentEditing.getAvatar(), oldavatar, 0);
+
                 //model.setSupervisor(pnp);
                 edit(false);
                 if(contextActivity != null){
@@ -369,8 +373,14 @@ public class UserEditor extends BaseFragment {
 
         }
 
+        UserType type = UserType.typeOf(currentEditing.getUserType());
 
-        Utils.load(getActivity(), currentEditing.getAvatar(), userPicture,R.drawable.user_avatar, currentEditing.getUserType() == UserType.PHYSIST.type ? R.drawable.physist: R.drawable.nurse);
+        Utils.load(getActivity(),
+                BuildConfig.AVATAR_BUCKET,
+                currentEditing.getAvatar(),
+                userPicture,
+                type.placeholder,
+                type.placeholder);
 
         title.setSelection(TitleType.typeOf(currentEditing.getTitle()).index);
         firstname.setText(Utils.niceFormat(currentEditing.getFirstName()));

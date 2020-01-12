@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.constant.AppointmentRequestStatus;
+import com.kamitsoft.ecosante.constant.PointOfView;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
 
@@ -28,13 +29,19 @@ public class AppointmentsAdapter extends AbstractAdapter<AppointmentsAdapter.MyH
     private Context context;
     private List<AppointmentInfo> mdata;
     private Calendar calendar = Calendar.getInstance();
-    private boolean patientPointOfView;
+    private int pov;
 
     // create constructor to innitilize context and data sent from MainActivity
-    public AppointmentsAdapter(Context context,boolean isppov) {
+    public AppointmentsAdapter(Context context, int type) {
         this.context = context;
         mdata = new ArrayList<>();
-        patientPointOfView = isppov;
+        if(type == UserType.NURSE.type){
+            pov = PointOfView.NURSE_POV;
+        }
+        if(type == UserType.PHYSIST.type){
+            pov = PointOfView.PHYS_POW;
+        }
+
     }
 
     // return total item from List
@@ -87,19 +94,24 @@ public class AppointmentsAdapter extends AbstractAdapter<AppointmentsAdapter.MyH
 
             AppointmentInfo current = mdata.get(position);
             AppointmentRequestStatus status = AppointmentRequestStatus.ofStatus(current.getStatus());
-
-            if(patientPointOfView) {
-                myHolder.header.setText(UserType.isPhysist(current.getUserType())
-                                            && current.getSpeciality()!=null?
-                                            current.getSpeciality()
-                                            :context.getString(UserType.typeOf(current.getUserType()).title));
-
-                myHolder.objectTitle.setText((status == AppointmentRequestStatus.PENDING)?"Demande de":current.getPatientObject());
-            }else{
-                myHolder.objectTitle.setText((status == AppointmentRequestStatus.PENDING)?"Demande de":current.getUserObject());
+            myHolder.header.setText(UserType.isPhysist(current.getUserType())
+                    && current.getSpeciality()!=null?
+                    current.getSpeciality()
+                    :(current.getRecipient()));
+            if(pov == PointOfView.NURSE_POV) {
+                myHolder.objectTitle.setText((status == AppointmentRequestStatus.PENDING)?
+                        "Demande de Rencontre avec "+current.getRecipient():
+                        "Rencontre avec "+current.getRecipient());
+            }
+            if(pov == PointOfView.PHYS_POW) {
+                myHolder.objectTitle.setText((status == AppointmentRequestStatus.PENDING)?
+                        "Demande de Rencontre avec "+current.getPatient():
+                        "Rencontre avec "+current.getPatient());
             }
 
-            myHolder.object.setText(Utils.niceFormat(current.getDetails()));
+            myHolder.object.setText(Utils.isNullOrEmpty(current.getDetails())?
+                    current.getUserObject():
+                    Utils.niceFormat(current.getDetails()));
             myHolder.place.setText(Utils.niceFormat(current.getPlace()));
             myHolder.header.setBackgroundColor(context.getResources().getColor(status.color, context.getTheme()));
             if(status == AppointmentRequestStatus.ACCEPTED) {

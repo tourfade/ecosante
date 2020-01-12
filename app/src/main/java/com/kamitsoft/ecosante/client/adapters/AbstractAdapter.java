@@ -17,22 +17,22 @@ public abstract class AbstractAdapter<T extends AbstractAdapter.EdtiableHolder> 
     public   class EdtiableHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
-        private ImageButton delete,edit;
+        private ImageButton[] actions;
         private View verso;
 
         // create constructor to get widget reference
         public EdtiableHolder(View itemView) {
             super(itemView);
             verso = itemView.findViewById(R.id.verso);
-            delete = itemView.findViewById(R.id.item_delete);
-            edit = itemView.findViewById(R.id.item_edit);
+            actions = new ImageButton[]{ itemView.findViewById(R.id.item_delete),itemView.findViewById(R.id.item_edit)};
             if(verso != null) {
+                for (View b :actions ) {
+                    if(b!=null)
+                        b.setOnClickListener(this);
+                }
 
-                if(delete!=null)
-                    delete.setOnClickListener(this);
 
-                if(edit!=null)
-                    edit.setOnClickListener(this);
+
 
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(v -> {
@@ -58,14 +58,22 @@ public abstract class AbstractAdapter<T extends AbstractAdapter.EdtiableHolder> 
 
         @Override
         public void onClick(View v) {
-
+            boolean click = false;
             if(verso !=null) {
                 if (anset!=null && anset.isRunning()) {
-                    close();
-                    return;
+
+                    for(View b:actions){
+                        if(v == b){
+                            click = true;
+                        }
+                    }
+                    if(!click)
+                        close();
+
+
                 }
             }
-            if (myClickListener != null) {
+            if (click && myClickListener != null) {
                 myClickListener.onItemClick(getAdapterPosition(), v);
             }
             close();

@@ -79,7 +79,7 @@ public class BaseFragment extends Fragment {
     protected final void requestSync() {
         app.service().requestSync(getEntity(),() -> {
             if(swr != null)
-            swr.setRefreshing(false);
+                getView().post(()->swr.setRefreshing(false));
         });
     }
     protected Class<?> getEntity(){

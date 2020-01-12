@@ -144,6 +144,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         findViewById(R.id.save).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
             model.insert(encounterInfo);
+            checkAvailableSupervisor(encounterInfo.getUuid());
             app.exitEncounter();
             onBackPressed();
         });
@@ -201,6 +202,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         });
     }
 
+    private void checkAvailableSupervisor(String encUuid) {
+        app.service().getAvailableSupervisors();
+    }
 
 
     private void initViewListeners() {

@@ -10,10 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.constant.TitleType;
+import com.kamitsoft.ecosante.constant.UserStatusConstant;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.UserInfo;
 
@@ -104,6 +107,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyHolder>  {
             // Get current position of item in recyclerview to bind data and assign values from list
 
             UserInfo current = mdata.get(position);
+            myHolder.status.setBackground(UserStatusConstant.ofStatus(current.getStatus()).drawable);
+
             myHolder.title.setText(TitleType.typeOf(current.getTitle()).title);
             myHolder.user.setText(Utils.formatName(context, current.getFirstName()+" "+Utils.niceFormat(current.getMiddleName()),current.getLastName(),-1));
             if(UserType.isPhysist(current.getUserType())) {
@@ -117,7 +122,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyHolder>  {
             myHolder.fix.setText(Utils.niceFormat(current.getFixPhone()));
             myHolder.email.setText(Utils.niceFormat(current.getEmail()));
             myHolder.type.setText(UserType.typeOf(current.getUserType()).title);
-            Utils.load(context,current.getAvatar(), myHolder.avatar,R.drawable.user_avatar,R.drawable.physist);
+            UserType type = UserType.typeOf(current.getUserType());
+
+            Utils.load(context, BuildConfig.AVATAR_BUCKET, current.getAvatar(), myHolder.avatar,type.placeholder,type.placeholder);
 
 
         }else {
@@ -157,9 +164,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyHolder>  {
 
         TextView title,user,specialityOrSupervisor,mobile,fix, email, type, specialityOrSupervisorText;
         ImageView avatar;
+        View status;
         // create constructor to get widget reference
         public MyHolder(View itemView) {
             super(itemView);
+            status = itemView.findViewById(R.id.status);
             avatar = itemView.findViewById(R.id.userPicture);
             title =   itemView.findViewById(R.id.title);
             user = itemView.findViewById(R.id.titlename);

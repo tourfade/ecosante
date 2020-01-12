@@ -1,6 +1,6 @@
 package com.kamitsoft.ecosante.model;
 
 
-public class Avatar {
+public class S3BucketUrl {
     public String url;
 }

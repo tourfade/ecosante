@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,15 +14,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kamitsoft.ecosante.constant.TitleType;
+import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.Drug;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.services.DateDeserializer;
+import com.kamitsoft.ecosante.services.FirebaseChannels;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -30,6 +37,7 @@ import java.util.Date;
 import androidx.annotation.AnyRes;
 import androidx.annotation.DrawableRes;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.core.content.FileProvider;
 
 public class Utils {
     private static DateFormat df = DateFormat.getDateInstance();
@@ -134,7 +142,7 @@ public class Utils {
         return fmt.format(patientAge)+(patientAge<= 1?"an":"ans");
     }
 
-    public static void load(Context context, String keyuuid,  ImageView to, @DrawableRes  int failed, @DrawableRes  int placeholder) {
+    public static void load(Context context, String bucket, String keyuuid,  ImageView to, @DrawableRes  int failed, @DrawableRes  int placeholder) {
         DiskCache cache = new DiskCache(context);
         if(cache.getFile(keyuuid).exists()){
             Glide.with(context)
@@ -145,14 +153,17 @@ public class Utils {
                     .into(to);
         }else {
             Glide.with(context)
-                    .load(avatarUrl(keyuuid))
+                    .load(bucket+keyuuid)
                     .error(failed)
                     .placeholder(placeholder)
                     .circleCrop()
                     .into(to);
         }
     }
-    public static void loadSquare(Context context, String keyuuid,  ImageView to, @DrawableRes  int failed, @DrawableRes  int placeholder) {
+    public static void loadSquare(Context context, String bucket, String keyuuid,
+                                  ImageView to, @DrawableRes
+                                          int failed, @DrawableRes
+                                          int placeholder) {
         DiskCache cache = new DiskCache(context);
         if(cache.getFile(keyuuid).exists()){
             Glide.with(context)
@@ -163,11 +174,25 @@ public class Utils {
                     .into(to);
         }else {
             Glide.with(context)
-                    .load(avatarUrl(keyuuid))
+                    .load(bucket+keyuuid)
                     .error(failed)
                     .placeholder(placeholder)
                     .centerInside()
                     .into(to);
+        }
+    }
+
+    public static Uri getUri(Context context, String bucket, String keyuuid) {
+        DiskCache cache = new DiskCache(context);
+        if(cache.getFile(keyuuid).exists()){
+            return FileProvider.getUriForFile(context,"com.kamitsoft.dmi.fileprovider",
+                    cache.getFile(keyuuid));
+
+        }else {
+
+                return  Uri.parse(bucket+keyuuid);
+
+
         }
     }
 
@@ -192,9 +217,7 @@ public class Utils {
             "image/png",
             "image/gif"};
 
-    private static String avatarUrl(String keyuuid) {
-        return null;
-    }
+
 
     public static Bitmap getBitmap(String path){
         return getBitmap(path, PICTURE_WIDTH);
@@ -256,6 +279,9 @@ public class Utils {
     }
 
     public static @DrawableRes int getPicture(String mimeType) {
+        if(mimeType == null){
+            return  R.drawable.docs;
+        }
         switch (mimeType){
             case "application/pdf":
                 return R.drawable.pdf;
@@ -423,6 +449,55 @@ public class Utils {
         calendar.set(Calendar.DAY_OF_MONTH, date[2]);
     }
 
+    public static void subscribe(UserInfo userInfo) {
+        int accountID = userInfo.getAccountID();
+        FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.ACCOUNT+accountID);
+        switch (UserType.typeOf(userInfo.getUserType())){
+            case PHYSIST:
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+accountID);
+                FirebaseMessaging.getInstance()
+                        .subscribeToTopic(FirebaseChannels.PHYSISTS_OF+accountID)
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+
+                            }
+
+                        });
+                FirebaseMessaging.getInstance()
+                        .subscribeToTopic(FirebaseChannels.PHYSIST+userInfo.getUuid())
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                            }
+                        });
+
+                break;
+            case NURSE:
+                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSES_OF+userInfo.getSupervisor().physicianUuid);
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.PHYSISTS_OF+accountID);
+                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSES_OF+accountID);
+                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSE+userInfo.getUuid());
+                break;
+            case ADMIN:
+                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.PHYSISTS_OF+accountID);
+                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSES_OF+accountID);
+                break;
+
+        }
+
+    }
+
+    public static void unSubscribe(UserInfo userInfo) {
+        int accountID = userInfo.getAccountID();
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.ACCOUNT+accountID);
+        if(userInfo.getSupervisor() != null)
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+userInfo.getSupervisor().physicianUuid);
+
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+accountID);
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.PHYSISTS_OF+accountID);
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.PHYSIST+userInfo.getUuid());
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSE+userInfo.getUuid());
+
+    }
 
     @FunctionalInterface
     public interface OnDateSelectedListener{

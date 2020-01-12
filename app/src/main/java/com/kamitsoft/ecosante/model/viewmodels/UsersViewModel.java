@@ -87,6 +87,10 @@ public class UsersViewModel extends AndroidViewModel {
     public PhysNursPat getNursePnp(String uuid) {
         return repository.getNursePnp(uuid);
     }
+
+    public void status(String uuid, int status) {
+        repository.remoteUpdateStatus(uuid,status);
+    }
 }
 
 

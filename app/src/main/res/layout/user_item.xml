@@ -8,24 +8,38 @@
     android:layout_height="wrap_content"
     android:elevation="4dp"
     app:cardCornerRadius="5dp">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
-
-        <ImageView
-            android:layout_marginTop="10dp"
-            android:id="@+id/userPicture"
+        <RelativeLayout
+            android:id="@+id/userPictureContainer"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_alignParentRight="true"
-            android:src="@drawable/person"
-            android:scaleType="centerInside"/>
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/userPicture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/person"
+                android:scaleType="centerInside"/>
+            <View
+                android:id="@+id/status"
+                android:background="@drawable/circle"
+                android:layout_centerInParent="true"
+                android:layout_alignParentBottom="true"
+                android:layout_width="15dp"
+                android:layout_height="15dp"/>
+        </RelativeLayout>
         <LinearLayout
             android:layout_marginTop="5dp"
             android:id="@+id/lastnametitleContainer"
-            android:layout_toLeftOf="@id/userPicture"
+            android:layout_toLeftOf="@id/userPictureContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -61,7 +75,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/specialityContainner"
             android:layout_below="@id/lastnametitleContainer"
-            android:layout_toLeftOf="@id/userPicture"
+            android:layout_toLeftOf="@id/userPictureContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -127,6 +141,9 @@
                    android:paddingTop="7dp"
                    android:paddingRight="0dp"
                    android:paddingBottom="7dp"
+                   android:autoLink="phone"
+                   android:focusable="false"
+                   android:focusableInTouchMode="false"
                    android:text="+18194483485" />
 
                <View
@@ -158,11 +175,14 @@
                    android:id="@+id/fixphone"
                    android:layout_width="match_parent"
                    android:layout_height="match_parent"
+                   android:autoLink="phone"
                    android:maxLines="1"
                    android:paddingLeft="5dp"
                    android:paddingTop="7dp"
                    android:paddingRight="0dp"
                    android:paddingBottom="7dp"
+                   android:focusable="false"
+                   android:focusableInTouchMode="false"
                    android:text="8194483485" />
 
                <View
@@ -199,6 +219,7 @@
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:autoLink="email"
                     android:maxLines="1"
                     android:paddingLeft="5dp"
                     android:paddingTop="7dp"

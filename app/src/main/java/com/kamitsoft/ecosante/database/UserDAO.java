@@ -76,4 +76,7 @@ public interface UserDAO {
 
     @Query("SELECT * FROM userinfo ")
     List<UserInfo> getAllUsers();
+
+    @Query("UPDATE  userinfo SET status =:status WHERE uuid=:uuid")
+    void changeStatus(String uuid, int status);
 }

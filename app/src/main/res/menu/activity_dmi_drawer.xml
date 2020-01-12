@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
 
     <group android:id="@+id/user_menu">
@@ -22,6 +23,16 @@
             android:title="@string/encounters" />
 
     </group>
+
+    <group android:id="@+id/nurse_menu">
+        <item
+            android:id="@+id/nav_supervisors"
+            android:icon="@drawable/phys"
+            android:title="@string/supervisors" />
+
+    </group>
+
+
     <group android:id="@+id/physician_menu">
         <item
             android:id="@+id/supervisednurses"
@@ -60,6 +71,16 @@
                 android:id="@+id/nav_disconnect"
                 android:icon="@drawable/shutdown"
                 android:title="@string/disconnect" />
+        </menu>
+    </item>
+
+    <item android:title="@string/availability">
+        <menu>
+            <item
+                app:actionLayout="@layout/switch_availability"
+                android:id="@+id/nav_available"
+                android:title="" />
+
         </menu>
     </item>
 

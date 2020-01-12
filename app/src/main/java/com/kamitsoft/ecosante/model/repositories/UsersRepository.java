@@ -108,6 +108,24 @@ public class UsersRepository {
 
     }
 
+    public void remoteUpdateStatus(String uuid, int status) {
+        (new ChangeStatusAsyncTask(userDAO)).execute(uuid, ""+status);
+    }
+
+    private static class ChangeStatusAsyncTask extends AsyncTask<String, Void, Void> {
+
+        private UserDAO mAsyncTaskDao;
+
+        ChangeStatusAsyncTask(UserDAO dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final String... params) {
+            mAsyncTaskDao.changeStatus(params[0], Integer.parseInt(params[1]));
+            return null;
+        }
+    }
 
 
     private static class DisconnectAsyncTask extends AsyncTask<Void, Void, Void> {

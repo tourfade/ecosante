@@ -55,7 +55,7 @@ public class PatientInfo {
         uuid = UUID.randomUUID().toString();
         createdAt = new Timestamp(System.currentTimeMillis());
         updatedAt = new Timestamp(System.currentTimeMillis());
-        matricule = uuid.substring(0,4)+String.valueOf(System.currentTimeMillis()%10000);
+        matricule = uuid.substring(0,4)+System.currentTimeMillis()%10000;
     }
 
     public String getUserName() {

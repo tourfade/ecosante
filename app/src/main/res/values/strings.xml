@@ -253,5 +253,9 @@
     <string name="archived">Archivé</string>
     <string name="deleted">effacé</string>
     <string name="newStatus">Nouveau</string>
+    <string name="availability">Disponibilité</string>
+    <string name="available">Disponible</string>
+    <string name="unavailable">Indisponible</string>
+    <string name="supervisors">Superviseurs</string>
 
 </resources>
