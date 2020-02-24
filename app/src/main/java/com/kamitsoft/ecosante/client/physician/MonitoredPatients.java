@@ -59,7 +59,8 @@ public class MonitoredPatients extends BaseFragment {
         model.getAllDatas().observe(this, patientInfos -> {
             patientInfos = patientInfos.stream()
                     .filter(p-> p.getMonitor() != null
-                        && !p.getMonitor().monitorUuid.equals(connectedUser.getUuid()))
+                            && p.getMonitor().monitorUuid != null
+                            && !p.getMonitor().monitorUuid.equals(connectedUser.getUuid()))
                     .collect(Collectors.toList());
              waitingList.syncData(patientInfos);
         });
@@ -74,7 +75,7 @@ public class MonitoredPatients extends BaseFragment {
 
         });
         add = view.findViewById(R.id.newItem);
-
+        if(add !=null)
         add.setOnClickListener(v -> {
            app.newPatient();
            Intent i = new Intent(getContext(), PatientActivity.class);
@@ -89,6 +90,7 @@ public class MonitoredPatients extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(add !=null)
         add.setVisibility(UserType.isAdmin(connectedUser.getUserType())?View.VISIBLE:View.GONE);
 
     }

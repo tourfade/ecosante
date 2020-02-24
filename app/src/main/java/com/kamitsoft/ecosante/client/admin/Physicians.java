@@ -25,7 +25,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 public class Physicians extends BaseFragment {
     private RecyclerView recyclerview;
     private UsersAdapter physicianAdapter;
-    private UsersViewModel model;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +45,6 @@ public class Physicians extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerview =  view.findViewById(R.id.recycler_view);
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        model = ViewModelProviders.of(this).get(UsersViewModel.class);
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
         physicianAdapter = new UsersAdapter(getActivity());

@@ -1176,8 +1176,62 @@
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        android:layout_below="@id/bilanandrecommandation"
+        <androidx.cardview.widget.CardView
+            app:cardBackgroundColor="@color/colorAlbatre"
+                android:layout_below="@id/bilanandrecommandation"
+                android:id="@+id/signin_date"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                app:cardCornerRadius="5dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:id="@+id/encounter_at"
+                            android:text="" />
+
+                        <TextView
+                            android:id="@+id/encounter_by"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+
+
+
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+        android:layout_below="@id/signin_date"
         android:id="@+id/editActions"
         android:layout_margin="10dp"
         android:padding="10dp"
@@ -1209,7 +1263,7 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
+        <androidx.cardview.widget.CardView
                 android:layout_below="@id/editActions"
                 android:id="@+id/reviewActions"
                 android:layout_margin="10dp"

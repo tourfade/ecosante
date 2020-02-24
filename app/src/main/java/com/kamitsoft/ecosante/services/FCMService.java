@@ -78,6 +78,8 @@ public class FCMService extends FirebaseMessagingService  {
             return;
         }
 
+        Log.i("XXXXXXXFCM", "--->"+remoteMessage);
+
         if(Boolean.parseBoolean(data.getOrDefault("syncRequest", "false"))){
             String entity = data.get("entity");
             entityRepository.setDirty(entity);

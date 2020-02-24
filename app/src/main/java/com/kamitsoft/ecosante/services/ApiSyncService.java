@@ -363,8 +363,11 @@ public class ApiSyncService extends Service {
                         if (response.code() == 200){
 
                             List<PatientInfo> deleted = response.body().stream().filter(p -> p.isDeleted()).collect(Collectors.toList());
-                            if(deleted!=null && deleted.size() > 0)
+                            if(deleted!=null && deleted.size() > 0) {
+                                Log.i("XXXXXX==>","deleted "+ deleted.size());
                                 patientRepository.delete(deleted.toArray(new PatientInfo[]{}));
+
+                            }
 
                             List<PatientInfo> updated = response.body().stream().filter(p -> !p.isDeleted()).collect(Collectors.toList());
                             updated.stream().forEach(p-> p.setUpdatedAt(new Timestamp(data.timestamp)));
@@ -375,7 +378,7 @@ public class ApiSyncService extends Service {
 
 
                             entityRepository.update(entitySync);
-                            if(response.body().size() > 0) {
+                            if(updated!=null && updated.size() > 0) {
                                 entityRepository.setDirty(DocumentInfo.class.getSimpleName());
                                 entityRepository.setDirty(MedicationInfo.class.getSimpleName());
                                 entityRepository.setDirty(LabInfo.class.getSimpleName());

@@ -18,6 +18,10 @@ public class UserAccountInfo {
 
     @Ignore
     private UserInfo userInfo;
+
+    @Ignore
+    private SubInstanceInfo subscriptionInfo;
+
     private boolean genPassword;
 
     public int getId() {
@@ -99,5 +103,13 @@ public class UserAccountInfo {
 
     public void setGenPassword(boolean genPassword) {
         this.genPassword = genPassword;
+    }
+
+    public SubInstanceInfo getSubscriptionInfo() {
+        return subscriptionInfo;
+    }
+
+    public void setSubscriptionInfo(SubInstanceInfo subscriptionInfo) {
+        this.subscriptionInfo = subscriptionInfo;
     }
 }

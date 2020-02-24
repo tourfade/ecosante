@@ -7,6 +7,8 @@ import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.UserDAO;
 import com.kamitsoft.ecosante.model.PhysNursPat;
+import com.kamitsoft.ecosante.model.SubConsumerInfo;
+import com.kamitsoft.ecosante.model.SubInstanceInfo;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 
@@ -25,6 +27,8 @@ public class UsersRepository {
     private LiveData<List<PhysNursPat>> links;
     private EcoSanteApp app;
     private LiveData<UserAccountInfo> connectAccount;
+    private LiveData<SubConsumerInfo> subConsumer;
+    private LiveData<SubInstanceInfo> subInstance;
 
     public UsersRepository(Application application) {
         app = (EcoSanteApp)application;
@@ -33,6 +37,15 @@ public class UsersRepository {
         connectedUser = userDAO.getConnectedUser();
         links = userDAO.getAllPnpLinks();
         connectAccount = userDAO.getConnectedAccount();
+        subConsumer = userDAO.getConsumerInfo();
+        subInstance = userDAO.getSubInstance();
+    }
+    public LiveData<SubConsumerInfo> getConsumer() {
+        return subConsumer;
+    }
+
+    public LiveData<SubInstanceInfo> getSubIntanceInfo() {
+        return subInstance;
     }
 
     public  LiveData<UserInfo> getConnectedUser(){
@@ -111,6 +124,8 @@ public class UsersRepository {
     public void remoteUpdateStatus(String uuid, int status) {
         (new ChangeStatusAsyncTask(userDAO)).execute(uuid, ""+status);
     }
+
+
 
     private static class ChangeStatusAsyncTask extends AsyncTask<String, Void, Void> {
 

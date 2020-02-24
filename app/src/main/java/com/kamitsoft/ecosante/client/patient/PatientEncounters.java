@@ -74,13 +74,13 @@ public class PatientEncounters extends PatientBaseFragment {
                 return;
             }
             if(v.getId() == R.id.item_edit){
-                Toast.makeText(getContext(),"Nothing to edit", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(getContext(), Encounter.class);
+                app.setCurrentEncounter(encounterAdapter.getItem(itemPosition));
+                startActivityForResult(i,102);
+                getActivity().overridePendingTransition(R.anim.enter_from_right,R.anim.exit_to_left);
                 return;
             }
-            Intent i = new Intent(getContext(), Encounter.class);
-            app.setCurrentEncounter(encounterAdapter.getItem(itemPosition));
-            startActivityForResult(i,102);
-            getActivity().overridePendingTransition(R.anim.enter_from_right,R.anim.exit_to_left);
+
         });
         newEncounter = view.findViewById(R.id.newItem);
         newEncounter.setOnClickListener((View v)-> {

@@ -11,6 +11,8 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.kamitsoft.ecosante.model.PhysNursPat;
+import com.kamitsoft.ecosante.model.SubConsumerInfo;
+import com.kamitsoft.ecosante.model.SubInstanceInfo;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 
@@ -79,4 +81,11 @@ public interface UserDAO {
 
     @Query("UPDATE  userinfo SET status =:status WHERE uuid=:uuid")
     void changeStatus(String uuid, int status);
+
+
+    @Query("SELECT * FROM  subconsumerinfo LIMIT 1")
+    LiveData<SubConsumerInfo> getConsumerInfo();
+
+    @Query("SELECT * FROM  subinstanceinfo ORDER BY created DESC LIMIT 1")
+    LiveData<SubInstanceInfo> getSubInstance();
 }

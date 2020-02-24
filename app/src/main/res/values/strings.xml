@@ -257,5 +257,7 @@
     <string name="available">Disponible</string>
     <string name="unavailable">Indisponible</string>
     <string name="supervisors">Superviseurs</string>
+    <string name="encoountered_at">Rencontré (e) le</string>
+    <string name="by">Par</string>
 
 </resources>

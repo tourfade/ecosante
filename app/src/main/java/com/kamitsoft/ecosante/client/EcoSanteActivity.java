@@ -137,8 +137,6 @@ public class EcoSanteActivity extends ImagePickerActivity
         switchView.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
                 Utils.subscribe(currentUser);
-
-                subscribe();
             }else{
                 Utils.unSubscribe(currentUser);
             }
@@ -249,6 +247,8 @@ public class EcoSanteActivity extends ImagePickerActivity
                 break;
 
             case R.id.nav_available:
+                return true;
+
 
         }
 
@@ -309,21 +309,7 @@ public class EcoSanteActivity extends ImagePickerActivity
 
     }
 
-    public void subscribe() {
-        FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.ACCOUNT+currentUser.getAccountID());
 
-        switch (UserType.typeOf(currentUser.getUserType())){
-            case PHYSIST:
-                break;
-            case NURSE:
-                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSES_OF+currentUser.getSupervisor().physicianUuid);
-                break;
-            case ADMIN:
-                break;
-
-        }
-
-    }
 
 
 }

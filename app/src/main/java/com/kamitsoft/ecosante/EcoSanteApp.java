@@ -66,15 +66,14 @@ public class EcoSanteApp extends MultiDexApplication {
             mBound = false;
         }
     };
-    private SharedPreferences credential;
 
     @Override
     public void onCreate() {
         super.onCreate();
         db = KsoftDatabase.getInstance(this);
-        credential = getSharedPreferences(getString(R.string.connection_credential), Context.MODE_PRIVATE);
         Stetho.initializeWithDefaults(this);
         creatChannel();
+
 
         usersRepository = new UsersRepository(this);
         usersRepository.getConnectedUser().observeForever(userInfo -> {

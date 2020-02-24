@@ -51,6 +51,7 @@ public class WaitingPatients extends BaseFragment {
         model.getAllDatas().observe(this, patientInfos -> {
             patientInfos = patientInfos.stream()
                     .filter(p-> p.getMonitor() != null
+                            && p.getMonitor().monitorUuid != null
                             && p.getMonitor().monitorUuid.equals(connectedUser.getUuid()))
                     .collect(Collectors.toList());
             adapter.syncData(patientInfos);

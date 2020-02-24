@@ -118,6 +118,7 @@ public class SignIn extends AppCompatActivity {
 
                         if (response.code() == 200){
                             UserAccountInfo ua = response.body();
+                            ua.getUserInfo().setAccountID(ua.getAccountId());
                             model.connect(ua, ua.getUserInfo());
                             Utils.subscribe(ua.getUserInfo());
 

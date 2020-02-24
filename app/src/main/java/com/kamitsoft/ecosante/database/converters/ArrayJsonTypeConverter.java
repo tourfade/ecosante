@@ -16,15 +16,16 @@ import java.util.List;
 
 import androidx.room.TypeConverter;
 
-public class SqlDateTypeConverter {
+public class ArrayJsonTypeConverter {
     static Type listType = new TypeToken<int[]>(){}.getType();
+    static Gson gson = new Gson();
 
     @TypeConverter
     public static int[] toDate(String value) {
         if(value == null){
             return  null;
         }
-        int[] date = new Gson().fromJson(value, listType);
+        int[] date = gson.fromJson(value, listType);
         return date;
     }
 
@@ -34,7 +35,7 @@ public class SqlDateTypeConverter {
             return null;
         }
 
-        return new Gson().toJson(value);
+        return gson.toJson(value);
     }
 }
 

@@ -6,9 +6,12 @@ import android.os.Bundle;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.EntitySync;
+import com.kamitsoft.ecosante.model.SubConsumerInfo;
+import com.kamitsoft.ecosante.model.SubInstanceInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
+import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
 import java.util.List;
 
@@ -23,7 +26,8 @@ public class BaseFragment extends Fragment {
     protected EcoSanteApp app;
     protected boolean edit;
     protected UserInfo connectedUser;
-    private EntitiesViewModel model;
+    private EntitiesViewModel entityModel;
+    protected UsersViewModel model;
     protected SwipeRefreshLayout swr;
 
     @Override
@@ -31,8 +35,8 @@ public class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         app = (EcoSanteApp)getActivity().getApplication();
         connectedUser = app.getCurrentUser();
-        model = ViewModelProviders.of(this).get(EntitiesViewModel.class);
-        model.getDirtyEntities().observe(this, entitySyncs -> {
+        entityModel = ViewModelProviders.of(this).get(EntitiesViewModel.class);
+        entityModel.getDirtyEntities().observe(this, entitySyncs -> {
             for(EntitySync e:entitySyncs){
                 if(getEntity() == null){
                     break;
@@ -42,7 +46,13 @@ public class BaseFragment extends Fragment {
                 }
             }
         });
+
+        model = ViewModelProviders.of(this).get(UsersViewModel.class);
+
+
     }
+
+
 
     @Override
     public void onAttach(Context context) {

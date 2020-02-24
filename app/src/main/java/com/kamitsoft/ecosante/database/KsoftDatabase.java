@@ -10,9 +10,9 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.kamitsoft.ecosante.R;
+import com.kamitsoft.ecosante.database.converters.ArrayJsonTypeConverter;
 import com.kamitsoft.ecosante.database.converters.DiseaseDataTypeConverter;
 import com.kamitsoft.ecosante.database.converters.MonitorTypeConverter;
-import com.kamitsoft.ecosante.database.converters.SqlDateTypeConverter;
 import com.kamitsoft.ecosante.database.converters.StatusTypeConverter;
 import com.kamitsoft.ecosante.database.converters.SupervisorTypeConverter;
 import com.kamitsoft.ecosante.database.converters.TimestampTypeConverter;
@@ -29,10 +29,11 @@ import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.PhysNursPat;
 import com.kamitsoft.ecosante.model.Speciality;
+import com.kamitsoft.ecosante.model.SubConsumerInfo;
+import com.kamitsoft.ecosante.model.SubInstanceInfo;
 import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
-import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.services.UnsyncFile;
 
 import java.io.InputStream;
@@ -55,14 +56,16 @@ import java.util.concurrent.Executors;
                     UserInfo.class,
                     EncounterInfo.class,
                     SummaryInfo.class,
-                    LabInfo.class},
+                    LabInfo.class,
+                    SubConsumerInfo.class,
+                    SubInstanceInfo.class},
         version = 2,exportSchema = false)
 @TypeConverters({TimestampTypeConverter.class,
                  DiseaseDataTypeConverter.class,
                  SupervisorTypeConverter.class,
                  MonitorTypeConverter.class,
                  StatusTypeConverter.class,
-                 SqlDateTypeConverter.class})
+                 ArrayJsonTypeConverter.class})
 public abstract class KsoftDatabase extends RoomDatabase {
     private static KsoftDatabase INSTANCE;
 

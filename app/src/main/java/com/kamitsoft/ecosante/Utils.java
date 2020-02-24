@@ -14,6 +14,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,6 +28,7 @@ import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.services.DateDeserializer;
 import com.kamitsoft.ecosante.services.FirebaseChannels;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -450,45 +453,61 @@ public class Utils {
     }
 
     public static void subscribe(UserInfo userInfo) {
+
+        unSubscribe(userInfo);
         int accountID = userInfo.getAccountID();
-        FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.ACCOUNT+accountID);
+        FirebaseMessaging.getInstance()
+                .subscribeToTopic(FirebaseChannels.ACCOUNT+accountID)
+                .addOnCompleteListener(Utils::subScribeComplete);
+
         switch (UserType.typeOf(userInfo.getUserType())){
             case PHYSIST:
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+accountID);
                 FirebaseMessaging.getInstance()
                         .subscribeToTopic(FirebaseChannels.PHYSISTS_OF+accountID)
-                        .addOnCompleteListener(task -> {
-                            if (!task.isSuccessful()) {
-
-                            }
-
-                        });
+                        .addOnCompleteListener(Utils::subScribeComplete);
                 FirebaseMessaging.getInstance()
                         .subscribeToTopic(FirebaseChannels.PHYSIST+userInfo.getUuid())
-                        .addOnCompleteListener(task -> {
-                            if (!task.isSuccessful()) {
-                            }
-                        });
+                        .addOnCompleteListener(Utils::subScribeComplete);
 
                 break;
             case NURSE:
-                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSES_OF+userInfo.getSupervisor().physicianUuid);
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.PHYSISTS_OF+accountID);
-                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSES_OF+accountID);
-                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSE+userInfo.getUuid());
+                FirebaseMessaging.getInstance()
+                        .subscribeToTopic(FirebaseChannels.NURSES_OF+userInfo.getSupervisor().physicianUuid)
+                        .addOnCompleteListener(Utils::subScribeComplete);
+                FirebaseMessaging.getInstance()
+                        .subscribeToTopic(FirebaseChannels.NURSES_OF+accountID)
+                        .addOnCompleteListener(Utils::subScribeComplete);
+                FirebaseMessaging.getInstance()
+                        .subscribeToTopic(FirebaseChannels.NURSE+userInfo.getUuid())
+                        .addOnCompleteListener(Utils::subScribeComplete);
+
                 break;
             case ADMIN:
-                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.PHYSISTS_OF+accountID);
-                FirebaseMessaging.getInstance().subscribeToTopic(FirebaseChannels.NURSES_OF+accountID);
+                FirebaseMessaging.getInstance()
+                        .subscribeToTopic(FirebaseChannels.PHYSISTS_OF+accountID)
+                        .addOnCompleteListener(Utils::subScribeComplete);
+                FirebaseMessaging.getInstance()
+                        .subscribeToTopic(FirebaseChannels.NURSES_OF+accountID)
+                        .addOnCompleteListener(Utils::subScribeComplete);
+
                 break;
 
         }
 
     }
 
+    private static void subScribeComplete(Task<Void> voidTask) {
+        if(!voidTask.isSuccessful()){
+            Log.i("XXXXXXX", "Registration: ERRRROOOOOR");
+        }else{
+            Log.i("XXXXXXX", "Registration: SUCESSS "+voidTask.toString());
+        }
+
+    }
+
     public static void unSubscribe(UserInfo userInfo) {
         int accountID = userInfo.getAccountID();
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.ACCOUNT+accountID);
+
         if(userInfo.getSupervisor() != null)
             FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+userInfo.getSupervisor().physicianUuid);
 

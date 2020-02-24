@@ -11,20 +11,18 @@
         android:layout_height="wrap_content"
         android:id="@+id/swiperefresh">
         <androidx.recyclerview.widget.RecyclerView
-            android:descendantFocusability="blocksDescendants"
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:id="@+id/newItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorAccent"
-        app:srcCompat="@drawable/addnew" />
+        android:layout_gravity="end|bottom"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/addnew"
+        android:layout_margin="16dp" />
 
 </RelativeLayout>

@@ -9,12 +9,14 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamitsoft.ecosante.R;
+import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.adapters.UserEncountersAdapter;
 import com.kamitsoft.ecosante.client.adapters.UsersAdapter;
 import com.kamitsoft.ecosante.client.patient.PatientActivity;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.PatientInfo;
+import com.kamitsoft.ecosante.model.SubConsumerInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
@@ -32,7 +34,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 public class Nurses extends BaseFragment {
     private RecyclerView recyclerview;
     private UsersAdapter nursesAdapter;
-    private UsersViewModel model;
     private View add;
 
     @Override
@@ -54,11 +55,12 @@ public class Nurses extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerview =  view.findViewById(R.id.recycler_view);
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        model = ViewModelProviders.of(this).get(UsersViewModel.class);
+
         nursesAdapter = new UsersAdapter(getActivity());
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
         recyclerview.setAdapter(nursesAdapter);
+
         model.getUsersOfType(UserType.NURSE).observe(this, userInfos -> {
             if(UserType.isPhysist(connectedUser.getUserType())){
                 userInfos = userInfos.stream().filter( n-> n.getSupervisor() !=null
@@ -97,6 +99,8 @@ public class Nurses extends BaseFragment {
         });
 
     }
+
+
 
     @Override
     protected Class<?> getEntity(){

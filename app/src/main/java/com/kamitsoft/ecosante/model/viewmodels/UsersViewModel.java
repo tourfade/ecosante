@@ -5,6 +5,8 @@ import android.app.Application;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.PhysNursPat;
+import com.kamitsoft.ecosante.model.SubConsumerInfo;
+import com.kamitsoft.ecosante.model.SubInstanceInfo;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.repositories.DocumentsRepository;
@@ -24,6 +26,8 @@ public class UsersViewModel extends AndroidViewModel {
     private LiveData<UserInfo> connectedUser;
     private LiveData<UserAccountInfo> connectedAccount;
     private Map<UserType, LiveData<List<UserInfo>>> allUsers;
+    private LiveData<SubConsumerInfo> consumerInfo;
+    private LiveData<SubInstanceInfo> subInstanceInfo;
 
 
     public UsersViewModel(Application app){
@@ -32,6 +36,8 @@ public class UsersViewModel extends AndroidViewModel {
         connectedUser = repository.getConnectedUser();
         allUsers = repository.getUsers();
         connectedAccount = repository.getAccount();
+        consumerInfo = repository.getConsumer();
+        subInstanceInfo = repository.getSubIntanceInfo();
     }
 
 
@@ -68,7 +74,6 @@ public class UsersViewModel extends AndroidViewModel {
     }
 
     public void connect(UserAccountInfo accountInfo, UserInfo userInfo) {
-
         repository.insert(userInfo);
         repository.connect(accountInfo);
     }
@@ -78,7 +83,6 @@ public class UsersViewModel extends AndroidViewModel {
     }
 
     public void setSupervisor(PhysNursPat pn) {
-
         repository.insert(pn);
     }
 
@@ -91,6 +95,17 @@ public class UsersViewModel extends AndroidViewModel {
     public void status(String uuid, int status) {
         repository.remoteUpdateStatus(uuid,status);
     }
+
+    public LiveData<SubInstanceInfo> getSubInstanceInfo() {
+        return subInstanceInfo;
+    }
+
+
+    public LiveData<SubConsumerInfo> getConsumerInfo() {
+        return consumerInfo;
+    }
+
+
 }
 
 

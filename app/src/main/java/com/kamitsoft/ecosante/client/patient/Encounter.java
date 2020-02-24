@@ -72,12 +72,13 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     private EntitiesViewModel entityModel;
     private EncountersViewModel encounterModel;
     private View editActions, reviesActions;
+    private TextView encounterAt, encounteredBy;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (EcoSanteApp)getApplication();
-        setTitle(R.string.encounter);
+
         setContentView(R.layout.encounter_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,9 +86,16 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
-        model = ViewModelProviders.of(this).get(EncountersViewModel.class);
-        app.getCurrentLivePatient().observe(this, patientInfo -> toolbar.setSubtitle(Utils.formatPatient(Encounter.this,patientInfo)));
+        encounterInfo = app.getCurrentEncounter();
 
+        setTitle(getString(R.string.encounter));
+        model = ViewModelProviders.of(this).get(EncountersViewModel.class);
+        app.getCurrentLivePatient().observe(this, patientInfo ->
+                toolbar.setSubtitle( Utils.formatPatient(Encounter.this,patientInfo)));
+
+
+        encounterAt = findViewById(R.id.encounter_at);
+        encounteredBy = findViewById(R.id.encounter_by);
 
         labsModel = ViewModelProviders.of(this).get(LabsViewModel.class);
         medModel = ViewModelProviders.of(this).get(MedicationViewModel.class);
@@ -134,7 +142,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         dysphnea = findViewById(R.id.dysphnea);
         autonomy = findViewById(R.id.autonomy);
         orientation = findViewById(R.id.orientation);
-        encounterInfo = app.getCurrentEncounter();
+
 
         findViewById(R.id.cancel).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
@@ -315,6 +323,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         }else {
             reviesActions.setVisibility(View.GONE);
         }
+
+        encounterAt.setText(getString(R.string.encoountered_at)+" "+ Utils.format(encounterInfo.getCreatedAt()));
+        encounteredBy.setText(getString(R.string.by)+" "+encounterInfo.getMonitor().monitorFullName);
         field.setText(encounterInfo.getField());
         runningTreatment.setText(encounterInfo.getRunningTreatment());
         advisings.setText(encounterInfo.getAdvising());

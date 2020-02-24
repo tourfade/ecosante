@@ -55,7 +55,6 @@ public class UserEditor extends BaseFragment {
     private ImagePickerActivity picker;
     private SpecialityOracleAdapter specialityOracle;
     private PhysistOracleAdapter physistOracle;
-    private UsersViewModel model;
     private View specSupContainner;
     private UserInfo connectedUser;
     private Button save;
@@ -73,7 +72,6 @@ public class UserEditor extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        model = ViewModelProviders.of(this).get(UsersViewModel.class);
 
     }
 
