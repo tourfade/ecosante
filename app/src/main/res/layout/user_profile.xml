@@ -195,7 +195,7 @@
                         android:text="@string/speciality" />
 
                     <AutoCompleteTextView
-                        android:id="@+id/specialityOrSupervisor"
+                        android:id="@+id/speciality"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:inputType="textAutoComplete"
@@ -204,7 +204,42 @@
                         android:text="" />
 
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/zoneContainner"
+                    android:layout_below="@id/specSupContainner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:orientation="vertical">
 
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="7dp"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:id="@+id/district"
+                        android:text="@string/associated_district" />
+
+                    <TextView
+                        android:id="@+id/districtSelector"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:maxLines="1"
+                        android:textSize="16sp"
+                        android:paddingLeft="7dp"
+                        android:paddingBottom="1dp"
+                        android:gravity="bottom"
+                        android:text="Distric55" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_centerVertical="true"
+                        android:background="@color/cardview_shadow_start_color" />
+
+                </LinearLayout>
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 

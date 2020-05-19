@@ -148,12 +148,13 @@ public class PatientProfileView extends PatientBaseFragment  {
 
         }
 
-        getActivity().invalidateOptionsMenu();
+
         return true;
 
     }
 
     private void save() {
+
         model.insert(currentPatient);
         picker.syncAvatar(currentPatient.getAvatar(),oldavatar, 0);
 
@@ -407,6 +408,7 @@ public class PatientProfileView extends PatientBaseFragment  {
             return;
         }
         if(isNew){
+            currentPatient.setDistrictUuid(app.getCurrentUser().getDistrictUuid());
             currentPatient.getMonitor().monitorUuid = app.getCurrentUser().getUuid();
             currentPatient.getMonitor().patientUuid = currentPatient.getUuid();
             currentPatient.getMonitor().active = true;

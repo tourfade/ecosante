@@ -3,93 +3,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kamitsoft.ecosante">
 
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
-
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
     <application
-        android:name="com.kamitsoft.ecosante.EcoSanteApp"
-        tools:replace="android:allowBackup"
+        android:name=".EcoSanteApp"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme.NoActionBar"
+        tools:replace="android:allowBackup">
+
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <activity
-            android:launchMode="singleInstance"
-            android:name=".Splash">
+            android:name=".Splash"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".signing.SignIn"
             android:launchMode="singleInstance"
-            android:name="com.kamitsoft.ecosante.signing.SignIn"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
-
+            android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".signing.SignUp"
             android:launchMode="singleInstance"
-            android:name="com.kamitsoft.ecosante.signing.SignUp"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
-
+            android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".signing.CredentialRestoreActivity"
             android:launchMode="singleInstance"
-            android:name="com.kamitsoft.ecosante.signing.CredentialRestoreActivity"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:launchMode="singleInstance"
-            android:name="com.kamitsoft.ecosante.client.EcoSanteActivity"
+            android:name=".client.EcoSanteActivity"
             android:label="@string/title_activity_dmi"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
-        <activity
             android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".client.user.subscription.PaymentWebView"
             android:label="@string/payment"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
-
-        <activity
             android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".client.patient.Encounter"
             android:label="@string/encounter"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
-        <activity
             android:launchMode="singleInstance"
-            android:name="com.kamitsoft.ecosante.client.patient.PatientActivity"
-            android:label="@string/patient_files"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".client.patient.PatientActivity"
+            android:label="@string/patient_files"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ImagePickerActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
-
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:theme="@style/Base.Theme.AppCompat"
+            android:windowSoftInputMode="stateHidden" />
 
         <provider
             android:name=".GenericFileProvider"
@@ -98,13 +94,13 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_path"/>
+                android:resource="@xml/provider_path" />
         </provider>
-        <service android:name=".services.ApiSyncService"/>
 
-        <service android:name=".services.WorkerService"
-            android:process="com.kamitsoft.dmi.worker"/>
-
+        <service android:name=".services.ApiSyncService" />
+        <service
+            android:name=".services.WorkerService"
+            android:process="com.kamitsoft.dmi.worker" />
         <service android:name=".services.FCMService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

@@ -50,13 +50,17 @@ public class Supervisors extends BaseFragment {
         swr.setOnRefreshListener(this::requestSync);
         supervisor = new SupervisorsAdapter(getActivity());
         recyclerview.setAdapter(supervisor);
-        model.getUsersOfType(UserType.PHYSIST)
-             .observe(this, userInfos -> {
-                    Stream<UserInfo> supervisors = userInfos.stream().filter(
-                                    (u) -> connectedUser
-                                            .getSupervisor()
-                                            .physicianUuid.equals(u.getUuid()));
-                    supervisor.syncData(supervisors.collect(Collectors.toList()));
+        model.getUsers().observe(this, userInfos -> {
+                        userInfos = userInfos
+                                .stream()
+                                .filter( u->
+                                    u.getUserType() == UserType.PHYSIST.type
+                                        && connectedUser.getDistrictUuid()!= null
+                                            && connectedUser.getDistrictUuid().equals(u.getDistrictUuid())
+                                )
+                    .collect(Collectors.toList());
+
+                    supervisor.syncData(userInfos);
                 });
 
     }

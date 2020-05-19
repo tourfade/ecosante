@@ -37,7 +37,8 @@ public class EntityRepository {
         new insertAsyncTask(dao).execute(doc);
     }
     public void update(EntitySync doc) {
-        new insertAsyncTask(dao).execute(doc);
+        dao.insert(doc);
+        //new insertAsyncTask(dao).execute(doc);
     }
 
     public void setDirty(String entity) {
@@ -46,6 +47,10 @@ public class EntityRepository {
 
     public void reset() {
         dao.resetAll();
+    }
+
+    public EntitySync getEntity(String entity) {
+        return dao.getEntitySync(entity);
     }
 
 

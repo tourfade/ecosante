@@ -4,13 +4,17 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import com.kamitsoft.ecosante.EcoSanteApp;
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.database.EncounterDAO;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.json.Status;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +82,13 @@ public class EncountersRepository {
 
     }
 
+    public EncounterInfo getEncounter(String euuid) {
+        return encounterDAO.getEncounter(euuid);
+    }
 
+    public void archive(){
+        new Archive(encounterDAO).execute();
+    }
     private static class insertAsyncTask extends AsyncTask<EncounterInfo, Void, Void> {
 
         private EncounterDAO mAsyncTaskDao;
@@ -118,6 +128,33 @@ public class EncountersRepository {
         @Override
         protected Void doInBackground(final EncounterInfo... params) {
             mAsyncTaskDao.delete(params);
+            return null;
+        }
+    }
+
+    private  static  class  Archive extends AsyncTask<Void, Void, Void>{
+        private EncounterDAO dao;
+
+        Archive(EncounterDAO dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            List<EncounterInfo> archives = new ArrayList<>();
+            List<EncounterInfo> encounterInfos = dao.getEncounters();
+            encounterInfos.stream().forEach( e->{// archive after 12 hours
+                com.kamitsoft.ecosante.model.json.Status stat = e.currentStatus();
+                if(stat.status == StatusConstant.ACCEPTED.status
+                        && (System.currentTimeMillis() - stat.date.getTime() > 12*3600000)){//
+                    e.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+                    e.setCurrentStatus(StatusConstant.ARCHIVED);
+                    archives.add(e);
+                }
+            });
+            if(archives.size() > 0){
+                dao.insert(archives.toArray(new EncounterInfo[]{}));
+            }
             return null;
         }
     }

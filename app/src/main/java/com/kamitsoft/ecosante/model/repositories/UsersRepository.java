@@ -23,22 +23,29 @@ import androidx.lifecycle.MutableLiveData;
 public class UsersRepository {
     private UserDAO userDAO;
     private Map<UserType, LiveData<List<UserInfo>>> allUsers;
-    private LiveData<UserInfo> connectedUser;
     private LiveData<List<PhysNursPat>> links;
     private EcoSanteApp app;
     private LiveData<UserAccountInfo> connectAccount;
     private LiveData<SubConsumerInfo> subConsumer;
     private LiveData<SubInstanceInfo> subInstance;
+    private LiveData<List<UserInfo>> all;
+    private LiveData<UserInfo> connectedUser;
 
     public UsersRepository(Application application) {
         app = (EcoSanteApp)application;
         userDAO = app.getDb().userDAO();
         allUsers = new HashMap<>();
-        connectedUser = userDAO.getConnectedUser();
         links = userDAO.getAllPnpLinks();
         connectAccount = userDAO.getConnectedAccount();
         subConsumer = userDAO.getConsumerInfo();
         subInstance = userDAO.getSubInstance();
+        all = userDAO.allUsers();
+    }
+    public LiveData<List<UserInfo>> getAllUsers() {
+        if(all == null){
+            all = userDAO.allUsers();
+        }
+        return all;
     }
     public LiveData<SubConsumerInfo> getConsumer() {
         return subConsumer;
@@ -48,9 +55,12 @@ public class UsersRepository {
         return subInstance;
     }
 
-    public  LiveData<UserInfo> getConnectedUser(){
-        return  connectedUser;
+
+
+    public UserInfo getConnected(){
+        return  userDAO.getConnected();
     }
+
     public LiveData<List<UserInfo>> getUserOfType(UserType type) {
         if(allUsers.get(type) == null ) {
             allUsers.put(type, userDAO.getUsers(type.type));
@@ -111,10 +121,7 @@ public class UsersRepository {
         if(todel != null) {
             todel= todel.parallelStream()
                     .filter(u ->
-                            !(u.getUuid().equals(accountInfo.getUserUuid())
-                                    || u.getSupervisor() == null
-                                    || accountInfo.equals(u.getSupervisor().physicianUuid)
-                                    || accountInfo.equals(u.getSupervisor().nurseUuid)))
+                            !(u.getUuid().equals(accountInfo.getUserUuid())))
                     .collect(Collectors.toList());
             userDAO.delete(todel.toArray(new UserInfo[]{}));
         }
@@ -125,6 +132,11 @@ public class UsersRepository {
         (new ChangeStatusAsyncTask(userDAO)).execute(uuid, ""+status);
     }
 
+    public LiveData<UserInfo> getConnectedUser() {
+        if(connectedUser == null)
+            connectedUser =  userDAO.getConnectedUser();
+        return connectedUser;
+    }
 
 
     private static class ChangeStatusAsyncTask extends AsyncTask<String, Void, Void> {

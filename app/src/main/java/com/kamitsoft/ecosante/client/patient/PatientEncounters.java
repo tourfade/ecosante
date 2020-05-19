@@ -76,6 +76,7 @@ public class PatientEncounters extends PatientBaseFragment {
             if(v.getId() == R.id.item_edit){
                 Intent i = new Intent(getContext(), Encounter.class);
                 app.setCurrentEncounter(encounterAdapter.getItem(itemPosition));
+
                 startActivityForResult(i,102);
                 getActivity().overridePendingTransition(R.anim.enter_from_right,R.anim.exit_to_left);
                 return;

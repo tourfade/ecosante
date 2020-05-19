@@ -73,7 +73,6 @@ public class SignIn extends AppCompatActivity {
                             v.setEnabled(true);
                         }
 
-
                     });
         });
 
@@ -136,6 +135,7 @@ public class SignIn extends AppCompatActivity {
                         }
 
                     }
+
                     @Override
                     public void onFailure(Call<UserAccountInfo> call, Throwable t) {
                         t.printStackTrace();

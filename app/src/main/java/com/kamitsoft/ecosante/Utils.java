@@ -462,6 +462,13 @@ public class Utils {
 
         switch (UserType.typeOf(userInfo.getUserType())){
             case PHYSIST:
+                Log.i("XXXXXXX->T1", new Gson().toJson(FirebaseChannels.PHYSISTS_OF+userInfo.getDistrictUuid()));
+                Log.i("XXXXXXX->T2", new Gson().toJson(FirebaseChannels.PHYSISTS_OF+accountID));
+                Log.i("XXXXXXX->T3", new Gson().toJson(FirebaseChannels.PHYSIST+userInfo.getUuid()));
+
+                FirebaseMessaging.getInstance()
+                        .subscribeToTopic(FirebaseChannels.PHYSISTS_OF+userInfo.getDistrictUuid())
+                        .addOnCompleteListener(Utils::subScribeComplete);
                 FirebaseMessaging.getInstance()
                         .subscribeToTopic(FirebaseChannels.PHYSISTS_OF+accountID)
                         .addOnCompleteListener(Utils::subScribeComplete);
@@ -472,7 +479,7 @@ public class Utils {
                 break;
             case NURSE:
                 FirebaseMessaging.getInstance()
-                        .subscribeToTopic(FirebaseChannels.NURSES_OF+userInfo.getSupervisor().physicianUuid)
+                        .subscribeToTopic(FirebaseChannels.NURSES_OF+userInfo.getDistrictUuid())
                         .addOnCompleteListener(Utils::subScribeComplete);
                 FirebaseMessaging.getInstance()
                         .subscribeToTopic(FirebaseChannels.NURSES_OF+accountID)
@@ -508,8 +515,8 @@ public class Utils {
     public static void unSubscribe(UserInfo userInfo) {
         int accountID = userInfo.getAccountID();
 
-        if(userInfo.getSupervisor() != null)
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+userInfo.getSupervisor().physicianUuid);
+        if(userInfo.getDistrictUuid() != null)
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+userInfo.getDistrictUuid());
 
         FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+accountID);
         FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.PHYSISTS_OF+accountID);

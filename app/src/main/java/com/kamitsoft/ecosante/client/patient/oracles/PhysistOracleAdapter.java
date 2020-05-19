@@ -116,7 +116,7 @@ public class PhysistOracleAdapter extends ArrayAdapter {
                 try {
                     Response<List<PhysicianInfo>> response = oracleProxy.search(searchStrLowerCase).execute();
                     results.values = response.body();
-                    results.count = response.body().size();
+                    results.count = response.body()==null? 0: response.body().size();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

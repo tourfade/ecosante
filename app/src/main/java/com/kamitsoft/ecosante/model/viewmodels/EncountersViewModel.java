@@ -40,6 +40,9 @@ public class EncountersViewModel extends AndroidViewModel {
         document = repository.getPatientEncounters();
         return document;
     }
+    public void archive(){
+        repository.archive();
+    }
 
     public LiveData<List<EncounterInfo>> getDirty() {
         dirty = repository.getDirty();
@@ -65,6 +68,9 @@ public class EncountersViewModel extends AndroidViewModel {
     }
 
 
+    public EncounterInfo getEncounter(String euuid) {
+        return repository.getEncounter(euuid);
+    }
 }
 
 

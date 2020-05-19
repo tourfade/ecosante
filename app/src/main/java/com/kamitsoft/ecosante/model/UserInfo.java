@@ -46,7 +46,8 @@ public class UserInfo {
 
     private String avatar;
     private String token;
-    private Supervisor supervisor;
+    private String districtUuid;
+    private String districtName;
 
     public int getUserID() {
         return userID;
@@ -246,14 +247,6 @@ public class UserInfo {
         this.token = token;
     }
 
-    public void setSupervisor(Supervisor supervisor) {
-        this.supervisor = supervisor;
-    }
-
-    public Supervisor getSupervisor() {
-        return supervisor;
-    }
-
 
     public int getSpecialityCode() {
         return specialityCode;
@@ -264,4 +257,19 @@ public class UserInfo {
     }
 
 
+    public String getDistrictUuid() {
+        return districtUuid;
+    }
+
+    public void setDistrictUuid(String districtUuid) {
+        this.districtUuid = districtUuid;
+    }
+
+    public String getDistrictName() {
+        return districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
+    }
 }

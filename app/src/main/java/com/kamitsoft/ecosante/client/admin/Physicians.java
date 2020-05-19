@@ -15,6 +15,8 @@ import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
+import java.util.stream.Collectors;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -49,7 +51,13 @@ public class Physicians extends BaseFragment {
         swr.setOnRefreshListener(this::requestSync);
         physicianAdapter = new UsersAdapter(getActivity());
         recyclerview.setAdapter(physicianAdapter);
-        model.getUsersOfType(UserType.PHYSIST).observe(this, userInfos -> physicianAdapter.syncData(userInfos));
+        model.getUsers().observe(this, userInfos ->{
+            userInfos = userInfos
+                    .stream()
+                    .filter( n-> n.getUserType() == UserType.PHYSIST.type)
+                    .collect(Collectors.toList());
+            physicianAdapter.syncData(userInfos);
+        } );
 
         physicianAdapter.setItemClickListener((itemPosition, v) -> {
             app.setEditingUser(physicianAdapter.getItem(itemPosition));

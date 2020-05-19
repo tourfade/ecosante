@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.BaseFragment;
+import com.kamitsoft.ecosante.client.PatientBaseFragment;
 import com.kamitsoft.ecosante.client.adapters.AppointmentsAdapter;
 import com.kamitsoft.ecosante.client.patient.dialogs.ApptEditorDialog;
 import com.kamitsoft.ecosante.client.patient.dialogs.ApptRequestorDialog;
@@ -28,7 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class PatientAppointments extends BaseFragment {
+public class PatientAppointments extends PatientBaseFragment {
     private RecyclerView recyclerView;
     private AppointmentsAdapter adapter;
     private AppointmentsViewModel model;
@@ -125,10 +126,7 @@ public class PatientAppointments extends BaseFragment {
         return  AppointmentInfo.class;
     }
 
-    @Override
-    public String getTitle() {
-        return getString(R.string.appointment_list);
-    }
+
 
 
 }

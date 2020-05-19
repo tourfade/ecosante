@@ -20,21 +20,29 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
+import com.kamitsoft.ecosante.client.EcoSanteActivity;
+import com.kamitsoft.ecosante.client.patient.Encounter;
 import com.kamitsoft.ecosante.client.patient.PatientActivity;
 import com.kamitsoft.ecosante.constant.UserStatusConstant;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.EntitySync;
+import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.repositories.EntityRepository;
 import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 
@@ -46,7 +54,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class FCMService extends FirebaseMessagingService  {
 
-    private LocalBroadcastManager lbm;
+
 
     public  static String CAT_PAYMENT_SUCCESS = "paymentsuccess";
     public  static String CAT_PAYMENT_FAILED = "paymentfailed";
@@ -56,11 +64,11 @@ public class FCMService extends FirebaseMessagingService  {
     private EntityRepository entityRepository;
     private UsersRepository userRepository;
     private EcoSanteApp app;
+    private UserInfo currentUser;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        lbm = LocalBroadcastManager.getInstance(getApplicationContext());
         app = (EcoSanteApp) getApplication();
         entityRepository = new EntityRepository(app);
         userRepository = new UsersRepository(app);
@@ -68,19 +76,22 @@ public class FCMService extends FirebaseMessagingService  {
     }
 
 
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> data = remoteMessage.getData();
+        currentUser = userRepository.getConnected();
+        if(currentUser == null || currentUser.getUuid().equals(data.get("emitter"))){
+            return;
+        }
         if(Boolean.parseBoolean(data.getOrDefault("syncPayment", "false"))){
             Intent msg = new Intent(ACTION_PAYMENT);
             msg.addCategory(CAT_PAYMENT_SUCCESS);
-            lbm.sendBroadcast(msg);
             return;
         }
 
-        Log.i("XXXXXXXFCM", "--->"+remoteMessage);
-
-        if(Boolean.parseBoolean(data.getOrDefault("syncRequest", "false"))){
+       // Log.i("XXXXXXXFCM", "--->"+remoteMessage);
+       if(Boolean.parseBoolean(data.getOrDefault("syncRequest", "false"))){
             String entity = data.get("entity");
             entityRepository.setDirty(entity);
 
@@ -88,23 +99,24 @@ public class FCMService extends FirebaseMessagingService  {
         if(Boolean.parseBoolean(data.getOrDefault("updateRequest", "false"))){
             String uuid = data.get("uuid");
             int status = Integer.parseInt(data.get("status"));
-            if(app.getCurrentUser()!=null
-                    && app.getCurrentUser().getSupervisor() !=null
+            /*if(app.getCurrentUser()!=null
+                    && app.getCurrentUser().getDistrictUuid() !=null
                     &&  uuid.equals(app.getCurrentUser().getSupervisor().physicianUuid)){
                 notify("Changement de status",
                         "Votre superviseur est "+ getApplicationContext().getString(UserStatusConstant.ofStatus(status).name),
                         null, new long[] { 900});
-            }
+            }*/
 
             userRepository.remoteUpdateStatus(uuid,status);
 
         }
         RemoteMessage.Notification remote = remoteMessage.getNotification();
-        if(remote!=null && remote.getTitle().trim().length() > 0){
+        if(remote != null && remote.getTitle().trim().length() > 0){
             notify(remote, data);
         }
 
     }
+
 
     @Override
     public void onNewToken(String token) {
@@ -112,11 +124,27 @@ public class FCMService extends FirebaseMessagingService  {
     }
 
     private void notify(RemoteMessage.Notification remNot, Map<String, String> data) {
-        notify(remNot.getTitle(), remNot.getBody(), data.get("patientUUID"), new long[] { 500, 500});
+        notify(remNot,data , new long[] { 500, 500});
     }
-    private void notify(String title, String body, String patUUID,  long[] vibes) {
+    private void notify(RemoteMessage.Notification remNot, Map<String, String> data,  long[] vibes) {
+        FutureTarget<Bitmap> futureTarget = Glide.with(this)
+                .asBitmap()
+                .load(BuildConfig.AVATAR_BUCKET+remNot.getIcon())
+                .submit();
+        Bitmap thumb = null;
+        try {
+             thumb = futureTarget.get();
+        }catch (Exception e){
+            thumb = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.encounters);
+        }
 
-        Intent intent = new Intent(this, patUUID==null? EcoSanteApp.class:PatientActivity.class);
+        Intent intent = new Intent(this, EcoSanteActivity.class);
+
+        if(EncounterInfo.class.getSimpleName().equalsIgnoreCase(data.get("entity"))){
+            intent = new Intent(this, Encounter.class);
+            intent.putExtra("euuid", data.get("euuid"));
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent
                 .getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -125,13 +153,15 @@ public class FCMService extends FirebaseMessagingService  {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, EcoSanteApp.CHANNEL_ID)
                         .setSmallIcon(R.drawable.ksoft)
-                        .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.encounters))
-                        .setContentTitle(title)
-                        .setContentText(body)
+                        .setLargeIcon(thumb)
+                        .setContentTitle(remNot.getTitle())
+                        .setContentText(remNot.getBody())
                         .setAutoCancel(true)
+                        //.setWhen(remNot.getEventTime())
                         .setSound(defaultSoundUri)
                         .setVibrate(vibes)
                         .setContentIntent(pendingIntent);
+
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

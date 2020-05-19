@@ -103,8 +103,8 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
             // Get current position of item in recyclerview to bind data and assign values from list
 
             EncounterHeaderInfo current = mdata.get(position);
-            myHolder.title.setText("Consultation du "+Utils.format(current.getCreatedAt()));
-            myHolder.patient.setText(Utils.formatName(context, current.getFirstName()+" "+Utils.niceFormat(current.getMiddleName()),current.getLastName(),-1));
+            myHolder.title.setText("Visite du "+Utils.format(current.getCreatedAt()));
+            myHolder.patient.setText(Utils.formatName(context, Utils.niceFormat(current.getFirstName())+" "+Utils.niceFormat(current.getMiddleName()),current.getLastName(),-1));
             myHolder.dobpob.setText(Utils.formatAge(current.getDob())+" né(é) à "+Utils.niceFormat(current.getPob()));
             myHolder.mobile.setText(current.getMobile());
             myHolder.date.setText(Utils.format(current.getCreatedAt()));

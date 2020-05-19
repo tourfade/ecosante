@@ -25,6 +25,7 @@ import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
+import com.kamitsoft.ecosante.client.patient.oracles.DistrictOracleAdapter;
 import com.kamitsoft.ecosante.client.patient.oracles.PhysistOracleAdapter;
 import com.kamitsoft.ecosante.client.patient.oracles.SpecialityOracleAdapter;
 import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
@@ -39,6 +40,7 @@ import com.kamitsoft.ecosante.client.user.subscription.order.Store;
 import com.kamitsoft.ecosante.constant.Gender;
 import com.kamitsoft.ecosante.constant.TitleType;
 import com.kamitsoft.ecosante.constant.UserType;
+import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.Speciality;
 import com.kamitsoft.ecosante.model.UserInfo;
@@ -65,9 +67,9 @@ public class UserProfile extends BaseFragment {
     private static final int PAYMENT_REQUEST = 101;
     private ImageView userPicture;
     private EditText firstname, lastname,dob,
-    pob, address, fixphone,mobile,email,validityDate;
-    private TextView specialityOrSupervisorText;
-    private AutoCompleteTextView specialityOrSupervisor;
+    pob, address, fixphone,mobile,email;
+    private TextView district;
+    private AutoCompleteTextView speciality;
     private Button renewSubscription, updatePassword;
     private AppCompatSpinner sex, title;
     private UserInfo cu;
@@ -113,8 +115,9 @@ public class UserProfile extends BaseFragment {
         lastname = view.findViewById(R.id.lastname);
         dob = view.findViewById(R.id.dob);
         pob = view.findViewById(R.id.pob);
-        specialityOrSupervisorText = view.findViewById(R.id.specialityOrSupervisorText);
-        specialityOrSupervisor = view.findViewById(R.id.specialityOrSupervisor);
+        speciality = view.findViewById(R.id.speciality);
+        district = view.findViewById(R.id.districtSelector);
+
         specSupContainner = view.findViewById(R.id.specSupContainner);
         address = view.findViewById(R.id.address);
         fixphone = view.findViewById(R.id.fixphone);
@@ -123,7 +126,6 @@ public class UserProfile extends BaseFragment {
         renewSubscription = view.findViewById(R.id.renewSubscription);
         updatePassword = view.findViewById(R.id.updatePassword);
         sex = view.findViewById(R.id.sex);
-        validityDate = view.findViewById(R.id.validity_date);
         cu = app.getEditingUser();
         oldAvatar = cu.getAvatar();
         connectedUser = app.getCurrentUser();
@@ -181,7 +183,7 @@ public class UserProfile extends BaseFragment {
         lastname.setEnabled(edit);
         dob.setEnabled(edit);
         pob.setEnabled(edit);
-        specialityOrSupervisor.setEnabled(edit);
+        speciality.setEnabled(edit);
         address.setEnabled(edit);
         fixphone.setEnabled(edit);
         mobile.setEnabled(edit);
@@ -255,27 +257,15 @@ public class UserProfile extends BaseFragment {
             datePickerDialog.show();
         });
 
-        specialityOrSupervisor.setOnItemClickListener((parent, view, position, id) -> {
+        speciality.setOnItemClickListener((parent, view, position, id) -> {
             if(UserType.isPhysist(cu.getUserType())) {
                 Speciality s = specialityOracle.getItem(position);
-                specialityOrSupervisor.setText(s.getName());
+                speciality.setText(s.getName());
                 cu.setSpeciality(s.toString());
                 cu.setSpecialityCode(s.getFieldvalue());
             }
-            if(UserType.isNurse(cu.getUserType())) {
-                PhysicianInfo s = physistOracle.getItem(position);
-                String sFullName = Utils.formatUser(getActivity(), s);
-                specialityOrSupervisor.setText(sFullName);
-                Supervisor sup = new Supervisor();
-                sup.nurseUuid = cu.getUuid();
-                sup.accountId = connectedUser.getAccountID();
-                sup.active = true;
-                sup.physicianUuid = s.uuid;
-                sup.supFullName = sFullName;
-                cu.setSupervisor(sup);
-            }
-        });
 
+        });
 
 
         address.addTextChangedListener(new TextWatchAdapter(){
@@ -352,37 +342,16 @@ public class UserProfile extends BaseFragment {
     private void initValues(){
         edit(false);
         if(cu == null){return;}
+        UserType type = UserType.typeOf(cu.getUserType());
+
         specSupContainner.setVisibility(View.GONE);
         if(UserType.isPhysist(cu.getUserType())){
             specSupContainner.setVisibility(View.VISIBLE);
             specialityOracle = new SpecialityOracleAdapter(getActivity());
-            specialityOrSupervisor.setAdapter(specialityOracle);
-            specialityOrSupervisorText.setText(R.string.speciality);
-        }
-        if( UserType.isNurse(cu.getUserType())){
-            specialityOrSupervisorText.setText(R.string.supervisor);
-            specSupContainner.setVisibility(View.VISIBLE);
-            if(UserType.isAdmin(connectedUser.getUserType()))
-                physistOracle = new PhysistOracleAdapter(getActivity());
-                specialityOrSupervisor.setAdapter(physistOracle);
-
-            if(UserType.isPhysist(connectedUser.getUserType())){
-                if(cu.getSupervisor() == null){
-                    cu.setSupervisor(new Supervisor());
-                }
-                cu.getSupervisor().accountId = connectedUser.getAccountID();
-                cu.getSupervisor().active = true;
-                cu.getSupervisor().nurseUuid = cu.getUuid();
-                cu.getSupervisor().physicianUuid = connectedUser.getUuid();
-                cu.getSupervisor().supFullName = Utils.formatUser(contextActivity, connectedUser);
-            }
-
-            specialityOrSupervisor.setText(cu.getSupervisor() !=null? cu.getSupervisor().supFullName:"");
-            specialityOrSupervisor.setClickable(UserType.isAdmin(connectedUser.getUserType()));
-
+            speciality.setAdapter(specialityOracle);
         }
 
-        UserType type = UserType.typeOf(cu.getUserType());
+
 
         Utils.load(getActivity(), BuildConfig.AVATAR_BUCKET, cu.getAvatar(), userPicture,
                 type.placeholder,
@@ -394,8 +363,12 @@ public class UserProfile extends BaseFragment {
         dob.setText(Utils.format(cu.getDob()));
         pob.setText(Utils.niceFormat(cu.getPob()));
         if(UserType.isPhysist(cu.getUserType())) {
-            specialityOrSupervisor.setText(Utils.niceFormat(cu.getSpeciality()));
+            speciality.setText(Utils.niceFormat(cu.getSpeciality()));
+            speciality.setVisibility(View.VISIBLE);
+        }else {
+            speciality.setVisibility(View.GONE);
         }
+        district.setText(Utils.niceFormat(cu.getDistrictName()));
 
 
 

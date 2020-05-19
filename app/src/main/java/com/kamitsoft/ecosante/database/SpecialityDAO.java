@@ -31,5 +31,5 @@ public interface SpecialityDAO {
     void deleteAll();
 
     @Query("SELECT * FROM Speciality WHERE name like:text")
-    List<Speciality> finSpecialities(String text);
+    List<Speciality> findSpecialities(String text);
 }

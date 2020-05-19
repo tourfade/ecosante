@@ -6,6 +6,7 @@ import com.kamitsoft.ecosante.model.json.Supervisor;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -199,12 +200,10 @@ public class EncounterHeaderInfo {
     }
 
     public Status currentStatus(){
-        Status current = getStatus().get(0);
-        for(Status s:status)
-            if(s.date != null && s.date.after(current.date)){
-                current = s;
-            }
+        return  status.stream()
+                .max((o1, o2) -> (int) (o1.date.getTime() - o2.date.getTime()))
+                .get();
 
-        return current;
+
     }
 }

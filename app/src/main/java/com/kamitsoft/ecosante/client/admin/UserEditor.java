@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,15 +24,18 @@ import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
+import com.kamitsoft.ecosante.client.patient.oracles.DistrictOracleAdapter;
 import com.kamitsoft.ecosante.client.patient.oracles.PhysistOracleAdapter;
 import com.kamitsoft.ecosante.client.patient.oracles.SpecialityOracleAdapter;
 import com.kamitsoft.ecosante.constant.Gender;
 import com.kamitsoft.ecosante.constant.TitleType;
 import com.kamitsoft.ecosante.constant.UserType;
+import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.Speciality;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.json.Supervisor;
+import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
 import java.sql.Date;
@@ -46,17 +50,14 @@ import androidx.lifecycle.ViewModelProviders;
 public class UserEditor extends BaseFragment {
 
     private ImageView userPicture;
-    private EditText firstname, lastname,dob,
-    pob, mobile,email;
-    private TextView specialityOrSupervisorText;
-    private AutoCompleteTextView specialityOrSupervisor;
+    private EditText firstname, lastname,dob, pob, mobile,email;
+    private AutoCompleteTextView specialitySelector, districtSelector;
     private AppCompatSpinner sex, title;
     private UserInfo currentEditing;
     private ImagePickerActivity picker;
     private SpecialityOracleAdapter specialityOracle;
-    private PhysistOracleAdapter physistOracle;
-    private View specSupContainner;
-    private UserInfo connectedUser;
+    private DistrictOracleAdapter districtOracle;
+    private View specialityContainner;
     private Button save;
     private String oldavatar;
 
@@ -86,6 +87,7 @@ public class UserEditor extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        currentEditing = app.getEditingUser();
         save = view.findViewById(R.id.save);
         userPicture = view.findViewById(R.id.userPicture);
         title = view.findViewById(R.id.title);
@@ -93,25 +95,23 @@ public class UserEditor extends BaseFragment {
         lastname = view.findViewById(R.id.lastname);
         dob = view.findViewById(R.id.dob);
         pob = view.findViewById(R.id.pob);
-        specialityOrSupervisorText = view.findViewById(R.id.specialityOrSupervisorText);
-        specialityOrSupervisor = view.findViewById(R.id.specialityOrSupervisor);
-        specSupContainner = view.findViewById(R.id.specSupContainner);
+        specialitySelector = view.findViewById(R.id.specialitySelector);
+        specialityContainner = view.findViewById(R.id.specialityContainner);
+        districtSelector = view.findViewById(R.id.districtSelector);
         mobile = view.findViewById(R.id.mobile);
         email = view.findViewById(R.id.email);
         sex = view.findViewById(R.id.sex);
+        districtOracle = new DistrictOracleAdapter(getContext());
+        districtSelector.setAdapter(districtOracle);
 
-        currentEditing = app.getEditingUser();
         oldavatar = currentEditing.getAvatar();
-        connectedUser = app.getCurrentUser();
-        if(connectedUser !=null) {
-            initListeners();
-            initValues();
+        if(connectedUser == null){
+            connectedUser  = new UsersRepository(app).getConnected();
+            if(connectedUser == null)
+                contextActivity.disconnect();
         }
-
-
-
-
-
+        initValues();
+        initListeners();
         switch (UserType.typeOf(currentEditing.getUserType())){
             case PHYSIST:
                 if(currentEditing.getAccountID() == 0) {
@@ -138,7 +138,13 @@ public class UserEditor extends BaseFragment {
 
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(currentEditing != null) {
+            contextActivity.setTitle(Utils.formatName(contextActivity, currentEditing.getFirstName(), currentEditing.getLastName(), currentEditing.getTitle()));
+        }
+    }
 
     @Override
     public String getTitle() {
@@ -168,7 +174,6 @@ public class UserEditor extends BaseFragment {
 
             case R.id.action_save:
                 currentEditing.setAccountID(connectedUser.getAccountID());
-
                 model.insert(currentEditing);
                 picker.syncAvatar(currentEditing.getAvatar(), oldavatar, 0);
 
@@ -196,19 +201,21 @@ public class UserEditor extends BaseFragment {
         lastname.setEnabled(edit);
         dob.setEnabled(edit);
         pob.setEnabled(edit);
-        specialityOrSupervisor.setEnabled(edit);
+        specialitySelector.setEnabled(edit);
+        districtSelector.setEnabled(edit);
         mobile.setEnabled(edit);
         email.setEnabled(currentEditing.getAccountID() <= 0);
         sex.setEnabled(edit);
     }
+
     private void initListeners() {
         if(picker != null) {
             picker.setPlaceholder(R.drawable.physist);
             picker.setSelectionFinishedListener((avatar)-> currentEditing.setAvatar(avatar));
             userPicture.setOnClickListener(picker::pick);
         }
-
         save.setOnClickListener(v->{
+            currentEditing.setAccountID(connectedUser.getAccountID());
             model.insert(currentEditing);
             //model.setSupervisor(pnp);
             edit(false);
@@ -261,6 +268,7 @@ public class UserEditor extends BaseFragment {
                 }
             }
         });
+
         dob.setOnClickListener(v->{
             int[] d = currentEditing.getDob();
             d = d!=null && d.length == 3? d:Utils.toArray(Calendar.getInstance());
@@ -271,28 +279,20 @@ public class UserEditor extends BaseFragment {
             datePickerDialog.show();
         });
 
-        specialityOrSupervisor.setOnItemClickListener((parent, view, position, id) -> {
-            if(UserType.isPhysist(currentEditing.getUserType())) {
-                Speciality s = specialityOracle.getItem(position);
-                specialityOrSupervisor.setText(s.getName());
-                currentEditing.setSpeciality(s.toString());
-                currentEditing.setSpecialityCode(s.getFieldvalue());
-            }
-            if(UserType.isNurse(currentEditing.getUserType())) {
-                PhysicianInfo s = physistOracle.getItem(position);
-                String sFullName = Utils.formatUser(getActivity(), s);
-                specialityOrSupervisor.setText(sFullName);
-                Supervisor sup = new Supervisor();
-                sup.nurseUuid = currentEditing.getUuid();
-                sup.accountId = connectedUser.getAccountID();
-                sup.active = true;
-                sup.physicianUuid = s.uuid;
-                sup.supFullName = sFullName;
-                currentEditing.setSupervisor(sup);
-            }
+        specialitySelector.setOnItemClickListener((parent, view, position, id) -> {
+            Speciality s = specialityOracle.getItem(position);
+            specialitySelector.setText(s.getName());
+            currentEditing.setSpeciality(s.toString());
+            currentEditing.setSpecialityCode(s.getFieldvalue());
         });
 
-
+        districtSelector.setOnItemClickListener((p,v, pos,id)->{
+            DistrictInfo d = districtOracle.getItem(pos);
+            districtSelector.setText(d.getName());
+            districtSelector.setTextColor(d.getArea().fillColor);
+            currentEditing.setDistrictUuid(d.getUuid());
+            currentEditing.setDistrictName(Utils.niceFormat(d.getName()));
+        });
 
 
         mobile.addTextChangedListener(new TextWatchAdapter(){
@@ -338,67 +338,38 @@ public class UserEditor extends BaseFragment {
 
 
     }
+
     private void initValues(){
         edit(false);
-        if(currentEditing == null){return;}
-        specSupContainner.setVisibility(View.GONE);
-        if(UserType.isPhysist(currentEditing.getUserType())){
-            specSupContainner.setVisibility(View.VISIBLE);
-            specialityOracle = new SpecialityOracleAdapter(getActivity());
-            specialityOrSupervisor.setAdapter(specialityOracle);
-            specialityOrSupervisorText.setText(R.string.speciality);
-        }
-        if( UserType.isNurse(currentEditing.getUserType())){
-            specialityOrSupervisorText.setText(R.string.supervisor);
-            specSupContainner.setVisibility(View.VISIBLE);
-            if(UserType.isAdmin(connectedUser.getUserType()))
-                physistOracle = new PhysistOracleAdapter(getActivity());
-                specialityOrSupervisor.setAdapter(physistOracle);
-
-            if(UserType.isPhysist(connectedUser.getUserType())){
-                if(currentEditing.getSupervisor() == null){
-                    currentEditing.setSupervisor(new Supervisor());
-                }
-                currentEditing.getSupervisor().accountId = connectedUser.getAccountID();
-                currentEditing.getSupervisor().active = true;
-                currentEditing.getSupervisor().nurseUuid = currentEditing.getUuid();
-                currentEditing.getSupervisor().physicianUuid = connectedUser.getUuid();
-                currentEditing.getSupervisor().supFullName = Utils.formatUser(contextActivity, connectedUser);
-            }
-
-            specialityOrSupervisor.setText(currentEditing.getSupervisor() !=null? currentEditing.getSupervisor().supFullName:"");
-            specialityOrSupervisor.setClickable(UserType.isAdmin(connectedUser.getUserType()));
-
-        }
-
+        districtSelector.setText("");
         UserType type = UserType.typeOf(currentEditing.getUserType());
+        contextActivity.setTitle(Utils.formatName(contextActivity,currentEditing.getFirstName(), currentEditing.getLastName(),currentEditing.getTitle()));
+        specialityContainner.setVisibility(UserType.isNurse(currentEditing.getUserType())?View.GONE:View.VISIBLE);
+
+        if(UserType.isPhysist(type.type)){
+            specialityOracle = new SpecialityOracleAdapter(getActivity());
+            specialitySelector.setAdapter(specialityOracle);
+            specialitySelector.setText(currentEditing.getSpeciality());
+        }
 
         Utils.load(getActivity(),
-                BuildConfig.AVATAR_BUCKET,
-                currentEditing.getAvatar(),
-                userPicture,
-                type.placeholder,
-                type.placeholder);
+                    BuildConfig.AVATAR_BUCKET,
+                    currentEditing.getAvatar(),
+                    userPicture,
+                    type.placeholder,
+                    type.placeholder);
 
         title.setSelection(TitleType.typeOf(currentEditing.getTitle()).index);
         firstname.setText(Utils.niceFormat(currentEditing.getFirstName()));
         lastname.setText(Utils.niceFormat(currentEditing.getLastName()));
         dob.setText(Utils.format(currentEditing.getDob()));
         pob.setText(Utils.niceFormat(currentEditing.getPob()));
-        if(UserType.isPhysist(currentEditing.getUserType())) {
-            specialityOrSupervisor.setText(Utils.niceFormat(currentEditing.getSpeciality()));
-        }
-
         mobile.setText(Utils.niceFormat(currentEditing.getMobilePhone()));
-
         email.setText(Utils.niceFormat(currentEditing.getUsername()));
-
-
         sex.setSelection(Gender.indexOf(currentEditing.getSex()), true);
+        districtSelector.setText(Utils.niceFormat(currentEditing.getDistrictName()));
+
     }
-
-
-
 
 
 }

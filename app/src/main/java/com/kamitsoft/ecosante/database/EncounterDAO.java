@@ -99,4 +99,10 @@ public interface EncounterDAO {
 
     @Query("DELETE FROM medicationinfo WHERE encounterUuid IN(:encounterIds)")
     void resetLabs(String... encounterIds);
+
+    @Query("SELECT * FROM encounterinfo LIMIT 1")
+    EncounterInfo getFirst();
+
+    @Query("SELECT * FROM encounterinfo")
+    List<EncounterInfo> getEncounters();
 }

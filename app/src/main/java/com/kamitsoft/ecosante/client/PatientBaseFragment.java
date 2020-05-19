@@ -9,6 +9,7 @@ import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
+import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
 
 import androidx.annotation.Nullable;
@@ -17,16 +18,18 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class PatientBaseFragment extends Fragment {
-    protected  PatientActivity contextActivity;
+    protected PatientActivity contextActivity;
     protected boolean edit;
     protected EcoSanteApp app;
     protected EntitiesViewModel entityModel;
     protected SwipeRefreshLayout swr;
+    protected UserInfo connectedUser;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (EcoSanteApp)getActivity().getApplication();
+        connectedUser  = app.getCurrentUser();
         entityModel = ViewModelProviders.of(this).get(EntitiesViewModel.class);
 
         entityModel.getDirtyEntities().observe(this, entitySyncs -> {
@@ -39,6 +42,8 @@ public class PatientBaseFragment extends Fragment {
                 }
             }
         });
+
+
 
     }
 
@@ -61,6 +66,7 @@ public class PatientBaseFragment extends Fragment {
     }
 
     protected final void requestSync() {
+        entityModel.init(getEntity());
         app.service().requestSync(getEntity(),() -> {
             if(swr != null)
                 swr.setRefreshing(false);

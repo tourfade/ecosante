@@ -39,6 +39,14 @@ public class EntitiesViewModel extends AndroidViewModel {
 
         repository.update(doc);
     }
+
+    public void init(Class<?> entity) {
+        EntitySync es = new EntitySync();
+        es.setDirty(true);
+        es.setLastSynced(0);
+        es.setEntity(entity.getSimpleName().toLowerCase());
+        repository.update(es);
+    }
 }
 
 

@@ -84,7 +84,7 @@ public class SpecialityOracleAdapter extends ArrayAdapter {
                 final String searchStrLowerCase = prefix.toString().toLowerCase();
 
                 //Call to database to get matching records using room
-                List<Speciality> matchValues = localDatabaseRepo.finSpecialities(searchStrLowerCase+"%");
+                List<Speciality> matchValues = localDatabaseRepo.findSpecialities(searchStrLowerCase+"%");
 
                 results.values = matchValues;
                 results.count = matchValues.size();

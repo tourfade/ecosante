@@ -116,11 +116,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyHolder>  {
                 myHolder.specialityOrSupervisor.setText(Utils.niceFormat(current.getSpeciality()));
             }else if(UserType.isNurse(current.getUserType())) {
                 myHolder.specialityOrSupervisorText.setText(R.string.supervisor);
-                myHolder.specialityOrSupervisor.setText(current.getSupervisor() != null? current.getSupervisor().supFullName:"No supervisor");
+                //myHolder.specialityOrSupervisor.setText(current.getSupervisor() != null? current.getSupervisor().supFullName:"No supervisor");
             }
             myHolder.mobile.setText(Utils.niceFormat(current.getMobilePhone()));
             myHolder.fix.setText(Utils.niceFormat(current.getFixPhone()));
-            myHolder.email.setText(Utils.niceFormat(current.getEmail()));
+            myHolder.email.setText(Utils.niceFormat(current.getUsername()));
             myHolder.type.setText(UserType.typeOf(current.getUserType()).title);
             UserType type = UserType.typeOf(current.getUserType());
 

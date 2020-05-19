@@ -50,6 +50,7 @@ public class PatientInfo {
     private String avatar;
     private Monitor monitor;
     private boolean deleted;
+    private String districtUuid;
 
     public PatientInfo(){
         uuid = UUID.randomUUID().toString();
@@ -296,5 +297,13 @@ public class PatientInfo {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getDistrictUuid() {
+        return districtUuid;
+    }
+
+    public void setDistrictUuid(String districtUuid) {
+        this.districtUuid = districtUuid;
     }
 }

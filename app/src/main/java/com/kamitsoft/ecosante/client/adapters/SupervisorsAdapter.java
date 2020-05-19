@@ -112,7 +112,7 @@ public class SupervisorsAdapter extends RecyclerView.Adapter<SupervisorsAdapter.
                 myHolder.specialityOrSupervisor.setText(Utils.niceFormat(current.getSpeciality()));
             }else if(UserType.isNurse(current.getUserType())) {
                 myHolder.specialityOrSupervisorText.setText(R.string.supervisor);
-                myHolder.specialityOrSupervisor.setText(current.getSupervisor() != null? current.getSupervisor().supFullName:"No supervisor");
+                //myHolder.specialityOrSupervisor.setText(current.getSupervisor() != null? current.getSupervisor().supFullName:"No supervisor");
             }
             myHolder.mobile.setText(Utils.niceFormat(current.getMobilePhone()));
             myHolder.fix.setText(Utils.niceFormat(current.getFixPhone()));

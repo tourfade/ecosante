@@ -2,6 +2,7 @@ package com.kamitsoft.ecosante.client.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.SubConsumerInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
 import java.util.List;
@@ -60,24 +62,32 @@ public class Nurses extends BaseFragment {
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
         recyclerview.setAdapter(nursesAdapter);
+        connectedUser = app.getCurrentUser();
 
-        model.getUsersOfType(UserType.NURSE).observe(this, userInfos -> {
+
+
+        model.getUsers().observe(this, userInfos -> {
+            Log.i("XXXXXXX", "-->"+userInfos);
+            connectedUser = app.getCurrentUser();
+            if(connectedUser == null){
+                return;
+            }
+           userInfos = userInfos
+                        .stream()
+                        .filter( n-> n.getUserType() == UserType.NURSE.type)
+                        .collect(Collectors.toList());
+
             if(UserType.isPhysist(connectedUser.getUserType())){
-                userInfos = userInfos.stream().filter( n-> n.getSupervisor() !=null
-                            && n.getSupervisor().physicianUuid.equals(connectedUser.getUuid()))
-                            .collect(Collectors.toList());
+                userInfos = userInfos
+                        .stream()
+                        .filter( n-> n.getDistrictUuid()!=null && n.getDistrictUuid().equals(connectedUser.getDistrictUuid()))
+                        .collect(Collectors.toList());
             }
             nursesAdapter.syncData(userInfos);
         });
-        model.getConnectedUser().observe(this, connected->{
-            if(connected !=null) {
-                connectedUser = connected;
-                add.setVisibility(UserType.isAdmin(connected.getUserType()) ? View.VISIBLE : View.GONE);
-            }
 
-        });
         nursesAdapter.setItemClickListener((itemPosition, v) -> {
-            if(connectedUser ==null){
+            if(connectedUser == null){
                 return;
             }
             if(!UserType.isAdmin(connectedUser.getUserType())){
@@ -98,6 +108,10 @@ public class Nurses extends BaseFragment {
 
         });
 
+        if(connectedUser !=null) {
+            add.setVisibility(UserType.isAdmin(connectedUser.getUserType()) ? View.VISIBLE : View.GONE);
+        }
+
     }
 
 
@@ -113,15 +127,6 @@ public class Nurses extends BaseFragment {
         return getString(R.string.nurses);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
 }

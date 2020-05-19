@@ -23,9 +23,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public class UsersViewModel extends AndroidViewModel {
     private UsersRepository repository;
-    private LiveData<UserInfo> connectedUser;
     private LiveData<UserAccountInfo> connectedAccount;
-    private Map<UserType, LiveData<List<UserInfo>>> allUsers;
     private LiveData<SubConsumerInfo> consumerInfo;
     private LiveData<SubInstanceInfo> subInstanceInfo;
 
@@ -33,17 +31,18 @@ public class UsersViewModel extends AndroidViewModel {
     public UsersViewModel(Application app){
         super(app);
         repository = new UsersRepository(app);
-        connectedUser = repository.getConnectedUser();
-        allUsers = repository.getUsers();
         connectedAccount = repository.getAccount();
         consumerInfo = repository.getConsumer();
         subInstanceInfo = repository.getSubIntanceInfo();
     }
 
 
-    public LiveData<List<UserInfo>> getUsersOfType(UserType type) {
-        repository.getUserOfType(type);
-        return allUsers.get(type);
+    public LiveData<UserInfo> getLiveConnectedUser() {
+        return repository.getConnectedUser();
+    }
+
+    public LiveData<List<UserInfo>> getUsers() {
+        return repository.getAllUsers();
     }
 
     public void insert(UserInfo doc){
@@ -54,10 +53,6 @@ public class UsersViewModel extends AndroidViewModel {
     public void update(UserInfo doc){
         doc.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         repository.update(doc);
-    }
-
-    public LiveData<UserInfo> getConnectedUser() {
-        return connectedUser;
     }
 
     public LiveData<UserAccountInfo> getConnectedAccount() {
@@ -104,6 +99,7 @@ public class UsersViewModel extends AndroidViewModel {
     public LiveData<SubConsumerInfo> getConsumerInfo() {
         return consumerInfo;
     }
+
 
 
 }

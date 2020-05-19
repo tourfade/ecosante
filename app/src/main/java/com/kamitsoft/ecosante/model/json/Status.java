@@ -13,6 +13,6 @@ public class Status {
     }
     public Status(int status){
         this.status = status;
-        date = new Timestamp(System.currentTimeMillis());
+        this.date = new Timestamp(System.currentTimeMillis());
     }
 }

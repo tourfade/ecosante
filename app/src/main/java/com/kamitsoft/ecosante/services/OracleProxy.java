@@ -15,6 +15,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface OracleProxy {
+
     @GET("api/user/search/{q}")
     Call<List<PhysicianInfo>> search(@Path("q") String key);
 

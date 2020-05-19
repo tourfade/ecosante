@@ -81,7 +81,7 @@
 
                             android:maxLines="1"
                             android:padding="8dp"
-                            android:text="TOURE" />
+                            android:text="Vide" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
@@ -102,7 +102,7 @@
                         android:textAllCaps="true"
                         android:maxLines="1"
                         android:padding="8dp"
-                        android:text="Fadel" />
+                        android:text="Vide" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <LinearLayout
                     android:layout_below="@id/firstnameContainer"
@@ -142,7 +142,7 @@
                             android:inputType="textAutoComplete|textCapWords"
                             android:maxLines="1"
                             android:padding="8dp"
-                            android:text="Kaedi" />
+                            android:text="Vide" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <LinearLayout
@@ -177,7 +177,7 @@
 
                 </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/specSupContainner"
+                    android:id="@+id/specialityContainner"
                     android:layout_below="@id/birthContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -192,11 +192,39 @@
                         android:paddingTop="0dp"
                         android:paddingRight="0dp"
                         android:paddingBottom="0dp"
-                        android:id="@+id/specialityOrSupervisorText"
                         android:text="@string/speciality" />
 
                     <AutoCompleteTextView
-                        android:id="@+id/specialityOrSupervisor"
+                        android:id="@+id/specialitySelector"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textAutoComplete"
+                        android:maxLines="1"
+                        android:paddingLeft="7dp"
+                        android:text="" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/zoneContainner"
+                    android:layout_below="@id/specialityContainner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="7dp"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:id="@+id/district"
+                        android:text="@string/associated_district" />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/districtSelector"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:inputType="textAutoComplete"

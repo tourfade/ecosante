@@ -22,7 +22,8 @@ import java.util.List;
 @Dao
 public interface UserDAO {
 
-
+    @Query("SELECT * FROM userinfo ")
+    LiveData<List<UserInfo>> allUsers();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(UserInfo... user);
@@ -67,7 +68,7 @@ public interface UserDAO {
     @Query("DELETE FROM  useraccountinfo")
     void disconnect();
 
-    @Query("SELECT ui.* FROM userinfo ui " +
+    @Query( " SELECT ui.* FROM userinfo ui " +
             " JOIN useraccountinfo ua ON (ui.uuid = ua.userUuid)" +
             " LIMIT 1")
     LiveData<UserInfo> getConnectedUser();
@@ -88,4 +89,7 @@ public interface UserDAO {
 
     @Query("SELECT * FROM  subinstanceinfo ORDER BY created DESC LIMIT 1")
     LiveData<SubInstanceInfo> getSubInstance();
+
+    @Query("SELECT ui.* FROM userinfo ui  JOIN useraccountinfo ua ON (ui.uuid = ua.userUuid)  LIMIT 1")
+    UserInfo getConnected();
 }

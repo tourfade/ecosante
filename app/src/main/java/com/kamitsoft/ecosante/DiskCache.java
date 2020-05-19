@@ -30,7 +30,7 @@ public class DiskCache {
 
 
 
-    class CacheImageWriter extends AsyncTask<String, Void, Void>{
+      class CacheImageWriter extends AsyncTask<String, Void, Void>{
          Completion complete;
          private final Bitmap picture;
 
@@ -47,7 +47,6 @@ public class DiskCache {
                     f.delete();
                 }
                 out = new FileOutputStream(getFile(keys[0]));
-
                 picture.compress(Bitmap.CompressFormat.PNG, 100, out);
 
             }catch (Exception e) {
@@ -70,8 +69,7 @@ public class DiskCache {
             }
          }
       }
-
-     class CacheFileWriter extends   AsyncTask<String, Void, Void>{
+      class CacheFileWriter extends   AsyncTask<String, Void, Void>{
          private final Completion complete;
          private final Uri filePath;
 
@@ -131,6 +129,7 @@ public class DiskCache {
     public DiskCache(Context context){
         this.context = context;
         cacheDir =  Glide.getPhotoCacheDir(context);
+
     }
     public synchronized void put(final String key, final Bitmap picture){
         put(key, picture, null);

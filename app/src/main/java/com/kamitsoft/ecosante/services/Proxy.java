@@ -9,6 +9,7 @@ package com.kamitsoft.ecosante.services;
 import com.kamitsoft.ecosante.model.Act;
 import com.kamitsoft.ecosante.model.Analysis;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
+import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.Drug;
 import com.kamitsoft.ecosante.model.EncounterInfo;
@@ -86,8 +87,6 @@ public interface Proxy {
     @GET("api/data/acts/sync/{timestamp}")
     Call<List<Act>> syncActs(@Path("timestamp") long timestamp);
 
-
-
     @POST("useraccount/sign-up")
     Call<Void>  createAccount(@Body UserAccountInfo accountInfo);
 
@@ -107,4 +106,9 @@ public interface Proxy {
     @GET("api/user/list-available")
     Call<List<Supervisor>> getAvailableSupervisors();
 
+    @POST("api/district/sync/")
+    Call<List<DistrictInfo>> syncDistricts(@Body SyncData<List<DistrictInfo>> data);
+
+    @GET("api/encounter/archived/page/{page}/size/{size}")
+    Call<List<EncounterInfo>> getPageArchivedEncounters(@Path("page") int page, @Path("size") int size);
 }

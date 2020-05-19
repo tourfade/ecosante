@@ -6,5 +6,6 @@ public class SyncData<T> {
     public  String uuid;
     public  long id;
     public  T data;
+    public  String hash;
 
 }

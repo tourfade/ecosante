@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.kamitsoft.ecosante.EcoSanteApp;
+import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.SubConsumerInfo;
 import com.kamitsoft.ecosante.model.SubInstanceInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
@@ -22,11 +24,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class BaseFragment extends Fragment {
-    protected  EcoSanteActivity contextActivity;
+    protected EcoSanteActivity contextActivity;
     protected EcoSanteApp app;
     protected boolean edit;
     protected UserInfo connectedUser;
-    private EntitiesViewModel entityModel;
+    private   EntitiesViewModel entityModel;
     protected UsersViewModel model;
     protected SwipeRefreshLayout swr;
 
@@ -34,13 +36,12 @@ public class BaseFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (EcoSanteApp)getActivity().getApplication();
-        connectedUser = app.getCurrentUser();
+        connectedUser  = app.getCurrentUser();
         entityModel = ViewModelProviders.of(this).get(EntitiesViewModel.class);
+        if(getEntity() != null)
         entityModel.getDirtyEntities().observe(this, entitySyncs -> {
             for(EntitySync e:entitySyncs){
-                if(getEntity() == null){
-                    break;
-                }
+
                 if(e.getEntity().equalsIgnoreCase(getEntity().getSimpleName()) && e.isDirty()){
                     app.service().requestSync(getEntity(),null);
                 }
@@ -69,10 +70,11 @@ public class BaseFragment extends Fragment {
         contextActivity = null;
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
-        connectedUser = app.getCurrentUser();
+        contextActivity.setTitle(getTitle());
     }
 
     protected   String getTitle(){
@@ -89,10 +91,10 @@ public class BaseFragment extends Fragment {
     protected final void requestSync() {
         app.service().requestSync(getEntity(),() -> {
             if(swr != null)
-                getView().post(()->swr.setRefreshing(false));
+                swr.post(()->swr.setRefreshing(false));
         });
     }
     protected Class<?> getEntity(){
-        return  null;
+        return getClass();
     }
 }

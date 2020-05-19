@@ -106,6 +106,7 @@ public class PatientDocuments extends PatientBaseFragment {
     protected Class<?> getEntity() {
         return DocumentInfo.class;
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -154,4 +155,6 @@ public class PatientDocuments extends PatientBaseFragment {
         }
 
     }
+
+
 }

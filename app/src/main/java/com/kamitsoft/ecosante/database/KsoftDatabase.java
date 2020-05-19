@@ -10,6 +10,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.kamitsoft.ecosante.R;
+import com.kamitsoft.ecosante.database.converters.AreaTypeConverter;
 import com.kamitsoft.ecosante.database.converters.ArrayJsonTypeConverter;
 import com.kamitsoft.ecosante.database.converters.DiseaseDataTypeConverter;
 import com.kamitsoft.ecosante.database.converters.MonitorTypeConverter;
@@ -20,6 +21,7 @@ import com.kamitsoft.ecosante.model.Act;
 import com.kamitsoft.ecosante.model.Allergen;
 import com.kamitsoft.ecosante.model.Analysis;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
+import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.Drug;
 import com.kamitsoft.ecosante.model.EncounterInfo;
@@ -41,6 +43,7 @@ import java.util.concurrent.Executors;
 
 
 @Database(entities = {Allergen.class,
+                    DistrictInfo.class,
                     UserAccountInfo.class,
                     UnsyncFile.class,
                     AppointmentInfo.class,
@@ -65,7 +68,8 @@ import java.util.concurrent.Executors;
                  SupervisorTypeConverter.class,
                  MonitorTypeConverter.class,
                  StatusTypeConverter.class,
-                 ArrayJsonTypeConverter.class})
+                 ArrayJsonTypeConverter.class,
+                 AreaTypeConverter.class})
 public abstract class KsoftDatabase extends RoomDatabase {
     private static KsoftDatabase INSTANCE;
 
@@ -81,6 +85,7 @@ public abstract class KsoftDatabase extends RoomDatabase {
     public abstract ActDAO actDAO();
     public abstract UnsyncFileDAO fileDAO();
     public abstract AllergenDAO allergenDAO();
+    public abstract DistrictDAO districtDAO();
 
     public synchronized static KsoftDatabase getInstance(Context context) {
         if (INSTANCE == null) {
@@ -122,7 +127,8 @@ public abstract class KsoftDatabase extends RoomDatabase {
                                         UserInfo.class,
                                         EncounterInfo.class,
                                         SummaryInfo.class,
-                                        LabInfo.class};
+                                        LabInfo.class,
+                                        DistrictInfo.class};
         EntitySync[] data = new EntitySync[entities.length];
 
         int i = 0;

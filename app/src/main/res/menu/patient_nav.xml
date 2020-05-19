@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_profile"
+        android:enabled="true"
+        android:checkable="true"
+        android:icon="@drawable/patient"
+        android:title="@string/profile"
+        app:showAsAction="ifRoom" />
+    <item
+        android:checkable="true"
+        android:id="@+id/action_summary"
+        android:enabled="true"
+        android:icon="@drawable/action"
+        android:title="@string/summary"
+        app:showAsAction="ifRoom" />
+    <item
+        android:checkable="true"
+        android:id="@+id/action_visits"
+        android:enabled="true"
+        android:icon="@drawable/encounter"
+        android:title="@string/visits"
+        app:showAsAction="ifRoom" />
+    <item
+        android:checkable="true"
+        android:id="@+id/action_docs"
+        android:enabled="true"
+        android:icon="@drawable/docs"
+        android:title="@string/docs"
+        app:showAsAction="ifRoom" />
+    <item
+        android:checkable="true"
+        android:id="@+id/action_appointments"
+        android:enabled="true"
+        android:icon="@drawable/appointment"
+        android:title="@string/appointment_list"
+        app:showAsAction="ifRoom" />
+</menu>

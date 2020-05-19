@@ -10,14 +10,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.DiskCache;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
+import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.EntitySync;
@@ -29,8 +32,10 @@ import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.SyncData;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.json.Status;
 import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.repositories.AppointmentsRepository;
+import com.kamitsoft.ecosante.model.repositories.DistrictRepository;
 import com.kamitsoft.ecosante.model.repositories.DocumentsRepository;
 import com.kamitsoft.ecosante.model.repositories.EncountersRepository;
 import com.kamitsoft.ecosante.model.repositories.EntityRepository;
@@ -75,6 +80,7 @@ public class ApiSyncService extends Service {
     private AppointmentsRepository appointmentRepository;
     private FileRepository fileRepository;
     private EntityRepository entityRepository;
+    private DistrictRepository districtRepository;
 
 
 
@@ -124,10 +130,11 @@ public class ApiSyncService extends Service {
         });
 
         encounterRepository.getDirty().observeForever(encounterInfos -> {
-            if(proxy == null){
+            if(proxy == null || encounterInfos.size()<= 0){
                 return;
             }
             EntitySync entitySync = getEntity(EncounterInfo.class);
+
             List<EncounterInfo> toSynch = encounterInfos.stream().filter(e ->
                     e.getUpdatedAt().getTime() > entitySync.getLastSynced()).collect(Collectors.toList());
             if(toSynch.size() > 0)
@@ -220,40 +227,68 @@ public class ApiSyncService extends Service {
             List<DocumentInfo> toSynch = labs.stream().filter(e ->
                     e.getUpdatedAt().getTime() > entitySycn.getLastSynced()).collect(Collectors.toList());
 
-
             if(toSynch.size() > 0)
                 syncDocs(entitySycn, toSynch, null);
 
 
         });
 
-        appointmentRepository.getData().observeForever(labs -> {
+        appointmentRepository.getData().observeForever(appt -> {
             if(proxy == null){
                 return;
             }
             EntitySync entitySycn = getEntity(AppointmentInfo.class);
-            List<AppointmentInfo> toSynch = labs.stream().filter(e ->
+            ;
+            List<AppointmentInfo> toSynch = appt.stream().filter(e ->
                     e.getUpdatedAt().getTime() > entitySycn.getLastSynced()).collect(Collectors.toList());
-
 
             if(toSynch.size() > 0)
                 syncAppointments(entitySycn, toSynch, null);
         });
 
+        districtRepository.getData().observeForever(dists -> {
+            if(proxy == null || dists == null){
+                return;
+            }
+
+            EntitySync entitySync = getEntity(DistrictInfo.class);
+            List<DistrictInfo> toSynch = dists.stream()
+                    .filter((d) -> {
+
+                        return d.getUpdatedAt().getTime() > entitySync.getLastSynced();
+                    })
+                    .collect(Collectors.toList());
+
+
+            if(toSynch.size() > 0)
+                syncDistricts(entitySync, toSynch, null);
+
+
+        });
+
     }
 
     public void requestSync(Class<?> beanClass, Completion completion) {
-        //Log.i("XXXXXXXXX--->",beanClass+"");
-        EntitySync entitySync = getEntity(beanClass);
-        if(entitySync==null ||  !entitySync.isDirty()){
-            if(completion != null){
+        if(beanClass == null){
+            if(completion !=null){
                 completion.onReady();
             }
             return;
         }
+        EntitySync entitySync = getEntity(beanClass);
+        if(entitySync == null){
+           entitySync = getEntity(beanClass);
+        }
+        if(System.currentTimeMillis() - entitySync.getLastSynced() <= 60*1000){
+            if(completion !=null){
+                completion.onReady();
+            }
+
+            return;
+        }
         //entitySync.setLastSynced(entitySync.getLastSynced()-1000);
         if(beanClass == PatientInfo.class ){
-            syncPatients(entitySync,new ArrayList<>(),completion);
+            syncPatients(entitySync, new ArrayList<>(),completion);
         }
         if(beanClass == EncounterInfo.class){
             syncEncounters(entitySync,new ArrayList<>(),completion);
@@ -276,6 +311,10 @@ public class ApiSyncService extends Service {
         if(beanClass == AppointmentInfo.class){
             syncAppointments(entitySync,new ArrayList<>(),completion);
         }
+        if(beanClass == DistrictInfo.class){
+            if(entitySync.isDirty())
+                syncDistricts(entitySync,new ArrayList<>(),completion);
+        }
     }
 
     private void initRepositories() {
@@ -288,6 +327,7 @@ public class ApiSyncService extends Service {
         appointmentRepository = new AppointmentsRepository(app);
         fileRepository = new FileRepository(app);
         entityRepository = new EntityRepository(app);
+        districtRepository = new DistrictRepository(app);
 
     }
 
@@ -313,24 +353,32 @@ public class ApiSyncService extends Service {
         SyncData<List<UserInfo>> data = new SyncData<>();
         data.timestamp = entitySync.getLastSynced();
         data.data = dirty;
-        entitySync.setLastSynced(System.currentTimeMillis());
         entitySync.setDirty(false);
         proxy.syncUser(data).enqueue(new Callback<List<UserInfo>>(){
             @Override
             public void onResponse(Call<List<UserInfo>> call, Response<List<UserInfo>> response) {
 
                 if (response.code() == 200){
-                    response.body().stream().forEach(e->  e.setUpdatedAt(new Timestamp(data.timestamp)));
+                    entitySync.setLastSynced(System.currentTimeMillis());
+                    entityRepository.update(entitySync);
+                    List<UserInfo> toDelete = response.body().stream()
+                            .filter(e -> {
+                                e.setUpdatedAt(new Timestamp(data.timestamp));
+                                return e.isDeleted();})
+                            .collect(Collectors.toList());
 
-                    List<UserInfo> toDelete = response.body().stream().filter(e -> e.isDeleted()).collect(Collectors.toList());
-                    if(toDelete != null && toDelete.size() > 0)
-                        userRepository.delete(toDelete.toArray(new UserInfo[]{}));
+                    if(toDelete != null && toDelete.size() > 0) {
+                       userRepository.delete(toDelete.toArray(new UserInfo[]{}));
+                    }
 
-                    List<UserInfo> toUpdate = response.body().stream().filter(e -> !e.isDeleted()).collect(Collectors.toList());
+                    List<UserInfo> toUpdate = response.body().stream()
+                            .filter(e -> {
+                                e.setUpdatedAt(new Timestamp(data.timestamp));
+                                return !e.isDeleted();})
+                            .collect(Collectors.toList());
                     if(toUpdate != null && toUpdate.size() > 0)
                         userRepository.insert(toUpdate.toArray(new UserInfo[]{}));
 
-                    database.entityDAO().insert(entitySync);
                 }
                 if(completion !=null){
                     completion.onReady();
@@ -354,22 +402,29 @@ public class ApiSyncService extends Service {
         SyncData<List<PatientInfo>> data = new SyncData<>();
         data.timestamp = entitySync.getLastSynced();
         data.data = dirty;
-        entitySync.setLastSynced(System.currentTimeMillis());
         entitySync.setDirty(false);
         proxy.syncPatients(data).enqueue(new Callback<List<PatientInfo>>(){
                     @Override
                     public void onResponse(Call<List<PatientInfo>> call, Response<List<PatientInfo>> response) {
-
                         if (response.code() == 200){
+                            entitySync.setLastSynced(System.currentTimeMillis());
+                            entityRepository.update(entitySync);
 
-                            List<PatientInfo> deleted = response.body().stream().filter(p -> p.isDeleted()).collect(Collectors.toList());
+                            List<PatientInfo> deleted = response.body()
+                                    .stream()
+                                    .filter((s) ->{
+                                        s.setUpdatedAt(new Timestamp(data.timestamp));
+                                        return s.isDeleted(); })
+                                    .collect(Collectors.toList());
                             if(deleted!=null && deleted.size() > 0) {
-                                Log.i("XXXXXX==>","deleted "+ deleted.size());
                                 patientRepository.delete(deleted.toArray(new PatientInfo[]{}));
-
                             }
 
-                            List<PatientInfo> updated = response.body().stream().filter(p -> !p.isDeleted()).collect(Collectors.toList());
+                            List<PatientInfo> updated = response.body().stream()
+                                    .filter((s) ->{
+                                        s.setUpdatedAt(new Timestamp(data.timestamp));
+                                        return !s.isDeleted(); })
+                                    .collect(Collectors.toList());
                             updated.stream().forEach(p-> p.setUpdatedAt(new Timestamp(data.timestamp)));
 
                             if(updated!=null && updated.size() > 0)
@@ -377,7 +432,7 @@ public class ApiSyncService extends Service {
 
 
 
-                            entityRepository.update(entitySync);
+
                             if(updated!=null && updated.size() > 0) {
                                 entityRepository.setDirty(DocumentInfo.class.getSimpleName());
                                 entityRepository.setDirty(MedicationInfo.class.getSimpleName());
@@ -406,28 +461,36 @@ public class ApiSyncService extends Service {
     public void syncEncounters(EntitySync entitySync, List<EncounterInfo> dirty, Completion completion) {
 
         SyncData<List<EncounterInfo>> data = new SyncData<>();
-        data.timestamp = entitySync.getLastSynced();
         data.data = dirty;
-        entitySync.setLastSynced(System.currentTimeMillis());
+        data.timestamp = entitySync.getLastSynced();
         entitySync.setDirty(false);
         proxy.syncEncounters(data).enqueue(new Callback<List<EncounterInfo>>(){
             @Override
             public void onResponse(Call<List<EncounterInfo>> call, Response<List<EncounterInfo>> response) {
 
                 if (response.code() == 200){
-
-                    List<EncounterInfo> deleted = response.body().stream().filter(p -> p.isDeleted()).collect(Collectors.toList());
+                    entitySync.setLastSynced(System.currentTimeMillis());
+                    entityRepository.update(entitySync);
+                    List<EncounterInfo> deleted = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return s.isDeleted(); })
+                            .collect(Collectors.toList());
                     if(deleted!=null && deleted.size() > 0)
                         encounterRepository.delete(deleted.toArray(new EncounterInfo[]{}));
 
-                    List<EncounterInfo> updated = response.body().stream().filter(p -> !p.isDeleted()).collect(Collectors.toList());
+                    List<EncounterInfo> updated = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return !s.isDeleted(); })
+                            .collect(Collectors.toList());
                     updated.stream().forEach(p-> p.setUpdatedAt(new Timestamp(data.timestamp)));
 
                     if(updated!=null && updated.size() > 0)
                         encounterRepository.insert(updated.toArray(new EncounterInfo[]{}));
 
+                    requestSync(PatientInfo.class, null);
 
-                    entityRepository.update(entitySync);
 
 
                 }
@@ -456,25 +519,34 @@ public class ApiSyncService extends Service {
 
         data.timestamp = entitySync.getLastSynced();
         data.data = dirty;
-        entitySync.setLastSynced(System.currentTimeMillis());
         entitySync.setDirty(false);
         proxy.syncSummaries(data).enqueue(new Callback<List<SummaryInfo>>(){
             @Override
             public void onResponse(Call<List<SummaryInfo>> call, Response<List<SummaryInfo>> response) {
 
                 if (response.code() == 200){
+                    entitySync.setLastSynced(System.currentTimeMillis());
 
-                    List<SummaryInfo> deleted = response.body().stream().filter(s -> s.isDeleted()).collect(Collectors.toList());
+                    entityRepository.update(entitySync);
+                    List<SummaryInfo> deleted = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return s.isDeleted(); })
+                            .collect(Collectors.toList());
                     if(deleted!=null && deleted.size() > 0)
                         patientRepository.delete(deleted.toArray(new SummaryInfo[]{}));
 
-                    List<SummaryInfo> updated = response.body().stream().filter(s -> !s.isDeleted()).collect(Collectors.toList());
+                    List<SummaryInfo> updated = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return !s.isDeleted(); })
+                            .collect(Collectors.toList());
                     updated.stream().forEach(p-> p.setUpdatedAt(new Timestamp(data.timestamp)));
 
                     if(updated!=null && updated.size() > 0)
                         patientRepository.updateSummaries(updated.toArray(new SummaryInfo[]{}));
 
-                    entityRepository.update(entitySync);
+
 
 
                 }
@@ -502,26 +574,34 @@ public class ApiSyncService extends Service {
 
         data.timestamp = entitySync.getLastSynced();
         data.data = dirty;
-        entitySync.setLastSynced(System.currentTimeMillis());
         entitySync.setDirty(false);
         proxy.syncMedications(data).enqueue(new Callback<List<MedicationInfo>>(){
             @Override
             public void onResponse(Call<List<MedicationInfo>> call, Response<List<MedicationInfo>> response) {
 
                 if (response.code() == 200){
+                    entitySync.setLastSynced(System.currentTimeMillis());
 
-                    List<MedicationInfo> deleted = response.body().stream().filter(s -> s.getDeleted()).collect(Collectors.toList());
+                    entityRepository.update(entitySync);
+                    List<MedicationInfo> deleted = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return s.getDeleted(); })
+                            .collect(Collectors.toList());
                     if(deleted!=null && deleted.size() > 0)
                         medicationRepository.delete(deleted.toArray(new MedicationInfo[]{}));
 
-                    List<MedicationInfo> updated = response.body().stream().filter(s -> !s.getDeleted()).collect(Collectors.toList());
+                    List<MedicationInfo> updated = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return !s.getDeleted(); })
+                            .collect(Collectors.toList());
                     updated.stream().forEach(p-> p.setUpdatedAt(new Timestamp(data.timestamp)));
 
                     if(updated!=null && updated.size() > 0)
                         medicationRepository.insert(updated.toArray(new MedicationInfo[]{}));
 
 
-                    entityRepository.update(entitySync);
 
 
                 }
@@ -549,24 +629,32 @@ public class ApiSyncService extends Service {
 
         data.timestamp = entitySync.getLastSynced();
         data.data = dirty;
-        entitySync.setLastSynced(System.currentTimeMillis());
         entitySync.setDirty(false);
         proxy.syncLabs(data).enqueue(new Callback<List<LabInfo>>(){
             @Override
             public void onResponse(Call<List<LabInfo>> call, Response<List<LabInfo>> response) {
 
                 if (response.code() == 200){
-                    List<LabInfo> deleted = response.body().stream().filter(s -> s.getDeleted()).collect(Collectors.toList());
+                    entitySync.setLastSynced(System.currentTimeMillis());
+                    entityRepository.update(entitySync);
+                    List<LabInfo> deleted = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return s.getDeleted(); })
+                            .collect(Collectors.toList());
                     if(deleted!=null && deleted.size() > 0)
                         labRepository.delete(deleted.toArray(new LabInfo[]{}));
 
-                    List<LabInfo> updated = response.body().stream().filter(s -> !s.getDeleted()).collect(Collectors.toList());
+                    List<LabInfo> updated = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return !s.getDeleted(); })
+                            .collect(Collectors.toList());
                     updated.stream().forEach(p-> p.setUpdatedAt(new Timestamp(data.timestamp)));
 
                     if(updated!=null && updated.size() > 0)
                         labRepository.insert(updated.toArray(new LabInfo[]{}));
 
-                    entityRepository.update(entitySync);
 
 
                 }
@@ -595,24 +683,36 @@ public class ApiSyncService extends Service {
 
         data.timestamp = entitySync.getLastSynced();
         data.data = dirty;
-        entitySync.setLastSynced(System.currentTimeMillis());
         entitySync.setDirty(false);
+        //Toast.makeText(getApplication(),"data "+ new Gson().toJson(data), Toast.LENGTH_LONG).show();
+
         proxy.syncDocuments(data).enqueue(new Callback<List<DocumentInfo>>(){
             @Override
             public void onResponse(Call<List<DocumentInfo>> call, Response<List<DocumentInfo>> response) {
+                //Toast.makeText(getApplication(),"code "+response.code() + new Gson().toJson(response.body()), Toast.LENGTH_LONG).show();
 
                 if (response.code() == 200){
-                    List<DocumentInfo> deleted = response.body().stream().filter(s -> s.getDeleted()).collect(Collectors.toList());
+                    entitySync.setLastSynced(System.currentTimeMillis());
+                    entityRepository.update(entitySync);
+                    List<DocumentInfo> deleted = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return s.getDeleted(); })
+                            .collect(Collectors.toList());
                     if(deleted!=null && deleted.size() > 0)
                         documentRepository.delete(deleted.toArray(new DocumentInfo[]{}));
 
-                    List<DocumentInfo> updated = response.body().stream().filter(s -> !s.getDeleted()).collect(Collectors.toList());
+                    List<DocumentInfo> updated = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return !s.getDeleted(); })
+                            .collect(Collectors.toList());
                     updated.stream().forEach(p-> p.setUpdatedAt(new Timestamp(data.timestamp)));
 
                     if(updated!=null && updated.size() > 0)
                         documentRepository.insert(updated.toArray(new DocumentInfo[]{}));
 
-                    entityRepository.update(entitySync);
+
 
 
                 }
@@ -636,6 +736,62 @@ public class ApiSyncService extends Service {
 
     }
 
+    private void syncDistricts(EntitySync entitySync, List<DistrictInfo> dirty, Completion completion) {
+
+        final SyncData<List<DistrictInfo>> data = new SyncData<>();
+        data.timestamp = entitySync.getLastSynced();
+        data.data = dirty;
+        entitySync.setDirty(false);
+
+        proxy.syncDistricts(data).enqueue(new Callback<List<DistrictInfo>>(){
+            @Override
+            public void onResponse(Call<List<DistrictInfo>> call, Response<List<DistrictInfo>> response) {
+
+                if (response.code() == 200){
+                    Log.i("XXXXXXXXX 2--->",""+entitySync.getLastSynced());
+                    entitySync.setLastSynced(System.currentTimeMillis());
+                    Log.i("XXXXXXXXX 3--->",""+entitySync.getLastSynced());
+
+                    entityRepository.update(entitySync);
+                    EntitySync e = entityRepository.getEntity(entitySync.getEntity());
+
+                    List<DistrictInfo> deleted = response.body()
+                            .stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return s.isDeleted(); })
+                            .collect(Collectors.toList());
+                    if(deleted!=null && deleted.size() > 0)
+                        districtRepository.syncDelete(deleted.toArray(new DistrictInfo[]{}));
+
+                    List<DistrictInfo> updated = response.body()
+                            .stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return !s.isDeleted(); })
+                            .collect(Collectors.toList());
+
+                    if(updated!=null && updated.size() > 0)
+                        districtRepository.syncUpdate(updated.toArray(new DistrictInfo[]{}));
+
+                }
+                if(completion !=null){
+                    completion.onReady();
+                }
+
+            }
+            @Override
+            public void onFailure(Call<List<DistrictInfo>> call, Throwable t) {
+                Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
+                if(completion !=null){
+                    completion.onReady();
+                }
+
+            }
+        });
+
+    }
+
     public void syncAppointments(EntitySync entitySync, List<AppointmentInfo> dirty, Completion completion) {
         SyncData<List<AppointmentInfo>> data = new SyncData<>();
 
@@ -643,22 +799,32 @@ public class ApiSyncService extends Service {
         data.data = dirty;
         entitySync.setLastSynced(System.currentTimeMillis());
         entitySync.setDirty(false);
+
         proxy.syncAppointments(data).enqueue(new Callback<List<AppointmentInfo>>(){
             @Override
             public void onResponse(Call<List<AppointmentInfo>> call, Response<List<AppointmentInfo>> response) {
 
                 if (response.code() == 200){
-                    List<AppointmentInfo> deleted = response.body().stream().filter(s -> s.isDeleted()).collect(Collectors.toList());
+                    entityRepository.update(entitySync);
+                    List<AppointmentInfo> deleted = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return s.isDeleted(); })
+                            .collect(Collectors.toList());
                     if(deleted!=null && deleted.size() > 0)
                         appointmentRepository.delete(deleted.toArray(new AppointmentInfo[]{}));
 
-                    List<AppointmentInfo> updated = response.body().stream().filter(s -> !s.isDeleted()).collect(Collectors.toList());
+                    List<AppointmentInfo> updated = response.body().stream()
+                            .filter((s) ->{
+                                s.setUpdatedAt(new Timestamp(data.timestamp));
+                                return s.isDeleted(); })
+                            .collect(Collectors.toList());
                     updated.stream().forEach(p-> p.setUpdatedAt(new Timestamp(data.timestamp)));
 
                     if(updated!=null && updated.size() > 0)
                         appointmentRepository.insert(updated.toArray(new AppointmentInfo[]{}));
 
-                    entityRepository.update(entitySync);
+
 
 
                 }
@@ -698,6 +864,29 @@ public class ApiSyncService extends Service {
             }
         });
 
+    }
+    public void getPageArchivedEncounters(int page, Completion completion) {
+        proxy.getPageArchivedEncounters(page, 10).enqueue(new Callback<List<EncounterInfo>>() {
+            @Override
+            public void onResponse(Call<List<EncounterInfo>> call,
+                                   Response<List<EncounterInfo>> response) {
+
+                if (response.code() == 200 && response.body().size() > 0){
+                    database.encounterDAO().insert(response.body().toArray(new EncounterInfo[]{}));
+                }
+                if(completion!= null){
+                    completion.onReady();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EncounterInfo>> call, Throwable t) {
+                t.printStackTrace();
+                if(completion!= null){
+                    completion.onReady();
+                }
+            }
+        });
     }
 
     public void getAvailableSupervisors() {
@@ -790,10 +979,11 @@ public class ApiSyncService extends Service {
 
     private EntitySync getEntity(Class<?> beanClass){
         assert (beanClass !=null);
-        EntitySync e = database.entityDAO().getEntitySync(beanClass.getSimpleName().toLowerCase());
+        String name = beanClass.getSimpleName().toLowerCase();
+        EntitySync e = entityRepository.getEntity(name);
         if(e== null){
             e = new EntitySync();
-            e.setEntity(beanClass.getSimpleName().toLowerCase());
+            e.setEntity(name);
             e.setDirty(true);
             e.setLastSynced(0L);
         }

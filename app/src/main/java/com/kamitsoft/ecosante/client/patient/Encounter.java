@@ -86,7 +86,13 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
-        encounterInfo = app.getCurrentEncounter();
+        if(getIntent().getStringExtra("euuid") == null) {
+            encounterInfo = app.getCurrentEncounter();
+        }else{
+            encounterInfo = encounterModel.getEncounter(getIntent().getStringExtra("euuid"));
+            app.setCurrentEncounter(encounterInfo);
+
+        }
 
         setTitle(getString(R.string.encounter));
         model = ViewModelProviders.of(this).get(EncountersViewModel.class);
@@ -182,6 +188,8 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
                 drugsAdapter.syncData(info.stream().filter(m -> m.getEncounterUuid().equals(encounterInfo.getUuid())).collect(Collectors.toList()));
             }
         });
+
+        if(app.getCurrentPatient() != null)
         encounterModel.getEncounters().observe(this,encounterInfos -> {
             for(EncounterInfo e:encounterInfos){
                 if(encounterInfo == null || e.getUuid().equals(encounterInfo.getUuid())){

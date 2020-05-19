@@ -69,6 +69,7 @@ public class EncounterInfo {
     private Supervisor supervisor;
     private Timestamp updatedAt;
     private boolean deleted;
+    private String districtUuid;
 
     public String getRunningTreatment() {
         return runningTreatment;
@@ -484,4 +485,11 @@ public class EncounterInfo {
         getStatus().add(0,new Status(statusConstant.status));
     }
 
+    public void setDistrictUuid(String districtUuid) {
+        this.districtUuid = districtUuid;
+    }
+
+    public String getDistrictUuid() {
+        return districtUuid;
+    }
 }

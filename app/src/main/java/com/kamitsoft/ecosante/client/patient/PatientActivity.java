@@ -1,34 +1,47 @@
 package com.kamitsoft.ecosante.client.patient;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.client.BaseFragment;
+import com.kamitsoft.ecosante.client.PatientBaseFragment;
 import com.kamitsoft.ecosante.constant.PatientViewsType;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-public class PatientActivity extends ImagePickerActivity implements TabLayout.BaseOnTabSelectedListener {
+public class PatientActivity extends ImagePickerActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private EcoSanteApp app;
-    private TabLayout tabLayout;
-    private ViewPager pager;
-    private CustomPagerAdapter adapter;
+
     private PatientsViewModel model;
+    private PatientBaseFragment currentFragment;
+    private BottomNavigationView navBar;
+    private PatientViewsType currentType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,29 +55,28 @@ public class PatientActivity extends ImagePickerActivity implements TabLayout.Ba
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
 
+        navBar = findViewById(R.id.bottom_navigation);
+        navBar.setOnNavigationItemSelectedListener(this);
 
-        tabLayout = findViewById(R.id.nav_bottom);
-        pager =     findViewById(R.id.view_pager);
-        adapter = new CustomPagerAdapter(getSupportFragmentManager());
 
-        pager.setAdapter(adapter);
-        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorAccent, getTheme()));
-        tabLayout.setupWithViewPager(pager);
-        for(PatientViewsType pwt: PatientViewsType.values()){
-            TabLayout.Tab tab =  tabLayout.getTabAt(pwt.value);
-            tab.setIcon(pwt.icon);
-            tab.setText(pwt.title);
-            if(pwt == PatientViewsType.ENCOUNTERS) {
-                tab.setCustomView(R.layout.consultation_item);
-            }
-        }
-        tabLayout.addOnTabSelectedListener(this);
+
         toolbar.setSubtitle(Utils.formatPatient(this,app.getCurrentPatient()));
         app.getCurrentLivePatient().observe(this, patientInfo -> {
             toolbar.setSubtitle(Utils.formatPatient(PatientActivity.this,app.getCurrentPatient()));
 
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        navBar.setSelectedItemId(PatientViewsType.ENCOUNTERS.value);
+
+        /*BottomNavigationMenuView mview = (BottomNavigationMenuView)navBar.getChildAt(0);
+        BottomNavigationItemView itemView = (BottomNavigationItemView)mview.getChildAt(2);
+        View circ = LayoutInflater.from(this).inflate(R.layout.pat_menu_button, mview, false);
+        itemView.addView(circ);*/
     }
 
     @Override
@@ -79,48 +91,51 @@ public class PatientActivity extends ImagePickerActivity implements TabLayout.Ba
 
     }
 
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        setTitle(tab.getText());
-    }
+
 
     @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        PatientViewsType type = PatientViewsType.typeOf(item.getItemId());
+        setTitle(type.title);
+        item.setChecked(true);
+        showFragment(type);
+        return false;
     }
 
 
 
-    public class CustomPagerAdapter extends FragmentPagerAdapter {
+    @SuppressLint("ResourceType")
+    public  PatientBaseFragment  showFragment(PatientViewsType type) {
+        try {
 
-
-        public CustomPagerAdapter(FragmentManager fm) {
-           super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        }
-
-
-
-        @Override
-        public Fragment getItem(int position) {
-            try {
-                return PatientViewsType.values()[position].fragment.newInstance();
-            }catch (Exception e){
-
+            currentFragment = (PatientBaseFragment)getSupportFragmentManager().findFragmentByTag(type.fragment.getName());
+            if(currentFragment == null) {
+                currentFragment = type.fragment.newInstance();
             }
-            return null;
-        }
 
-        @Override
-        public int getCount() {
-            return PatientViewsType.values().length;
-        }
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            if(currentType != null){
+                boolean rtl = type.ordinal() > currentType.ordinal() ;
+                ft.setCustomAnimations(rtl?R.anim.enter_from_right:R.anim.enter_from_left,
+                                       rtl?R.anim.exit_to_left:R.anim.exit_to_right);
+            }
+            //
 
+            ft.replace(R.id.container, currentFragment, type.fragment.getName());
+            //ft.runOnCommit(() -> setTitle(currentFragment.getTitle()));
+            ft.commit();
+            currentType = type;
+
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return  currentFragment;
 
     }
+
+
+
 
 }

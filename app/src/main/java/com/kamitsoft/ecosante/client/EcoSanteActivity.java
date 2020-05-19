@@ -9,21 +9,22 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
+import com.kamitsoft.ecosante.client.admin.DistrictList;
+import com.kamitsoft.ecosante.client.admin.DistrictMap;
 import com.kamitsoft.ecosante.client.nurse.Supervisors;
 import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
 import com.kamitsoft.ecosante.constant.UserStatusConstant;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
-import com.kamitsoft.ecosante.services.FirebaseChannels;
-import com.kamitsoft.ecosante.services.Proxy;
+import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 import com.kamitsoft.ecosante.signing.SignIn;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -44,15 +45,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class EcoSanteActivity extends ImagePickerActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -75,20 +72,15 @@ public class EcoSanteActivity extends ImagePickerActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         header = navigationView.getHeaderView(0);
+
         model = ViewModelProviders.of(this).get(UsersViewModel.class);
-        model.getConnectedUser().observe(this, userInfo -> {
-            app.setCurrentUser(userInfo);
-            if(userInfo == null){
-                return;
-            }
-            this.currentUser = userInfo;
-            initDrawerMenu();
-            initHeaderInfo();
-            if(account!=null && account.getGenPassword() && currentUser !=null){
-                new PasswordEditorDialog(currentUser)
-                        .show(getSupportFragmentManager(), "PasswordEditorDialog");
-            }
-        });
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
         model.getConnectedAccount().observe(this, account->{
             this.account = account;
@@ -97,12 +89,22 @@ public class EcoSanteActivity extends ImagePickerActivity
                         .show(getSupportFragmentManager(), "PasswordEditorDialog");
             }
         });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        model.getLiveConnectedUser().observeForever(cu->{
+            currentUser = cu;
+            if(currentUser != null) {
+                initDrawerMenu();
+                initHeaderInfo();
+                if(account!=null && account.getGenPassword() && currentUser !=null){
+                    new PasswordEditorDialog(currentUser)
+                            .show(getSupportFragmentManager(), "PasswordEditorDialog");
+                }
+            }else{
+                disconnect();
+            }
+        });
+
+
 
         showFragment(Home.class, R.anim.fade_in, R.anim.fade_out);
 
@@ -112,11 +114,11 @@ public class EcoSanteActivity extends ImagePickerActivity
 
 
     private void initDrawerMenu() {
-        assert(currentUser != null);
         navigationView.getMenu().setGroupVisible(R.id.nurse_menu, false);
         navigationView.getMenu().setGroupVisible(R.id.user_menu, false);
         navigationView.getMenu().setGroupVisible(R.id.physician_menu,false);
         navigationView.getMenu().setGroupVisible(R.id.adminmenu, false);
+        if(currentUser == null){return;}
         switch (UserType.typeOf(currentUser.getUserType())){
             case PHYSIST:
                 navigationView.getMenu().setGroupVisible(R.id.user_menu, true);
@@ -149,25 +151,29 @@ public class EcoSanteActivity extends ImagePickerActivity
     }
 
     public void initHeaderInfo() {
-        assert(app.getCurrentUser() != null);
+        assert(currentUser != null);
 
         TextView fullName = header.findViewById(R.id.textViewPhysistFullName);
-        fullName.setText(Utils.formatUser(this, app.getCurrentUser()));
+        fullName.setText(Utils.formatUser(this, currentUser));
         TextView speciality = header.findViewById(R.id.textViewPhysistSpeciality);
-        speciality.setText(Utils.niceFormat(app.getCurrentUser().getSpeciality()));
+        if(UserType.isPhysist(currentUser.getUserType())) {
+            speciality.setText(Utils.niceFormat(currentUser.getSpeciality()));
+        }
+        if(UserType.isNurse(currentUser.getUserType())) {
+            speciality.setText(Utils.niceFormat(currentUser.getDistrictName()));
+        }
         ImageView headerIv = header.findViewById(R.id.imageViewHeader);
 
         if(headerIv !=null) {
             //R.drawable.user_avatar,R.drawable.physist
-            UserInfo user = app.getCurrentUser();
-            UserType type = UserType.typeOf(user.getUserType());
-            Utils.load(this,BuildConfig.AVATAR_BUCKET,
-                     user.getAvatar(),
+            UserType type = UserType.typeOf(currentUser.getUserType());
+            Utils.load(getApplicationContext(),BuildConfig.AVATAR_BUCKET,
+                     currentUser.getAvatar(),
                      headerIv,type.placeholder,type.placeholder );
         }
 
         header.setOnClickListener(v->{
-            app.setEditingUser(app.getCurrentUser());
+            app.setEditingUser(currentUser);
             showFragment(UserProfile.class, R.anim.fade_in, R.anim.fade_out);
         });
 
@@ -198,6 +204,7 @@ public class EcoSanteActivity extends ImagePickerActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        item.setChecked(true);
         switch (id){
             case R.id.nav_home:
                 showFragment(Home.class, R.anim.fade_in, R.anim.fade_out);
@@ -213,7 +220,7 @@ public class EcoSanteActivity extends ImagePickerActivity
                 showFragment(Supervisors.class, R.anim.fade_in, R.anim.fade_out);
                 break;
 
-            //physiscian
+            //physician
             case R.id.supervisednurses:
                 showFragment(Nurses.class,R.anim.fade_in, R.anim.fade_out);
                 break;
@@ -226,6 +233,10 @@ public class EcoSanteActivity extends ImagePickerActivity
                 break;
             //======
                 //admin
+            case R.id.districs:
+                showFragment(DistrictMap.class,R.anim.fade_in, R.anim.fade_out);
+                break;
+
             case R.id.physicians:
                  showFragment(Physicians.class,R.anim.fade_in, R.anim.fade_out);
                  break;
@@ -239,7 +250,7 @@ public class EcoSanteActivity extends ImagePickerActivity
                 showFragment(UserAppointments.class, R.anim.fade_in, R.anim.fade_out);
                 break;
             case R.id.nav_profile:
-                app.setEditingUser(app.getCurrentUser());
+                app.setEditingUser(currentUser);
                 showFragment(UserProfile.class, R.anim.fade_in, R.anim.fade_out);
                 break;
             case R.id.nav_disconnect:
@@ -265,24 +276,20 @@ public class EcoSanteActivity extends ImagePickerActivity
         alertDialogBuilder.setIcon(R.drawable.logout);
         alertDialogBuilder.setPositiveButton("Deconnecter",(dialog, which)->{
 
-            model.disconnectUser();
-
-            Intent i = new Intent(this, SignIn.class);
-            startActivity(i);
-            overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
-            finish();
+            disconnect();
 
         });
         alertDialogBuilder.setNegativeButton("Annuler", (dialog, which) -> dialog.cancel());
         alertDialogBuilder.create().show();
-
-
-
     }
 
-
     @SuppressLint("ResourceType")
-    public  BaseFragment  showFragment(Class<? extends BaseFragment> fragmentClass, @AnimRes int inAnim, @AnimRes int outAnim) {
+    public  BaseFragment  showFragment(Class<? extends BaseFragment> fragmentClass,  int inAnim,  int outAnim) {
+      return   showFragment(fragmentClass, inAnim,outAnim, 0, 0);
+    }
+
+        @SuppressLint("ResourceType")
+    public  BaseFragment  showFragment(Class<? extends BaseFragment> fragmentClass,  int inAnim,  int outAnim,  int popInAnim,  int popOutAnim) {
         try {
             currentFragment = (BaseFragment)getSupportFragmentManager().findFragmentByTag(fragmentClass.getName());
             if(currentFragment == null) {
@@ -293,6 +300,8 @@ public class EcoSanteActivity extends ImagePickerActivity
             if(inAnim > 0 && outAnim > 0)
                 ft.setCustomAnimations(inAnim, outAnim);
             if(currentFragment.getNavLevel() > 0){
+                if(inAnim > 0 && outAnim > 0 && popInAnim > 0 && popOutAnim > 0)
+                    ft.setCustomAnimations(inAnim, outAnim, popInAnim, popOutAnim);
                 ft.addToBackStack(fragmentClass.getName());
             }
             ft.replace(R.id.container, currentFragment, fragmentClass.getName());
@@ -310,6 +319,14 @@ public class EcoSanteActivity extends ImagePickerActivity
     }
 
 
+    public  void disconnect(){
+        model.disconnectUser();
+
+        Intent i = new Intent(this, SignIn.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
+        finish();
+    }
 
 
 }
