@@ -199,6 +199,7 @@ public class DistrictMap extends BaseFragment implements OnMapReadyCallback, Goo
             return;
         }
         DistrictInfo distric = new DistrictInfo();
+        distric.setNeedUpdate(true);
         distric.setAccountID(connectedUser.getAccountID());
         distric.setMaxNurse(20);
         distric.setMaxPhysist(20);

@@ -44,6 +44,7 @@ import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.LabsViewModel;
@@ -91,8 +92,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         }else{
             encounterInfo = encounterModel.getEncounter(getIntent().getStringExtra("euuid"));
             app.setCurrentEncounter(encounterInfo);
-
         }
+
+        encounterInfo.setNeedUpdate(true);
 
         setTitle(getString(R.string.encounter));
         model = ViewModelProviders.of(this).get(EncountersViewModel.class);
@@ -150,6 +152,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         orientation = findViewById(R.id.orientation);
 
 
+
         findViewById(R.id.cancel).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
             app.exitEncounter();
@@ -157,6 +160,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         });
         findViewById(R.id.save).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
+            setSuperviser();
             model.insert(encounterInfo);
             checkAvailableSupervisor(encounterInfo.getUuid());
             app.exitEncounter();
@@ -164,6 +168,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         });
         findViewById(R.id.reject).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
+            setSuperviser();
             encounterInfo.setCurrentStatus(StatusConstant.REJECTED);
             model.insert(encounterInfo);
             app.exitEncounter();
@@ -171,6 +176,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         });
         findViewById(R.id.accept).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
+            setSuperviser();
             encounterInfo.setCurrentStatus(StatusConstant.ACCEPTED);
             model.insert(encounterInfo);
             app.exitEncounter();
@@ -189,16 +195,17 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
             }
         });
 
-        if(app.getCurrentPatient() != null)
-        encounterModel.getEncounters().observe(this,encounterInfos -> {
-            for(EncounterInfo e:encounterInfos){
-                if(encounterInfo == null || e.getUuid().equals(encounterInfo.getUuid())){
-                    this.encounterInfo = e;
-                    initValue();
-                    break;
+        if(app.getCurrentPatient() != null) {
+            encounterModel.getEncounters().observe(this, encounterInfos -> {
+                for (EncounterInfo e : encounterInfos) {
+                    if (encounterInfo == null || e.getUuid().equals(encounterInfo.getUuid())) {
+                        this.encounterInfo = e;
+                        initValue();
+                        break;
+                    }
                 }
-            }
-        });
+            });
+        }
 
 
         entityModel.getDirtyEntities().observe(this, entitySyncs -> {
@@ -216,6 +223,27 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
             }
         });
+    }
+
+    public void setSuperviser() {
+
+        UserInfo cuser = app.getCurrentUser();
+        if(UserType.isPhysist(cuser.getUserType())) {
+            Supervisor s = new Supervisor();
+            s.supFullName = Utils.formatUser(getApplicationContext(), cuser);
+            s.physicianUuid = cuser.getUuid();
+            s.accountId = cuser.getAccountID();
+            s.nurseUuid = encounterInfo.getUserUuid();
+            encounterInfo.setSupervisor(s);
+            model.insert(encounterInfo);
+        }
+    }
+    public void setSuperviserAndSave() {
+        setSuperviser();
+        UserInfo cuser = app.getCurrentUser();
+        if(UserType.isPhysist(cuser.getUserType())) {
+            model.insert(encounterInfo);
+        }
     }
 
     private void checkAvailableSupervisor(String encUuid) {
@@ -301,6 +329,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         findViewById(R.id.addMedication).setOnClickListener(this);
         drugsAdapter.setItemClickListener((itemPosition, v) -> {
             curentMedication = drugsAdapter.getItem(itemPosition);
+            curentMedication.setNeedUpdate(true);
             if(v.getId() == R.id.item_delete){
                 curentMedication.setDeleted(true);
                 medModel.update(curentMedication);
@@ -425,7 +454,8 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
             curentLab = app.newLab();
             readyForNew = true;
         }
-        new LabEditorDialog(curentLab,readyForNew).show(getSupportFragmentManager(),"labdialog");
+        new LabEditorDialog(curentLab,readyForNew, this::setSuperviserAndSave)
+                .show(getSupportFragmentManager(),"labdialog");
 
     }
 
@@ -435,7 +465,8 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
             curentMedication = app.newMedication();
             readyForNew = true;
         }
-        new MedicationEditorDialog(curentMedication,readyForNew).show(getSupportFragmentManager(),"medicationdialog");
+        new MedicationEditorDialog(curentMedication,readyForNew, this::setSuperviserAndSave)
+                .show(getSupportFragmentManager(),"medicationdialog");
 
     }
 

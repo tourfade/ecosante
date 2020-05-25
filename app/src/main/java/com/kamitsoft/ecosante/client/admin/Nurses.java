@@ -99,9 +99,9 @@ public class Nurses extends BaseFragment {
 
         });
         add = view.findViewById(R.id.newItem);
-
         add.setOnClickListener(v -> {
             UserInfo ui = new UserInfo();
+            ui.setNeedUpdate(true);
             ui.setUserType(UserType.NURSE.type);
             app.setEditingUser(ui);
             contextActivity.showFragment(UserEditor.class,R.anim.slide_up,R.anim.fade_out);

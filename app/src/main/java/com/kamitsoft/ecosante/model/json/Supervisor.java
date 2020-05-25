@@ -1,5 +1,8 @@
 package com.kamitsoft.ecosante.model.json;
 
+import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.model.UserInfo;
+
 import java.sql.Timestamp;
 
 import androidx.room.Entity;

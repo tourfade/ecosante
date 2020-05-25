@@ -51,6 +51,7 @@ public class PatientInfo {
     private Monitor monitor;
     private boolean deleted;
     private String districtUuid;
+    private boolean needUpdate;
 
     public PatientInfo(){
         uuid = UUID.randomUUID().toString();
@@ -305,5 +306,13 @@ public class PatientInfo {
 
     public void setDistrictUuid(String districtUuid) {
         this.districtUuid = districtUuid;
+    }
+
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
     }
 }

@@ -38,35 +38,23 @@ public class UserEncounters extends BaseFragment implements BottomNavigationView
     private EncountersViewModel model;
     private ProgressBar progress;
     private BottomNavigationView navBar;
-    private boolean archived;
+    private StatusConstant currentStatus = StatusConstant.PENDING;
     private int page = 0;
-    private Observer<? super List<EncounterHeaderInfo>> archive  = encounters-> {
+    private Observer<? super List<EncounterHeaderInfo>> observer  = encounters-> {
         if(encounters ==null || encounters.size()<= 0){
             return;
         }
         Stream<EncounterHeaderInfo> data = encounters .stream()
                 .filter( e -> e.getMonitor().monitorUuid.equals(app.getCurrentUser().getUuid())
-                        && e.currentStatus().status == StatusConstant.ARCHIVED.status);
+                        &&   e.currentStatus().status == currentStatus.status);
 
         List<EncounterHeaderInfo> list = data.collect(Collectors.toList());
         encountersAdapter.syncData(list);
-        if(archived){
+        if(currentStatus == StatusConstant.ARCHIVED){
             page = (list.size()/25);
         }
     };
-    private Observer<? super List<EncounterHeaderInfo>> running  = encounters-> {
-        if(encounters ==null || encounters.size()<= 0){
-            return;
-        }
-        Stream<EncounterHeaderInfo> data = encounters
-                .stream()
-                .filter(e -> e.getMonitor().monitorUuid.equals(app.getCurrentUser().getUuid())
-                        && e.currentStatus().status != StatusConstant.ARCHIVED.status
-                        && e.currentStatus().status != StatusConstant.DELETED.status);
 
-        encountersAdapter.syncData(data.collect(Collectors.toList()));
-
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +81,7 @@ public class UserEncounters extends BaseFragment implements BottomNavigationView
         encountersAdapter = new UserEncountersAdapter(getActivity());
         model = ViewModelProviders.of(this).get(EncountersViewModel.class);
 
-        model.getUserEncounters().observe(this, running);
+        model.getUserEncounters().observe(this, observer);
         recyclerview.setAdapter(encountersAdapter);
         encountersAdapter.setItemClickListener((itemPosition, v) -> new Task().execute(encountersAdapter.getItem(itemPosition)));
         swr = view.findViewById(R.id.swiperefresh);
@@ -121,20 +109,28 @@ public class UserEncounters extends BaseFragment implements BottomNavigationView
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         getActivity().setTitle(item.getTitle());
-        archived = item.getItemId() == R.id.archive;
         item.setChecked(true);
-        model.getUserEncounters().removeObserver(running);
-        model.getUserEncounters().removeObserver(archive);
+        model.getUserEncounters().removeObserver(observer);
 
-        if(archived){
-            model.getUserEncounters().observe(this, archive);
-            app.service().getPageArchivedEncounters(page, ()->{
-                progress.setVisibility(View.GONE);
-            });
-
-        }else{
-            model.getUserEncounters().observe(this, running);
+        switch (item.getItemId()){
+            case R.id.archive:
+                currentStatus = StatusConstant.ARCHIVED;
+                app.service().getPageArchivedEncounters(page, ()->{
+                    progress.setVisibility(View.GONE);
+                });
+                break;
+            case R.id.rejected:
+                currentStatus = StatusConstant.REJECTED;
+                break;
+            case R.id.active:
+                currentStatus = StatusConstant.PENDING;
+                break;
+            case R.id.accepted:
+                currentStatus = StatusConstant.ACCEPTED;
+                break;
         }
+        model.getUserEncounters().observe(this, observer);
+
         return false;
     }
 

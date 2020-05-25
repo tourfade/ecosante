@@ -2,7 +2,7 @@ package com.kamitsoft.ecosante.constant;
 
 
 import com.kamitsoft.ecosante.R;
-import com.kamitsoft.ecosante.client.PatientBaseFragment;
+import com.kamitsoft.ecosante.client.patient.PatientBaseFragment;
 import com.kamitsoft.ecosante.client.patient.PatientAppointments;
 import com.kamitsoft.ecosante.client.patient.PatientDocuments;
 import com.kamitsoft.ecosante.client.patient.PatientEncounters;
@@ -11,7 +11,6 @@ import com.kamitsoft.ecosante.client.patient.PatientSummaryView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
-import androidx.fragment.app.Fragment;
 
 public enum PatientViewsType {
     PROFILE(R.id.action_profile, R.string.profile,  R.drawable.patient, PatientProfileView.class),// for user check

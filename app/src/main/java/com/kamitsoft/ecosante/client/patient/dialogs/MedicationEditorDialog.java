@@ -35,12 +35,14 @@ public class MedicationEditorDialog  extends DialogFragment implements View.OnCl
     private  AppCompatSpinner renewal, status;
     private  Drug selectedDrug;
     private  MedicationStatus medStatus;
-    private MedicationViewModel medModel;
+    private  MedicationViewModel medModel;
+    private  OnSaving completion;
 
-    public MedicationEditorDialog(MedicationInfo med, boolean isNew){
+    public MedicationEditorDialog(MedicationInfo med, boolean isNew, OnSaving completion){
         this.curentMedication = med;
         this.readyForNew = isNew;
-
+        curentMedication.setNeedUpdate(true);
+        this.completion = completion;
     }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -67,6 +69,9 @@ public class MedicationEditorDialog  extends DialogFragment implements View.OnCl
             curentMedication.setStatus(medStatus.status);
             curentMedication.setEndingDate(medStatus == MedicationStatus.TERMINATED? new Timestamp(edCalendar.getTimeInMillis()):null);
             curentMedication.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            if(completion!=null){
+                completion.saving();
+            }
             if(readyForNew) {
                 medModel.insert(curentMedication);
             }else {

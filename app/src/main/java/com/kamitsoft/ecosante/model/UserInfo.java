@@ -48,6 +48,7 @@ public class UserInfo {
     private String token;
     private String districtUuid;
     private String districtName;
+    private boolean needUpdate;
 
     public int getUserID() {
         return userID;
@@ -271,5 +272,13 @@ public class UserInfo {
 
     public void setDistrictName(String districtName) {
         this.districtName = districtName;
+    }
+
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
     }
 }

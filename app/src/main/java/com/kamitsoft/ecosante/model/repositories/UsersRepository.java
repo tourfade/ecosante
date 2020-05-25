@@ -30,6 +30,7 @@ public class UsersRepository {
     private LiveData<SubInstanceInfo> subInstance;
     private LiveData<List<UserInfo>> all;
     private LiveData<UserInfo> connectedUser;
+    private LiveData<List<UserInfo>> dirty;
 
     public UsersRepository(Application application) {
         app = (EcoSanteApp)application;
@@ -46,6 +47,12 @@ public class UsersRepository {
             all = userDAO.allUsers();
         }
         return all;
+    }
+    public LiveData<List<UserInfo>> getDirty() {
+        if(dirty == null){
+            dirty = userDAO.dirty();
+        }
+        return dirty;
     }
     public LiveData<SubConsumerInfo> getConsumer() {
         return subConsumer;

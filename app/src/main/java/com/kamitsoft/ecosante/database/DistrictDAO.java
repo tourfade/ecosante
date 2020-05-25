@@ -37,5 +37,6 @@ public interface DistrictDAO {
     List<DistrictInfo> finDistricts(String key1);
 
 
-
+    @Query("SELECT * FROM districtinfo WHERE needUpdate >= 1")
+    LiveData<List<DistrictInfo>> dirty();
 }

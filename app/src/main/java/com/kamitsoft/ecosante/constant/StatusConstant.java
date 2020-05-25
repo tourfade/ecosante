@@ -12,12 +12,14 @@ import top.defaults.drawabletoolbox.DrawableBuilder;
 public enum StatusConstant {
     NEW(0,0, Color.LTGRAY,R.string.newStatus), //0
 
-    PENDING(1,1, Color.CYAN, R.string.pending), //0
-    REVIEWED(2,2,Color.BLUE, R.string.reviewed),//1
+    PENDING(1,1, Color.BLUE, R.string.pending), //0
+    REVIEWED(2,2,Color.CYAN, R.string.reviewed),//1
     ACCEPTED(3,3,Color.GREEN, R.string.accepted),//2
     REJECTED(4,4,Color.RED,R.string.rejected),//-1
     ARCHIVED(5,-1,Color.GRAY,R.string.archived),//-1
-    DELETED(6,-2,Color.YELLOW,R.string.deleted);//-1
+    DELETED(6,-2,Color.YELLOW,R.string.deleted),//-1
+    FILTER_UNASSIGNED(7,-3,Color.WHITE,R.string.unassigned),//-1
+    FILTER_TREATED(8,-4,Color.WHITE,R.string.treated);//-1
     public final int status;
     public final int name;
     public final int index;

@@ -179,8 +179,9 @@ public class EcoSanteApp extends MultiDexApplication {
     }
     public void newPatient() {
         exitPatient();
-
-        setCurrentPatient(new PatientInfo());
+        PatientInfo p = new PatientInfo();
+        p.setNeedUpdate(true);
+        setCurrentPatient(p);
     }
     public void setCurrentPatient(PatientInfo currentPatient) {
 
@@ -201,6 +202,7 @@ public class EcoSanteApp extends MultiDexApplication {
     }
     public void setNewEncounter() {
         EncounterInfo e = new EncounterInfo();
+        e.setNeedUpdate(true);
         e.getStatus().add(new Status(StatusConstant.NEW.status));
         e.setDistrictUuid(currentUser.getDistrictUuid());
         currentEncounter.setValue(e);
@@ -231,6 +233,7 @@ public class EcoSanteApp extends MultiDexApplication {
 
     public LabInfo newLab() {
         LabInfo  li = new LabInfo();
+        li.setNeedUpdate(true);
         li.setPatientID(currentPatient.getValue().getPatientID());
         li.setPatientUuid(currentPatient.getValue().getUuid());
         li.setEncounterUuid(currentEncounter.getValue().getUuid());
@@ -252,6 +255,7 @@ public class EcoSanteApp extends MultiDexApplication {
 
     public MedicationInfo newMedication() {
         MedicationInfo  li = new MedicationInfo();
+        li.setNeedUpdate(true);
         li.setPatientID(currentPatient.getValue().getPatientID());
         li.setPatientUuid(currentPatient.getValue().getUuid());
         li.setEncounterUuid(currentEncounter.getValue().getUuid());
@@ -277,6 +281,7 @@ public class EcoSanteApp extends MultiDexApplication {
     }
 
     public void setCurrentDistrict(DistrictInfo currentDistrict) {
+        currentDistrict.setNeedUpdate(true);
         this.currentDistrict.postValue( currentDistrict);
     }
 

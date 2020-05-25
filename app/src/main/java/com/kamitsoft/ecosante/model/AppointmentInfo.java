@@ -32,6 +32,7 @@ public class AppointmentInfo {
     private int status;
     private String recipient;
     private String patient;
+    private boolean needUpdate;
 
     public String getUserObject() {
         return userObject;
@@ -200,5 +201,13 @@ public class AppointmentInfo {
 
     public String getPatient() {
         return patient;
+    }
+
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
     }
 }

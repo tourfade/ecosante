@@ -88,8 +88,8 @@ public interface EncounterDAO {
     @Query("SELECT * FROM encounterinfo WHERE patientUuid =:uuid AND deleted<= 0 ORDER BY createdAt DESC")
     List<EncounterInfo> getAllPatientEncounters(String uuid);
 
-    @Query("SELECT * FROM encounterinfo WHERE updatedAt > (SELECT lastSynced FROM entitysync WHERE entity ='encounterinfo')")
-    LiveData<List<EncounterInfo>> getUnsync();
+    @Query("SELECT * FROM encounterinfo WHERE needUpdate >= 1")
+    LiveData<List<EncounterInfo>> dirty();
 
     @Query("DELETE FROM encounterinfo WHERE uuid IN(:encounterIds)")
     void resetEncounters(String... encounterIds);
@@ -105,4 +105,10 @@ public interface EncounterDAO {
 
     @Query("SELECT * FROM encounterinfo")
     List<EncounterInfo> getEncounters();
+
+    @Query("SELECT * FROM labinfo WHERE  needUpdate >= 1")
+    LiveData<List<LabInfo>> dirtyLab();
+
+    @Query("SELECT * FROM medicationinfo WHERE  needUpdate >= 1")
+    LiveData<List<MedicationInfo>> dirtyMed();
 }

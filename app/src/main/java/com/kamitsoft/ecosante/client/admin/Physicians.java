@@ -66,6 +66,7 @@ public class Physicians extends BaseFragment {
 
         (view.findViewById(R.id.newItem)).setOnClickListener(v -> {
             UserInfo ui = new UserInfo();
+            ui.setNeedUpdate(true);
             ui.setUserType(UserType.PHYSIST.type);
             app.setEditingUser(ui);
             contextActivity.showFragment(UserEditor.class,R.anim.slide_up,R.anim.fade_out);

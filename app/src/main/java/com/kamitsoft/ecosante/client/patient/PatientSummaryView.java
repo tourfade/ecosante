@@ -15,7 +15,6 @@ import android.widget.EditText;
 
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
-import com.kamitsoft.ecosante.client.PatientBaseFragment;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
 import com.kamitsoft.ecosante.client.patient.dialogs.AllergiesEditorDialog;
 import com.kamitsoft.ecosante.client.patient.dialogs.FallsEditorDialog;
@@ -53,7 +52,6 @@ public class PatientSummaryView extends PatientBaseFragment {
     private AppCompatCheckBox  idm, avc, falls, surgeries, allergies, drop, dementia, hta, epilepsy, irc, asthm, diabete,
             glaucoma, hepatitb, hypertyroid, other, menopause, falciform;
     private SummaryInfo currentSummary;
-    private PatientInfo currentPatient;
     private PatientsViewModel model;
     private boolean initialized;
 
@@ -77,22 +75,17 @@ public class PatientSummaryView extends PatientBaseFragment {
         model = ViewModelProviders.of(this).get(PatientsViewModel.class);
 
 
-        model.getCurrentPatient().observe(this, patientInfo -> {
-            if(patientInfo == null){
-                return;
-            }
-            this.currentPatient = patientInfo;
-            model.getCurrentSummary(currentPatient.getUuid())
-                    .observe(PatientSummaryView.this, summaryInfo -> {
-                        currentSummary = summaryInfo;
-                        if(currentSummary == null){
-                            currentSummary = new SummaryInfo();
-                            currentSummary.setPatientUuid(currentPatient.getUuid());
-                            currentSummary.setPatientID(currentPatient.getPatientID());
-                        }
-                        initSummaryInfo();
-            });
 
+        model.getCurrentSummary(currentPatient.getUuid())
+                .observe(PatientSummaryView.this, summaryInfo -> {
+                    currentSummary = summaryInfo;
+                    if(currentSummary == null){
+                        currentSummary = new SummaryInfo();
+                        currentSummary.setPatientUuid(currentPatient.getUuid());
+                        currentSummary.setPatientID(currentPatient.getPatientID());
+                    }
+                    currentSummary.setNeedUpdate(true);
+                    initSummaryInfo();
         });
 
         doctor = view.findViewById(R.id.ecosantedocotor);

@@ -1,7 +1,6 @@
 package com.kamitsoft.ecosante.client.patient;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +12,16 @@ import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.DiskCache;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
-import com.kamitsoft.ecosante.client.PatientBaseFragment;
 import com.kamitsoft.ecosante.client.adapters.DocumentsListAdapter;
 import com.kamitsoft.ecosante.client.patient.dialogs.DocEditorDialog;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
-import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.DocumentsViewModel;
 
 import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,12 +62,11 @@ public class PatientDocuments extends PatientBaseFragment {
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
         model.getDocuments().observe(this, documentInfos -> {
-            PatientInfo p = app.getCurrentPatient();
-            if(p != null) {
+            if(currentPatient != null) {
                 docAdapter.syncData(documentInfos.parallelStream()
-                        .filter(d -> app.getCurrentPatient()!=null &&
+                        .filter(d -> currentPatient!=null &&
                                 !d.getDeleted() &&
-                                d.getPatientUuid().equals(p.getUuid()))
+                                d.getPatientUuid().equals(currentPatient.getUuid()))
                         .collect(Collectors.toList()));
             }
 

@@ -3,16 +3,12 @@ package com.kamitsoft.ecosante.client.patient;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamitsoft.ecosante.R;
-import com.kamitsoft.ecosante.client.PatientBaseFragment;
 import com.kamitsoft.ecosante.client.adapters.PatientEncountersAdapter;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
@@ -26,7 +22,6 @@ import androidx.annotation.RequiresApi;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class PatientEncounters extends PatientBaseFragment {
     private RecyclerView recyclerview;
@@ -62,7 +57,7 @@ public class PatientEncounters extends PatientBaseFragment {
             Stream<EncounterInfo> data = encounters
                     .stream()
                     .filter(e -> !e.isDeleted()
-                            && e.getPatientUuid().equals(app.getCurrentPatient().getUuid()));
+                            && e.getPatientUuid().equals(currentPatient.getUuid()));
             encounterAdapter.syncData(data.collect(Collectors.toList()));
         });
 
@@ -70,6 +65,7 @@ public class PatientEncounters extends PatientBaseFragment {
             if(v.getId() == R.id.item_delete){
                 EncounterInfo item = encounterAdapter.getItem(itemPosition);
                 item.setDeleted(true);
+                item.setNeedUpdate(true);
                 model.update(item);
                 return;
             }

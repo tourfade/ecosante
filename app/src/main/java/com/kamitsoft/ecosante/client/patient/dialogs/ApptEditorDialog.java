@@ -42,6 +42,7 @@ public class ApptEditorDialog extends DialogFragment {
         this.readyForNew = isNew;
         if(appointmentInfo != null ){
             current = appointmentInfo;
+            current.setNeedUpdate(true);
         }
     }
     @Override
@@ -66,7 +67,7 @@ public class ApptEditorDialog extends DialogFragment {
 
 
         }
-
+        current.setNeedUpdate(true);
         alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
         alertDialogBuilder.setTitle(readyForNew || current==null? getString(R.string.new_appointment):current.getUserObject());

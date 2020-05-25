@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,16 +23,12 @@ import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
-import com.kamitsoft.ecosante.client.PatientBaseFragment;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
 import com.kamitsoft.ecosante.constant.Gender;
 import com.kamitsoft.ecosante.constant.MaritalStatus;
 import com.kamitsoft.ecosante.model.PatientInfo;
-import com.kamitsoft.ecosante.model.json.Monitor;
 import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Calendar;
 
 public class PatientProfileView extends PatientBaseFragment  {
@@ -43,7 +38,6 @@ public class PatientProfileView extends PatientBaseFragment  {
             personContactphone1,personContactphone2,perosnContactAddress;
     private AppCompatSpinner sex, status;
     private AppCompatCheckBox retired, ipres,fnr,official;
-    private PatientInfo currentPatient;
     private ImagePickerActivity picker;
     private PatientsViewModel model;
     private boolean isNew;
@@ -102,6 +96,8 @@ public class PatientProfileView extends PatientBaseFragment  {
             if (patientInfo == null) { return;}
             oldavatar = patientInfo.getAvatar();
             this.currentPatient = patientInfo;
+            currentPatient.setNeedUpdate(true);
+
             initPatientInfo();
         });
 
@@ -109,6 +105,7 @@ public class PatientProfileView extends PatientBaseFragment  {
             if (patientInfo == null || currentPatient == null) { return;}
             for(PatientInfo p:patientInfo) {
                 if (currentPatient != null && currentPatient.getUuid().equals(p.getUuid())) {
+                    currentPatient.setNeedUpdate(true);
                     model.setCurrentPatient(p);
                     break;
                 }
@@ -138,7 +135,6 @@ public class PatientProfileView extends PatientBaseFragment  {
         switch (item.getItemId()){
             case R.id.action_edit:
                 edit(true);
-
                 break;
 
             case R.id.action_save:
@@ -154,7 +150,7 @@ public class PatientProfileView extends PatientBaseFragment  {
     }
 
     private void save() {
-
+        currentPatient.setNeedUpdate(true);
         model.insert(currentPatient);
         picker.syncAvatar(currentPatient.getAvatar(),oldavatar, 0);
 
@@ -210,7 +206,7 @@ public class PatientProfileView extends PatientBaseFragment  {
 
         perosnContactAddress.setEnabled(editable);
         perosnContactAddress.setError(null);
-
+        getActivity().invalidateOptionsMenu();
     }
 
     private void initListeners() {

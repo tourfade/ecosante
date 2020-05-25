@@ -13,17 +13,21 @@ import androidx.lifecycle.LiveData;
 
 public class MedicationsRepository {
     private EncounterDAO encounterDAO;
-    private LiveData<List<MedicationInfo>> encounterMedication;
+    private LiveData<List<MedicationInfo>> encounterMedication,dirty;
     private EcoSanteApp app;
 
     public MedicationsRepository(Application application) {
         app = (EcoSanteApp)application;
         encounterDAO = app.getDb().encounterDAO();
         encounterMedication = encounterDAO.getMedications();
+        dirty = encounterDAO.dirtyMed();
     }
 
     public LiveData<List<MedicationInfo>> getPatientMedications() {
         return encounterMedication;
+    }
+    public LiveData<List<MedicationInfo>> dirty() {
+        return dirty;
     }
 
     public void insert (MedicationInfo... doc) {

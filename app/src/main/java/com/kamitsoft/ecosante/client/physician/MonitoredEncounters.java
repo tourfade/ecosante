@@ -5,35 +5,72 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.adapters.UserEncountersAdapter;
 import com.kamitsoft.ecosante.client.patient.Encounter;
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class MonitoredEncounters extends BaseFragment {
+public class MonitoredEncounters extends BaseFragment implements BottomNavigationView.OnNavigationItemSelectedListener {
     private RecyclerView recyclerview;
     private UserEncountersAdapter encountersAdapter;
     private EncountersViewModel model;
+    private BottomNavigationView navBar;
+    private StatusConstant currentStatus = StatusConstant.PENDING;
+    private int page = 0;
+    private ProgressBar progress;
 
+    private Observer<? super List<EncounterHeaderInfo>> observer  = encounters-> {
+        if(encounters ==null || encounters.size()<= 0){
+            return;
+        }
+        Stream<EncounterHeaderInfo> data = encounters .stream()
+                .filter( e -> {
+                    if(currentStatus == StatusConstant.FILTER_UNASSIGNED){
+                        return  e.getSupervisor() == null || e.getSupervisor().physicianUuid == null;
+                    }
+                    if(currentStatus == StatusConstant.FILTER_TREATED){
+                        return  e.currentStatus().status == StatusConstant.ACCEPTED.status
+                                || e.currentStatus().status == StatusConstant.REVIEWED.status
+                                || e.currentStatus().status == StatusConstant.NEW.status;
+                    }
+
+                    return    e.getSupervisor() != null
+                            && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid)
+                            && e.currentStatus().status == currentStatus.status;
+
+                });
+
+        List<EncounterHeaderInfo> list = data.collect(Collectors.toList());
+        encountersAdapter.syncData(list);
+        if(currentStatus == StatusConstant.ARCHIVED){
+            page = (list.size()/25);
+        }
+    };
 
 
     @Override
@@ -46,7 +83,7 @@ public class MonitoredEncounters extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.list, container, false);
+        return inflater.inflate(R.layout.supervised_list, container, false);
     }
 
 
@@ -55,9 +92,14 @@ public class MonitoredEncounters extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerview =  view.findViewById(R.id.recycler_view);
+        progress = view.findViewById(R.id.progress);
+
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
+        navBar = view.findViewById(R.id.bottom_navigation);
+        navBar.setOnNavigationItemSelectedListener(this);
+        navBar.setVisibility(View.VISIBLE);
         encountersAdapter = new UserEncountersAdapter(getActivity());
         recyclerview.setAdapter(encountersAdapter);
         model = ViewModelProviders.of(this).get(EncountersViewModel.class);
@@ -81,7 +123,35 @@ public class MonitoredEncounters extends BaseFragment {
         return getString(R.string.reviewed_encounters);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        getActivity().setTitle(item.getTitle());
+        item.setChecked(true);
+        model.getUserEncounters().removeObserver(observer);
 
+        switch (item.getItemId()){
+            case R.id.pending:
+                currentStatus = StatusConstant.ACCEPTED;
+                break;
+            case R.id.treated:
+                currentStatus = StatusConstant.FILTER_TREATED;
+                break;
+            case R.id.archive:
+                currentStatus = StatusConstant.ARCHIVED;
+                app.service().getPageArchivedEncounters(page, ()->{
+                    progress.setVisibility(View.GONE);
+                });
+                break;
+            case R.id.unassigned:
+                currentStatus = StatusConstant.FILTER_UNASSIGNED;
+                break;
+
+
+        }
+        model.getUserEncounters().observe(this, observer);
+
+        return false;
+    }
 
 
     class Task extends AsyncTask<EncounterHeaderInfo, PatientInfo, EncounterInfo> {

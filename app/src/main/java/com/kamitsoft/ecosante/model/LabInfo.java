@@ -25,7 +25,7 @@ public class LabInfo {
     private int labNumber;
     private Timestamp doneDate;
     private boolean deleted;
-
+    private boolean needUpdate;
 
     public LabInfo(){
         uuid = UUID.randomUUID().toString();
@@ -151,5 +151,12 @@ public class LabInfo {
     }
 
 
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
+    }
 }
 

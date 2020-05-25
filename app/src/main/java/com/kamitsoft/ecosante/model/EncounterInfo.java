@@ -70,6 +70,7 @@ public class EncounterInfo {
     private Timestamp updatedAt;
     private boolean deleted;
     private String districtUuid;
+    private boolean needUpdate;
 
     public String getRunningTreatment() {
         return runningTreatment;
@@ -491,5 +492,13 @@ public class EncounterInfo {
 
     public String getDistrictUuid() {
         return districtUuid;
+    }
+
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
     }
 }

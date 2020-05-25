@@ -1,4 +1,4 @@
-package com.kamitsoft.ecosante.client;
+package com.kamitsoft.ecosante.client.patient;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
+import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
 
@@ -24,12 +25,13 @@ public class PatientBaseFragment extends Fragment {
     protected EntitiesViewModel entityModel;
     protected SwipeRefreshLayout swr;
     protected UserInfo connectedUser;
-
+    protected PatientInfo currentPatient;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (EcoSanteApp)getActivity().getApplication();
         connectedUser  = app.getCurrentUser();
+        currentPatient = app.getCurrentPatient();
         entityModel = ViewModelProviders.of(this).get(EntitiesViewModel.class);
 
         entityModel.getDirtyEntities().observe(this, entitySyncs -> {

@@ -37,8 +37,8 @@ public interface SummaryDAO {
     @Query("SELECT * FROM summaryinfo WHERE patientUuid=:patientUUID")
     LiveData<SummaryInfo> getPatientSummaryLD(String patientUUID);
 
-    @Query("SELECT * FROM summaryinfo WHERE updatedAt > (SELECT lastSynced FROM entitysync WHERE entity ='summaryinfo')")
-    LiveData<List<SummaryInfo>> getUnsync();
+    @Query("SELECT * FROM summaryinfo WHERE needUpdate >= 1")
+    LiveData<List<SummaryInfo>> getDirty();
 
     @Query("DELETE FROM summaryinfo ")
     void resetSummariesSet();

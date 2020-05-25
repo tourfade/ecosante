@@ -158,6 +158,7 @@ public class UserProfile extends BaseFragment {
                 break;
 
             case R.id.action_save:
+                cu.setNeedUpdate(true);
                 model.insert(cu);
                 contextActivity.syncAvatar(cu.getAvatar(),oldAvatar, 0);
                 edit(false);

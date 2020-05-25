@@ -92,4 +92,7 @@ public interface UserDAO {
 
     @Query("SELECT ui.* FROM userinfo ui  JOIN useraccountinfo ua ON (ui.uuid = ua.userUuid)  LIMIT 1")
     UserInfo getConnected();
+
+    @Query("SELECT * FROM userinfo WHERE needUpdate >= 1")
+    LiveData<List<UserInfo>> dirty();
 }

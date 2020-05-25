@@ -49,6 +49,7 @@ public class ApptRequestorDialog extends DialogFragment {
         this.readyForNew = isNew;
         if(appointmentInfo != null ){
             current = appointmentInfo;
+            current.setNeedUpdate(true);
         }
     }
 
@@ -68,7 +69,7 @@ public class ApptRequestorDialog extends DialogFragment {
             currentUser = app.getCurrentUser();
             current.setUserRequestorUuid(currentUser.getUuid());
         }
-
+        current.setNeedUpdate(true);
         alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(readyForNew || current==null? getString(R.string.new_appointment_request):current.getUserObject());
 

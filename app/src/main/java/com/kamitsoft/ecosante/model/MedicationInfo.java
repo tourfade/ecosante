@@ -26,6 +26,7 @@ public class MedicationInfo {
     private int status;
     private Timestamp endingDate;
     private boolean deleted;
+    private boolean needUpdate;
 
     public long getDrugNumber() {
         return drugNumber;
@@ -154,5 +155,12 @@ public class MedicationInfo {
     }
 
 
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
+    }
 }
 

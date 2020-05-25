@@ -19,17 +19,21 @@ import androidx.lifecycle.LiveData;
 
 public class LabsRepository {
     private EncounterDAO encounterDAO;
-    private LiveData<List<LabInfo>> encounterLabs;
+    private LiveData<List<LabInfo>> encounterLabs, dirty;
     private EcoSanteApp app;
 
     public LabsRepository(Application application) {
         app = (EcoSanteApp)application;
         encounterDAO = app.getDb().encounterDAO();
         encounterLabs = encounterDAO.getLabs();
+        dirty = encounterDAO.dirtyLab();
     }
 
     public LiveData<List<LabInfo>> getEncounterLabs() {
         return encounterLabs;
+    }
+    public LiveData<List<LabInfo>> getDirty() {
+        return dirty;
     }
 
     public void insert (LabInfo... doc) {

@@ -6,15 +6,11 @@ import android.os.AsyncTask;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.database.PatientDAO;
 import com.kamitsoft.ecosante.database.SummaryDAO;
-import com.kamitsoft.ecosante.database.UserDAO;
-import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import androidx.lifecycle.LiveData;
 
@@ -31,8 +27,8 @@ public class PatientsRepository {
         dao = app.getDb().patientDAO();
         summaryDAO = app.getDb().summaryDAO();
         allData = dao.getPatients();
-        dirty = dao.getUnsync();
-        dirtySummaries = summaryDAO.getUnsync();
+        dirty = dao.dirtyPatients();
+        dirtySummaries = summaryDAO.getDirty();
 
     }
     public LiveData<List<PatientInfo>> getDirty() {

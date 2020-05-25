@@ -53,8 +53,8 @@ public interface PatientDAO {
     @Query("SELECT * FROM patientinfo WHERE lastName like:key OR firstName like:key OR middleName like:key OR mobile like:key OR (firstName || ' '|| lastName) like:key")
     List<PatientInfo> findPatients(String key);
 
-    @Query("SELECT * FROM patientinfo WHERE updatedAt > (SELECT lastSynced FROM entitysync WHERE entity ='patientinfo')")
-    LiveData<List<PatientInfo>>  getUnsync();
+    @Query("SELECT * FROM patientinfo WHERE needUpdate >= 1")
+    LiveData<List<PatientInfo>> dirtyPatients();
 
     @Query("DELETE FROM patientinfo ")
     void resetePatientsSet();
@@ -62,5 +62,6 @@ public interface PatientDAO {
     @Query("DELETE FROM documentinfo ")
     void reseteDocumentsSet();
 
-
+    @Query("SELECT * FROM documentinfo WHERE  needUpdate >= 1")
+    LiveData<List<DocumentInfo>> dirty();
 }

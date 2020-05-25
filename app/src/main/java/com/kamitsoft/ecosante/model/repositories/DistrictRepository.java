@@ -15,18 +15,23 @@ import androidx.lifecycle.LiveData;
 public class DistrictRepository {
     private DistrictDAO dao;
     private LiveData<List<DistrictInfo>> data;
-    private LiveData<List<DistrictInfo>> unsyched;
+    private LiveData<List<DistrictInfo>> dirty;
     private EcoSanteApp app;
 
     public DistrictRepository(Application application) {
         app = (EcoSanteApp)application;
         dao = app.getDb().districtDAO();
         data = dao.all();
+        dirty = dao.dirty();
         //unsyched = dao.getUnsynched();
     }
 
     public LiveData<List<DistrictInfo>> getData() {
         return data;
+    }
+
+    public LiveData<List<DistrictInfo>> getDirty() {
+        return dirty;
     }
 
     public void insert (DistrictInfo... infos) {

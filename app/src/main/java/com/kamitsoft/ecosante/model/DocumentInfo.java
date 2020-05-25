@@ -27,7 +27,7 @@ public class DocumentInfo {
     private String attachment;
     private String mimeType;
     private boolean deleted;
-
+    private boolean needUpdate;
 
     public DocumentInfo(){
         uuid = UUID.randomUUID().toString();
@@ -138,6 +138,14 @@ public class DocumentInfo {
 
     public boolean getDeleted() {
         return deleted;
+    }
+
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
     }
 }
 

@@ -129,139 +129,83 @@ public class ApiSyncService extends Service {
             }
         });
 
-        encounterRepository.getDirty().observeForever(encounterInfos -> {
-            if(proxy == null || encounterInfos.size()<= 0){
+        encounterRepository.getDirty().observeForever(toSynch -> {
+            if(proxy == null ){
                 return;
             }
-            EntitySync entitySync = getEntity(EncounterInfo.class);
-
-            List<EncounterInfo> toSynch = encounterInfos.stream().filter(e ->
-                    e.getUpdatedAt().getTime() > entitySync.getLastSynced()).collect(Collectors.toList());
             if(toSynch.size() > 0)
-                syncEncounters(entitySync, toSynch, null);
+                syncEncounters(getEntity(EncounterInfo.class), toSynch, null);
         });
 
-        patientRepository.getDirty().observeForever(patients -> {
-            if(proxy == null){
-                return;
-            }
-            EntitySync entitySync = getEntity(PatientInfo.class);
-            List<PatientInfo> toSynch = patients.parallelStream().filter(e ->
-                    e.getUpdatedAt().getTime() > entitySync.getLastSynced()).collect(Collectors.toList());
-
-            if(toSynch.size() > 0)
-                syncPatients(entitySync,toSynch, null);
-
-        });
-
-        userRepository.getUserOfType(UserType.PHYSIST).observeForever(users->{
-            if(proxy == null){
-                return;
-            }
-            EntitySync entitySycn = getEntity(UserInfo.class);
-            List<UserInfo> toSynch = users.stream().filter(e ->
-                    e.getUpdatedAt()!=null && e.getUpdatedAt().getTime() > entitySycn.getLastSynced()).collect(Collectors.toList());
-
-
-            if(toSynch.size() > 0)
-                syncUsers(entitySycn, toSynch, null);
-        });
-
-        userRepository.getUserOfType(UserType.NURSE).observeForever(users->{
-            if(proxy == null){
-                return;
-            }
-            EntitySync entitySycn = getEntity(UserInfo.class);
-            List<UserInfo> toSynch = users.stream().filter(e ->
-                    e.getUpdatedAt()!=null && e.getUpdatedAt().getTime() > entitySycn.getLastSynced()).collect(Collectors.toList());
-
-            if(toSynch.size() > 0)
-                syncUsers(entitySycn, toSynch, null);
-        });
-
-        patientRepository.getDirtySummaries().observeForever(summaryInfos -> {
-            if(proxy == null){
-                return;
-            }
-            EntitySync entitySycn = getEntity(SummaryInfo.class);
-            List<SummaryInfo> toSynch = summaryInfos.stream().filter(e ->
-                    e.getUpdatedAt().getTime() > entitySycn.getLastSynced()).collect(Collectors.toList());
-
-
-            if(toSynch.size() > 0)
-                syncSummaries(entitySycn, toSynch, null);
-        });
-
-        medicationRepository.getPatientMedications().observeForever(medicationInfos -> {
-            if(proxy == null){
-                return;
-            }
-            EntitySync entitySycn = getEntity(MedicationInfo.class);
-            List<MedicationInfo> toSynch = medicationInfos.stream().filter(e ->
-                    e.getUpdatedAt().getTime() > entitySycn.getLastSynced()).collect(Collectors.toList());
-
-
-            if(toSynch.size() > 0)
-                syncMedications(entitySycn, toSynch, null);
-        });
-
-        labRepository.getEncounterLabs().observeForever(labs -> {
-            if(proxy == null){
-                return;
-            }
-            EntitySync entitySycn = getEntity(LabInfo.class);
-            List<LabInfo> toSynch = labs.stream().filter(e ->
-                    e.getUpdatedAt().getTime() > entitySycn.getLastSynced()).collect(Collectors.toList());
-
-
-            if(toSynch.size() > 0)
-                syncLabs(entitySycn, toSynch, null);
-        });
-
-        documentRepository.getPatientDocs().observeForever(labs -> {
+        patientRepository.getDirty().observeForever(toSynch -> {
             if(proxy == null){
                 return;
             }
 
-            EntitySync entitySycn = getEntity(DocumentInfo.class);
-            List<DocumentInfo> toSynch = labs.stream().filter(e ->
-                    e.getUpdatedAt().getTime() > entitySycn.getLastSynced()).collect(Collectors.toList());
-
             if(toSynch.size() > 0)
-                syncDocs(entitySycn, toSynch, null);
-
+                syncPatients(getEntity(PatientInfo.class),toSynch, null);
 
         });
 
-        appointmentRepository.getData().observeForever(appt -> {
+        userRepository.getDirty().observeForever(toSynch->{
+            if(toSynch.size() > 0)
+                syncUsers(getEntity(UserInfo.class), toSynch, null);
+        });
+
+        patientRepository.getDirtySummaries().observeForever(toSynch -> {
             if(proxy == null){
                 return;
             }
-            EntitySync entitySycn = getEntity(AppointmentInfo.class);
-            ;
-            List<AppointmentInfo> toSynch = appt.stream().filter(e ->
-                    e.getUpdatedAt().getTime() > entitySycn.getLastSynced()).collect(Collectors.toList());
 
             if(toSynch.size() > 0)
-                syncAppointments(entitySycn, toSynch, null);
+                syncSummaries(getEntity(SummaryInfo.class), toSynch, null);
         });
 
-        districtRepository.getData().observeForever(dists -> {
-            if(proxy == null || dists == null){
+        medicationRepository.dirty().observeForever(toSynch -> {
+            if(proxy == null){
                 return;
             }
 
-            EntitySync entitySync = getEntity(DistrictInfo.class);
-            List<DistrictInfo> toSynch = dists.stream()
-                    .filter((d) -> {
 
-                        return d.getUpdatedAt().getTime() > entitySync.getLastSynced();
-                    })
-                    .collect(Collectors.toList());
+            if(toSynch.size() > 0)
+                syncMedications(getEntity(MedicationInfo.class), toSynch, null);
+        });
+
+        labRepository.getDirty().observeForever(toSynch -> {
+            if(proxy == null){
+                return;
+            }
 
 
             if(toSynch.size() > 0)
-                syncDistricts(entitySync, toSynch, null);
+                syncLabs(getEntity(LabInfo.class), toSynch, null);
+        });
+
+        documentRepository.getDirty().observeForever(toSynch -> {
+            if(proxy == null){
+                return;
+            }
+            if(toSynch.size() > 0)
+                syncDocs(getEntity(DocumentInfo.class), toSynch, null);
+
+
+        });
+
+        appointmentRepository.getDirty().observeForever(toSynch -> {
+            if(proxy == null){
+                return;
+            }
+
+            if(toSynch.size() > 0)
+                syncAppointments(getEntity(AppointmentInfo.class), toSynch, null);
+        });
+
+        districtRepository.getDirty().observeForever(toSynch -> {
+            if(proxy == null || toSynch == null){
+                return;
+            }
+            if(toSynch.size() > 0)
+                syncDistricts(getEntity(DistrictInfo.class), toSynch, null);
 
 
         });
@@ -748,9 +692,7 @@ public class ApiSyncService extends Service {
             public void onResponse(Call<List<DistrictInfo>> call, Response<List<DistrictInfo>> response) {
 
                 if (response.code() == 200){
-                    Log.i("XXXXXXXXX 2--->",""+entitySync.getLastSynced());
                     entitySync.setLastSynced(System.currentTimeMillis());
-                    Log.i("XXXXXXXXX 3--->",""+entitySync.getLastSynced());
 
                     entityRepository.update(entitySync);
                     EntitySync e = entityRepository.getEntity(entitySync.getEntity());

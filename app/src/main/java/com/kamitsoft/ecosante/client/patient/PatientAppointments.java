@@ -7,17 +7,11 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamitsoft.ecosante.R;
-import com.kamitsoft.ecosante.client.BaseFragment;
-import com.kamitsoft.ecosante.client.PatientBaseFragment;
 import com.kamitsoft.ecosante.client.adapters.AppointmentsAdapter;
 import com.kamitsoft.ecosante.client.patient.dialogs.ApptEditorDialog;
 import com.kamitsoft.ecosante.client.patient.dialogs.ApptRequestorDialog;
-import com.kamitsoft.ecosante.client.patient.dialogs.DocEditorDialog;
-import com.kamitsoft.ecosante.constant.PointOfView;
-import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
-import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.AppointmentsViewModel;
 
 import java.util.stream.Collectors;
@@ -27,13 +21,11 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class PatientAppointments extends PatientBaseFragment {
     private RecyclerView recyclerView;
     private AppointmentsAdapter adapter;
     private AppointmentsViewModel model;
-    private PatientInfo currentPatient;
     private boolean isFABOpen;
     private FloatingActionButton  newDoc,newApp,reqApp;
 
@@ -54,7 +46,7 @@ public class PatientAppointments extends PatientBaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        currentPatient = app.getCurrentPatient();
+
         model = ViewModelProviders.of(this).get(AppointmentsViewModel.class);
         model.getPatientData().observe(this, appointmentInfos ->  {
             currentPatient = app.getCurrentPatient();

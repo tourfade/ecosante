@@ -274,5 +274,8 @@
     <string name="associated_district">District Associé</string>
     <string name="visits">Visites</string>
     <string name="visit_date">Date de la visite</string>
+    <string name="unassigned">Non Assignés</string>
+    <string name="waiting">En Attente</string>
+    <string name="treated">Traitées</string>
 
 </resources>

@@ -16,17 +16,21 @@ import androidx.lifecycle.LiveData;
 
 public class DocumentsRepository {
     private PatientDAO patientDAO;
-    private LiveData<List<DocumentInfo>> allPatientDocuments;
+    private LiveData<List<DocumentInfo>> allPatientDocuments, dirty;
     private EcoSanteApp app;
 
     public DocumentsRepository(Application application) {
         app = (EcoSanteApp)application;
         patientDAO = app.getDb().patientDAO();
         allPatientDocuments = patientDAO.getAllDocuments();
+        dirty = patientDAO.dirty();
     }
 
     public LiveData<List<DocumentInfo>> getPatientDocs() {
         return allPatientDocuments;
+    }
+    public LiveData<List<DocumentInfo>> getDirty() {
+        return dirty;
     }
 
     public void insert (DocumentInfo... doc) {

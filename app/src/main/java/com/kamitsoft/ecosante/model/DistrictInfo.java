@@ -31,6 +31,8 @@ public class DistrictInfo {
     private Timestamp updatedAt;
     private boolean deleted;
     private Area area;
+    private boolean needUpdate;
+
     public int getAccountID() {
         return accountID;
     }
@@ -149,6 +151,14 @@ public class DistrictInfo {
     @Override
     public String toString() {
         return name;
+    }
+
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
     }
 }
 

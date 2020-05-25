@@ -41,6 +41,7 @@ public class DocEditorDialog extends DialogFragment {
         this.filchooser= filchooser;
         this.doc = doc;
         this.docsAdapter = adapter;
+        doc.setNeedUpdate(true);
 
     }
     @Override

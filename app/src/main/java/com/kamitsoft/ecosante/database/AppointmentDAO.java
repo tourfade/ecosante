@@ -42,4 +42,6 @@ public interface AppointmentDAO {
     int update(AppointmentInfo... beans);
 
 
+    @Query("SELECT * FROM appointmentinfo WHERE needUpdate >= 1")
+    LiveData<List<AppointmentInfo>> dirty();
 }

@@ -20,12 +20,14 @@ public class AppointmentsRepository {
     private LiveData<List<AppointmentInfo>> data;
     private LiveData<List<AppointmentInfo>> patientData;
     private EcoSanteApp app;
+    private LiveData<List<AppointmentInfo>> dirty;
 
     public AppointmentsRepository(Application application) {
         app = (EcoSanteApp)application;
         dao = app.getDb().appointmentDAO();
         userData = dao.getAppointments();
         data = dao.getAppointments();
+        dirty = dao.dirty();
     }
     public LiveData<List<AppointmentInfo>> getPatientAppointments(String uuid) {
         if(uuid == null) {
@@ -39,7 +41,9 @@ public class AppointmentsRepository {
     public LiveData<List<AppointmentInfo>> getData() {
         return data;
     }
-
+    public LiveData<List<AppointmentInfo>> getDirty() {
+        return dirty;
+    }
     public LiveData<List<AppointmentInfo>> getUserData() {
         if(userData == null){
             userData  = new MutableLiveData<>();

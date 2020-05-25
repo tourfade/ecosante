@@ -16,8 +16,11 @@ import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.adapters.LabsAdapter;
 import com.kamitsoft.ecosante.client.patient.oracles.AnalysisOracleAdapter;
 import com.kamitsoft.ecosante.constant.LabType;
+import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.Analysis;
 import com.kamitsoft.ecosante.model.LabInfo;
+import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.viewmodels.LabsViewModel;
 
 import java.sql.Timestamp;
@@ -29,6 +32,10 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProviders;
 
 public class LabEditorDialog extends DialogFragment {
+
+
+    private final OnSaving completion;
+
     private  boolean readyForNew;
     private LabsAdapter labsAdapter;
     private  LabInfo curentLab;
@@ -43,9 +50,11 @@ public class LabEditorDialog extends DialogFragment {
     private Analysis analys;
     private LabsViewModel labsModel;
 
-    public LabEditorDialog(LabInfo labs, boolean isNew){
+    public LabEditorDialog(LabInfo labs, boolean isNew, OnSaving completion){
         this.curentLab = labs;
         this.readyForNew = isNew;
+        this.curentLab.setNeedUpdate(true);
+        this.completion = completion;
     }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -73,7 +82,8 @@ public class LabEditorDialog extends DialogFragment {
             curentLab.setLabValue(Utils.floatFromEditText(labValue));
             curentLab.setType(LabType.atIndex(labType.getSelectedItemPosition()).type);
             curentLab.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-
+            if(completion != null)
+                completion.saving();
             if(readyForNew) {
                 labsModel.insert(curentLab);
             }else {
@@ -91,6 +101,9 @@ public class LabEditorDialog extends DialogFragment {
 
         return alertDialog;
     }
+
+
+
 
     void initVars(AlertDialog d) {
 

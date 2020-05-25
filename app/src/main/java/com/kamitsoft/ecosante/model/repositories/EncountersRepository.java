@@ -30,7 +30,7 @@ public class EncountersRepository {
     public EncountersRepository(Application application) {
         app = (EcoSanteApp)application;
         encounterDAO = app.getDb().encounterDAO();
-        dirty = encounterDAO.getUnsync();
+        dirty = encounterDAO.dirty();
 
     }
     public LiveData<List<EncounterInfo>> getDirty(){
