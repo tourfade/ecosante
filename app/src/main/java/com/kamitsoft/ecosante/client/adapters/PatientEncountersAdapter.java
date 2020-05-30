@@ -52,7 +52,7 @@ public class PatientEncountersAdapter extends AbstractAdapter<PatientEncountersA
     // return total item from List
     @Override
     public int getItemCount() {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return 1;
         }else {
             return mdata.size();
@@ -61,7 +61,7 @@ public class PatientEncountersAdapter extends AbstractAdapter<PatientEncountersA
 
     @Override
     public int getItemViewType(int position) {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return VIEW_TYPE_EMPTY;
         }else {
             return VIEW_TYPE_NORMAL;

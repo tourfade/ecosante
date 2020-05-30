@@ -57,13 +57,12 @@ public class PatientProfileView extends PatientBaseFragment  {
     }
 
 
-
-
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         model = ViewModelProviders.of(this).get(PatientsViewModel.class);
+        swr = view.findViewById(R.id.swiperefresh);
+        swr.setOnRefreshListener(this::requestSync);
 
         patientPicture = view.findViewById(R.id.patientPicture);
         firstName = view.findViewById(R.id.firstname);

@@ -57,7 +57,7 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
     // return total item from List
     @Override
     public int getItemCount() {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return 1;
         }else {
             return mdata.size();
@@ -66,7 +66,7 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
 
     @Override
     public int getItemViewType(int position) {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return VIEW_TYPE_EMPTY;
         }else {
             return VIEW_TYPE_NORMAL;
@@ -128,6 +128,7 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
 
 
         }else {
+
         }
         setAnimation(myHolder.itemView,position);
 
@@ -192,7 +193,7 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
         }
         @Override
         public void onClick(View v) {
-            if(myClickListener != null) {
+            if(myClickListener != null && getItemViewType() == VIEW_TYPE_NORMAL) {
                 myClickListener.onItemClick(getAdapterPosition(), v);
             }
         }

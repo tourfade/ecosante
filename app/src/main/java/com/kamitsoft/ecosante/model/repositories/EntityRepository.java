@@ -78,7 +78,7 @@ public class EntityRepository {
 
         @Override
         protected Void doInBackground(final String... params) {
-            EntitySync e = dao.getEntitySync(params[0]);
+            EntitySync e = dao.getEntitySync(params[0].toLowerCase());
             if(e==null){
                 e = new EntitySync();
                 e.setEntity(params[0]);

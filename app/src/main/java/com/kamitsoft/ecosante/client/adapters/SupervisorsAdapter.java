@@ -49,7 +49,7 @@ public class SupervisorsAdapter extends RecyclerView.Adapter<SupervisorsAdapter.
     // return total item from List
     @Override
     public int getItemCount() {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return 1;
         }else {
             return mdata.size();
@@ -58,7 +58,7 @@ public class SupervisorsAdapter extends RecyclerView.Adapter<SupervisorsAdapter.
 
     @Override
     public int getItemViewType(int position) {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return VIEW_TYPE_EMPTY;
         }else {
             return VIEW_TYPE_NORMAL;
@@ -174,8 +174,7 @@ public class SupervisorsAdapter extends RecyclerView.Adapter<SupervisorsAdapter.
             fix = itemView.findViewById(R.id.fixphone);
             email = itemView.findViewById(R.id.email);
             type = itemView.findViewById(R.id.userType);
-
-             itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
 
         }
 
@@ -184,7 +183,7 @@ public class SupervisorsAdapter extends RecyclerView.Adapter<SupervisorsAdapter.
         }
         @Override
         public void onClick(View v) {
-            if(myClickListener != null) {
+            if(myClickListener != null && getItemViewType() == VIEW_TYPE_NORMAL) {
                 myClickListener.onItemClick(getAdapterPosition(), v);
             }
         }

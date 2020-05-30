@@ -1,11 +1,9 @@
 package com.kamitsoft.ecosante.client.patient;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -50,7 +48,6 @@ import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.LabsViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.MedicationViewModel;
 
-import java.sql.Timestamp;
 import java.util.stream.Collectors;
 
 
@@ -72,7 +69,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     private EncountersViewModel model;
     private EntitiesViewModel entityModel;
     private EncountersViewModel encounterModel;
-    private View editActions, reviesActions;
+    private View editActions, reviewActions;
     private TextView encounterAt, encounteredBy;
 
     @Override
@@ -110,7 +107,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         entityModel = ViewModelProviders.of(this).get(EntitiesViewModel.class);
         encounterModel = ViewModelProviders.of(this).get(EncountersViewModel.class);
         editActions = findViewById(R.id.editActions);
-        reviesActions = findViewById(R.id.reviewActions);
+        reviewActions = findViewById(R.id.reviewActions);
         pressure = findViewById(R.id.pressure);
         temperature = findViewById(R.id.temperature);
         weight = findViewById(R.id.weight);
@@ -355,10 +352,10 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     private  void initValue(){
         UserInfo user = app.getCurrentUser();
         if(user !=null){
-            reviesActions.setVisibility(user.getUserType() == UserType.PHYSIST.type?View.VISIBLE:View.GONE);
+            reviewActions.setVisibility(user.getUserType() == UserType.PHYSIST.type?View.VISIBLE:View.GONE);
             editActions.setVisibility(user.getUserType() == UserType.NURSE.type?View.VISIBLE:View.GONE);
         }else {
-            reviesActions.setVisibility(View.GONE);
+            reviewActions.setVisibility(View.GONE);
         }
 
         encounterAt.setText(getString(R.string.encoountered_at)+" "+ Utils.format(encounterInfo.getCreatedAt()));

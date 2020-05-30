@@ -30,6 +30,7 @@ public class PatientsRepository {
         dirty = dao.dirtyPatients();
         dirtySummaries = summaryDAO.getDirty();
 
+
     }
     public LiveData<List<PatientInfo>> getDirty() {
         return dirty;
@@ -73,6 +74,17 @@ public class PatientsRepository {
     }
 
 
+    public LiveData<Integer> encounterCounts(String puuid) {
+        return dao.countE(puuid);
+    }
+
+    public LiveData<Integer> docCount(String puuid) {
+        return dao.countD(puuid);
+    }
+
+    public LiveData<Integer> appCount(String puuid) {
+        return dao.countA(puuid);
+    }
 
 
     private static class insertAsyncTask extends AsyncTask<PatientInfo, Void, Void> {

@@ -47,7 +47,7 @@ public class AppointmentsAdapter extends AbstractAdapter<AppointmentsAdapter.MyH
     // return total item from List
     @Override
     public int getItemCount() {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return 1;
         }else {
             return mdata.size();
@@ -56,7 +56,7 @@ public class AppointmentsAdapter extends AbstractAdapter<AppointmentsAdapter.MyH
 
     @Override
     public int getItemViewType(int position) {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return VIEW_TYPE_EMPTY;
         }else {
             return VIEW_TYPE_NORMAL;
@@ -144,7 +144,6 @@ public class AppointmentsAdapter extends AbstractAdapter<AppointmentsAdapter.MyH
     int lastpos = -1;
     private void setAnimation(View itemView, int position) {
         if(position > lastpos){
-
             Animation anim = AnimationUtils.loadAnimation(context,android.R.anim.slide_in_left);
             itemView.startAnimation(anim);
         }

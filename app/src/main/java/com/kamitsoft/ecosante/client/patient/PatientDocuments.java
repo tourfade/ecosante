@@ -68,6 +68,7 @@ public class PatientDocuments extends PatientBaseFragment {
                                 !d.getDeleted() &&
                                 d.getPatientUuid().equals(currentPatient.getUuid()))
                         .collect(Collectors.toList()));
+
             }
 
         });
@@ -106,6 +107,7 @@ public class PatientDocuments extends PatientBaseFragment {
     public void onResume() {
         super.onResume();
         app.exitDocument();
+
     }
 
     private void showFABMenu(){

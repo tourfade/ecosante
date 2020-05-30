@@ -2,6 +2,7 @@ package com.kamitsoft.ecosante.database;
 
 
 import com.kamitsoft.ecosante.model.DocumentInfo;
+import com.kamitsoft.ecosante.model.ECounterItem;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.LabInfo;
@@ -111,4 +112,8 @@ public interface EncounterDAO {
 
     @Query("SELECT * FROM medicationinfo WHERE  needUpdate >= 1")
     LiveData<List<MedicationInfo>> dirtyMed();
+
+    @Query("SELECT uuid, patientUuid, monitor, supervisor, status FROM encounterinfo ")
+    LiveData<List<ECounterItem>>getCounts();
+
 }

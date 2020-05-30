@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.constant.StatusConstant;
+import com.kamitsoft.ecosante.model.ECounterItem;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.json.Status;
@@ -70,6 +71,11 @@ public class EncountersViewModel extends AndroidViewModel {
 
     public EncounterInfo getEncounter(String euuid) {
         return repository.getEncounter(euuid);
+    }
+
+
+    public LiveData<List<ECounterItem>> getCount() {
+        return repository.getCount();
     }
 }
 

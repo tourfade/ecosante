@@ -44,24 +44,35 @@ public class MonitoredEncounters extends BaseFragment implements BottomNavigatio
     private int page = 0;
     private ProgressBar progress;
 
+
     private Observer<? super List<EncounterHeaderInfo>> observer  = encounters-> {
         if(encounters ==null || encounters.size()<= 0){
             return;
         }
         Stream<EncounterHeaderInfo> data = encounters .stream()
                 .filter( e -> {
-                    if(currentStatus == StatusConstant.FILTER_UNASSIGNED){
-                        return  e.getSupervisor() == null || e.getSupervisor().physicianUuid == null;
-                    }
+
                     if(currentStatus == StatusConstant.FILTER_TREATED){
-                        return  e.currentStatus().status == StatusConstant.ACCEPTED.status
+                        return  e.getSupervisor() != null
+                                && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid)
+                         &&(e.currentStatus().status == StatusConstant.ACCEPTED.status
                                 || e.currentStatus().status == StatusConstant.REVIEWED.status
-                                || e.currentStatus().status == StatusConstant.NEW.status;
+                                || e.currentStatus().status == StatusConstant.NEW.status);
                     }
 
-                    return    e.getSupervisor() != null
-                            && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid)
-                            && e.currentStatus().status == currentStatus.status;
+                    if(currentStatus == StatusConstant.PENDING) {
+                        return e.currentStatus().status == StatusConstant.PENDING.status
+                                && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid);
+                    }
+
+                    if(currentStatus == StatusConstant.ARCHIVED) {
+                        return e.getSupervisor() != null
+                                && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid)
+                                && e.currentStatus().status == StatusConstant.ARCHIVED.status;
+                    }
+
+                    return  e.getSupervisor() == null || e.getSupervisor().physicianUuid == null;
+
 
                 });
 
@@ -70,6 +81,7 @@ public class MonitoredEncounters extends BaseFragment implements BottomNavigatio
         if(currentStatus == StatusConstant.ARCHIVED){
             page = (list.size()/25);
         }
+
     };
 
 
@@ -106,9 +118,46 @@ public class MonitoredEncounters extends BaseFragment implements BottomNavigatio
         model.getUserEncounters().observe(this, encounters-> {
             encountersAdapter.syncData(encounters);
         });
+        model.getCount().observe(this,items ->{
+            int[] counter = new int[]{0,0,0,0};
+
+            items.stream().forEach(e -> {
+                int cs = e.currentStatus().status;
+
+                if( e.getSupervisor() != null
+                        && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid)
+                        && cs == StatusConstant.PENDING.status){
+                    counter[0]++;
+                }
+
+                if(  e.getSupervisor() != null
+                        && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid)
+                        && (
+                        cs == StatusConstant.ACCEPTED.status
+                        || cs == StatusConstant.REVIEWED.status
+                        || cs == StatusConstant.NEW.status)){
+                    counter[1]++;
+                }
+
+                if( app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid) &&
+                        cs == StatusConstant.ARCHIVED.status){
+                    counter[2]++;
+                }
+
+
+                if(e.getSupervisor() == null || e.getSupervisor().physicianUuid == null){
+                    counter[3]++;
+                }
+
+            });
+            navBar.getOrCreateBadge(R.id.pending).setNumber(counter[0]);
+            navBar.getOrCreateBadge(R.id.treated).setNumber(counter[1]);
+            navBar.getOrCreateBadge(R.id.archive).setNumber(counter[2]);
+            navBar.getOrCreateBadge(R.id.unassigned).setNumber(counter[3]);
+        });
 
         encountersAdapter.setItemClickListener((itemPosition, v) -> new Task().execute(encountersAdapter.getItem(itemPosition)));
-
+        navBar.setSelectedItemId(R.id.pending);
 
     }
 
@@ -131,7 +180,7 @@ public class MonitoredEncounters extends BaseFragment implements BottomNavigatio
 
         switch (item.getItemId()){
             case R.id.pending:
-                currentStatus = StatusConstant.ACCEPTED;
+                currentStatus = StatusConstant.PENDING;
                 break;
             case R.id.treated:
                 currentStatus = StatusConstant.FILTER_TREATED;

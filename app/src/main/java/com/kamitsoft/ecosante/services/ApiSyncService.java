@@ -223,7 +223,7 @@ public class ApiSyncService extends Service {
         if(entitySync == null){
            entitySync = getEntity(beanClass);
         }
-        if(System.currentTimeMillis() - entitySync.getLastSynced() <= 60*1000){
+        if(System.currentTimeMillis() - entitySync.getLastSynced() <= 2*1000){
             if(completion !=null){
                 completion.onReady();
             }

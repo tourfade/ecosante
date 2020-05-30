@@ -58,7 +58,9 @@ public class PatientEncounters extends PatientBaseFragment {
                     .stream()
                     .filter(e -> !e.isDeleted()
                             && e.getPatientUuid().equals(currentPatient.getUuid()));
+
             encounterAdapter.syncData(data.collect(Collectors.toList()));
+
         });
 
         encounterAdapter.setItemClickListener((itemPosition, v) -> {
@@ -99,6 +101,7 @@ public class PatientEncounters extends PatientBaseFragment {
     public void onResume() {
         super.onResume();
         app.exitEncounter();
+
     }
 
     @Override

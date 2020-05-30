@@ -54,7 +54,7 @@ public class WaitingPatientAdapter extends RecyclerView.Adapter<WaitingPatientAd
     // return total item from List
     @Override
     public int getItemCount() {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return 1;
         }else {
             return mdata.size();
@@ -63,7 +63,7 @@ public class WaitingPatientAdapter extends RecyclerView.Adapter<WaitingPatientAd
 
     @Override
     public int getItemViewType(int position) {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return VIEW_TYPE_EMPTY;
         }else {
             return VIEW_TYPE_NORMAL;
@@ -184,7 +184,7 @@ public class WaitingPatientAdapter extends RecyclerView.Adapter<WaitingPatientAd
         }
         @Override
         public void onClick(View v) {
-            if(myClickListener != null) {
+            if(myClickListener != null && getItemViewType() == VIEW_TYPE_NORMAL) {
                 myClickListener.onItemClick(getAdapterPosition(), v);
             }
         }

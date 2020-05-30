@@ -46,7 +46,7 @@ public class PatientSummaryView extends PatientBaseFragment {
     private EditText doctorCell, doctorEmail,
             specialist, specialistCell, specialistEmail,
             longTermTreatment, notes;
-    PhysistOracleAdapter physistOracle;
+    private PhysistOracleAdapter physistOracle;
     private AutoCompleteTextView doctor;
     private AppCompatSpinner rhesus;
     private AppCompatCheckBox  idm, avc, falls, surgeries, allergies, drop, dementia, hta, epilepsy, irc, asthm, diabete,
@@ -73,9 +73,6 @@ public class PatientSummaryView extends PatientBaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         model = ViewModelProviders.of(this).get(PatientsViewModel.class);
-
-
-
         model.getCurrentSummary(currentPatient.getUuid())
                 .observe(PatientSummaryView.this, summaryInfo -> {
                     currentSummary = summaryInfo;
@@ -87,6 +84,9 @@ public class PatientSummaryView extends PatientBaseFragment {
                     currentSummary.setNeedUpdate(true);
                     initSummaryInfo();
         });
+
+        swr = view.findViewById(R.id.swiperefresh);
+        swr.setOnRefreshListener(this::requestSync);
 
         doctor = view.findViewById(R.id.ecosantedocotor);
         physistOracle = new PhysistOracleAdapter(getActivity());

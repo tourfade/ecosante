@@ -2,7 +2,9 @@ package com.kamitsoft.ecosante.client.patient;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.material.badge.BadgeDrawable;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.client.patient.PatientActivity;
 import com.kamitsoft.ecosante.model.EncounterInfo;
@@ -26,6 +28,7 @@ public class PatientBaseFragment extends Fragment {
     protected SwipeRefreshLayout swr;
     protected UserInfo connectedUser;
     protected PatientInfo currentPatient;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,16 +37,16 @@ public class PatientBaseFragment extends Fragment {
         currentPatient = app.getCurrentPatient();
         entityModel = ViewModelProviders.of(this).get(EntitiesViewModel.class);
 
-        entityModel.getDirtyEntities().observe(this, entitySyncs -> {
-            for(EntitySync e:entitySyncs){
-                if(getEntity() == null){
-                    return;
+        if(getEntity() != null) {
+            entityModel.getDirtyEntities().observe(this, entitySyncs -> {
+                for (EntitySync e : entitySyncs) {
+                    if (e.getEntity().equalsIgnoreCase(getEntity().getSimpleName())) {
+                        app.service().requestSync(getEntity(), null);
+                        break;
+                    }
                 }
-                if(e.getEntity().equalsIgnoreCase(getEntity().getSimpleName())){
-                    app.service().requestSync(getEntity(),null);
-                }
-            }
-        });
+            });
+        };
 
 
 
@@ -74,5 +77,6 @@ public class PatientBaseFragment extends Fragment {
                 swr.setRefreshing(false);
         });
     }
+
 
 }

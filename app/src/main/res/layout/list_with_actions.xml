@@ -9,7 +9,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:id="@+id/swiperefresh"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
@@ -23,7 +23,8 @@
         android:layout_height="@dimen/standard_45"
         app:fabCustomSize="@dimen/standard_45"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/standard_21"
+        android:layout_marginRight="@dimen/standard_21"
+        android:layout_marginBottom="50dp"
         app:backgroundTint="@color/colorAccent"
         app:srcCompat="@drawable/pdf"
         />
@@ -35,7 +36,8 @@
         android:layout_height="@dimen/standard_45"
         app:fabCustomSize="@dimen/standard_45"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/standard_21"
+        android:layout_marginRight="@dimen/standard_21"
+        android:layout_marginBottom="50dp"
         app:backgroundTint="@color/colorAccent"
         app:srcCompat="@drawable/ic_menu_camera" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -45,7 +47,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/standard_21"
+        android:layout_marginBottom="50dp"
         app:backgroundTint="@color/colorAccent"
         app:srcCompat="@drawable/addnew" />
 

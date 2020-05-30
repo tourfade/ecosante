@@ -64,4 +64,15 @@ public interface PatientDAO {
 
     @Query("SELECT * FROM documentinfo WHERE  needUpdate >= 1")
     LiveData<List<DocumentInfo>> dirty();
+
+
+
+    @Query("SELECT count(e.uuid) FROM encounterinfo e WHERE e.patientUuid = :puuid ")
+    LiveData<Integer> countE(String puuid);
+
+    @Query("SELECT count(d.uuid) FROM documentinfo d WHERE d.patientUuid = :puuid ")
+    LiveData<Integer> countD(String puuid);
+
+    @Query("SELECT count(a.uuid) FROM appointmentinfo a WHERE a.patientUuid = :puuid ")
+    LiveData<Integer> countA(String puuid);
 }
