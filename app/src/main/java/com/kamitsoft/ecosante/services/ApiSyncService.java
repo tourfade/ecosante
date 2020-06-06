@@ -1,23 +1,18 @@
 package com.kamitsoft.ecosante.services;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.text.Editable;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.Gson;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.DiskCache;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.constant.StatusConstant;
-import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
 import com.kamitsoft.ecosante.model.DistrictInfo;
@@ -32,7 +27,6 @@ import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.SyncData;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
-import com.kamitsoft.ecosante.model.json.Status;
 import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.repositories.AppointmentsRepository;
 import com.kamitsoft.ecosante.model.repositories.DistrictRepository;
@@ -55,7 +49,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import androidx.annotation.Nullable;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -116,18 +109,21 @@ public class ApiSyncService extends Service {
 
     }
 
-    private void observ() {
+    public void reset(UserAccountInfo accountInfo){
+        userRepository.reset(accountInfo);
+        encounterRepository.reset(accountInfo);
+        patientRepository.reset();
+        appointmentRepository.reset(accountInfo);
+        entityRepository.reset();
+    }
 
-        userRepository.getAccount().observeForever(accountInfo->{
+    private void observ() {
+        userRepository.getLiveAccount().observeForever(accountInfo->{
             if(accountInfo != null) {
                 init(accountInfo);
-                userRepository.reset(accountInfo);
-                encounterRepository.reset(accountInfo);
-                patientRepository.reset(accountInfo);
-                appointmentRepository.reset(accountInfo);
-                entityRepository.reset();
             }
         });
+
 
         encounterRepository.getDirty().observeForever(toSynch -> {
             if(proxy == null ){
@@ -213,7 +209,7 @@ public class ApiSyncService extends Service {
     }
 
     public void requestSync(Class<?> beanClass, Completion completion) {
-        if(beanClass == null){
+        if(beanClass == null || proxy == null){
             if(completion !=null){
                 completion.onReady();
             }
@@ -418,7 +414,7 @@ public class ApiSyncService extends Service {
                     List<EncounterInfo> deleted = response.body().stream()
                             .filter((s) ->{
                                 s.setUpdatedAt(new Timestamp(data.timestamp));
-                                return s.isDeleted(); })
+                                return s.isDeleted() || s.currentStatus().status == StatusConstant.ARCHIVED.status; })
                             .collect(Collectors.toList());
                     if(deleted!=null && deleted.size() > 0)
                         encounterRepository.delete(deleted.toArray(new EncounterInfo[]{}));

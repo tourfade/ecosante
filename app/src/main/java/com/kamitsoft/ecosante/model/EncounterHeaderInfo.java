@@ -6,7 +6,6 @@ import com.kamitsoft.ecosante.model.json.Supervisor;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -34,6 +33,7 @@ public class EncounterHeaderInfo {
     private Monitor monitor;
     private Supervisor supervisor;
     private List<Status> status;
+    private String districtUuid;
 
     public Monitor getMonitor() {
         return monitor;
@@ -205,5 +205,13 @@ public class EncounterHeaderInfo {
                 .get();
 
 
+    }
+
+    public String getDistrictUuid() {
+        return districtUuid;
+    }
+
+    public void setDistrictUuid(String districtUuid) {
+        this.districtUuid = districtUuid;
     }
 }

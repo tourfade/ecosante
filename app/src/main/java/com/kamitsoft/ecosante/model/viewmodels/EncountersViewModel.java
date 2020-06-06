@@ -51,7 +51,9 @@ public class EncountersViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<EncounterHeaderInfo>> getUserEncounters() {
-        userEncountersHeader = repository.getUserEncounterHeader();
+        if(userEncountersHeader== null) {
+            userEncountersHeader = repository.getUserEncounterHeader();
+        }
         return userEncountersHeader;
     }
 
@@ -59,7 +61,7 @@ public class EncountersViewModel extends AndroidViewModel {
         doc.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         Status status = doc.currentStatus();
         if(status.status == StatusConstant.NEW.status){
-            doc.setCurrentStatus(StatusConstant.PENDING);
+            doc.setCurrentStatus(StatusConstant.PENDING, status.author);
         }
         repository.insert(doc);
     }

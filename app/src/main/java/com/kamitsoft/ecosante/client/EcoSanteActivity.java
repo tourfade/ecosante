@@ -4,12 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.AnimRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -17,26 +15,25 @@ import com.google.android.material.navigation.NavigationView;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
-import com.kamitsoft.ecosante.client.admin.DistrictList;
 import com.kamitsoft.ecosante.client.admin.DistrictMap;
 import com.kamitsoft.ecosante.client.nurse.Supervisors;
 import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
+import com.kamitsoft.ecosante.constant.NavMenuConstant;
 import com.kamitsoft.ecosante.constant.UserStatusConstant;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
-import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 import com.kamitsoft.ecosante.signing.SignIn;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.admin.Nurses;
 import com.kamitsoft.ecosante.client.admin.Physicians;
-import com.kamitsoft.ecosante.client.nurse.UserEncounters;
-import com.kamitsoft.ecosante.client.physician.MonitoredEncounters;
-import com.kamitsoft.ecosante.client.physician.MonitoredPatients;
+import com.kamitsoft.ecosante.client.nurse.MonitoredEncounters;
+import com.kamitsoft.ecosante.client.physician.SupervisedEncounters;
+import com.kamitsoft.ecosante.client.physician.SupervisedPatients;
 import com.kamitsoft.ecosante.client.user.UserAppointments;
 import com.kamitsoft.ecosante.client.user.Home;
 import com.kamitsoft.ecosante.client.user.UserProfile;
-import com.kamitsoft.ecosante.client.nurse.WaitingPatients;
+import com.kamitsoft.ecosante.client.nurse.MonitoredPatients;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
@@ -82,7 +79,7 @@ public class EcoSanteActivity extends ImagePickerActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        model.getConnectedAccount().observe(this, account->{
+        model.getLiveConnectedAccount().observe(this, account->{
             this.account = account;
             if(account!=null && account.getGenPassword() && currentUser !=null){
                 new PasswordEditorDialog(currentUser)
@@ -92,9 +89,11 @@ public class EcoSanteActivity extends ImagePickerActivity
 
         model.getLiveConnectedUser().observeForever(cu->{
             currentUser = cu;
+
             if(currentUser != null) {
                 initDrawerMenu();
                 initHeaderInfo();
+                initDrawerCount();
                 if(account!=null && account.getGenPassword() && currentUser !=null){
                     new PasswordEditorDialog(currentUser)
                             .show(getSupportFragmentManager(), "PasswordEditorDialog");
@@ -105,12 +104,79 @@ public class EcoSanteActivity extends ImagePickerActivity
         });
 
 
-
+        navigationView.setCheckedItem(NavMenuConstant.NAV_USER_HOME.id);
         showFragment(Home.class, R.anim.fade_in, R.anim.fade_out);
 
 
     }
 
+    private void initDrawerCount() {
+       NavMenuConstant
+        .filter(n -> n.isAuthorized(currentUser.getUserType()) && n.isList)
+        .forEach(n->{
+            MenuItem v = navigationView.getMenu().findItem(n.id);
+             if(v.getActionView() != null){
+                TextView tv = v.getActionView().findViewById(R.id.textMenuItemCount);
+                model.getCount(n.id).observe(this,items ->{
+                    long count = 0;
+                    switch (NavMenuConstant.ofMenu(n.id)){
+                        case NAV_USER_VISITS:
+                            count = items.stream().filter(p-> p.getMonitor()!=null && currentUser.getUuid().equals(p.getMonitor().monitorUuid)).count();
+                            break;
+                        case NAV_USER_PATIENTS:
+                            count = items.stream().filter(p-> p.getMonitor()!=null && currentUser.getUuid().equals(p.getMonitor().monitorUuid)).count();
+
+                            break;
+                        case NAV_ADMIN_DISTRICTS:
+                            count = items.stream()
+                                    .filter(p-> currentUser.getAccountId() == p.getAccountId())
+                                    .count();
+
+                            break;
+                        case NAV_ADMIN_PHYSICIANS:
+                            count = items.stream()
+                                    .filter(p-> UserType.isPhysist(p.getUserType()) && currentUser.getAccountId() == p.getAccountId())
+                                    .count();
+                            break;
+                        case NAV_ADMIN_NURSES:
+                            count = items.stream()
+                                    .filter(p-> UserType.isNurse(p.getUserType()) && currentUser.getAccountId() == p.getAccountId())
+                                    .count();
+                            break;
+                        case NAV_NURSE_SUPERVISORS:
+                            count = items.stream()
+                                    .filter(p-> UserType.isPhysist(p.getUserType()) && currentUser.getDistrictUuid().equals(p.getDistrictUuid()))
+                                    .count();
+
+                            break;
+                        case NAV_SUPERVISED_NURSES:
+                            count = items.stream().filter(p-> UserType.isNurse(p.getUserType())
+                                    && currentUser.getDistrictUuid().equals(p.getDistrictUuid())).count();
+
+                            break;
+                        case NAV_SUPERVISED_VISITS:
+                            count = items.stream().filter(p-> currentUser.getDistrictUuid().equals(p.getDistrictUuid())).count();
+
+                            break;
+                        case NAV_USER_APPOINTMENTS:
+                            count = items.stream().filter(p-> currentUser.getUuid().equals(p.getUuid())).count();
+
+                            break;
+                        case NAV_SUPERVISED_PATIENTS:
+                            count = items.stream().filter(p-> currentUser.getDistrictUuid().equals(p.getDistrictUuid())).count();
+
+                            break;
+
+                    }
+
+                    tv.setText(String.valueOf(count));
+                });
+
+            }
+        });
+
+
+    }
 
 
     private void initDrawerMenu() {
@@ -119,6 +185,7 @@ public class EcoSanteActivity extends ImagePickerActivity
         navigationView.getMenu().setGroupVisible(R.id.physician_menu,false);
         navigationView.getMenu().setGroupVisible(R.id.adminmenu, false);
         if(currentUser == null){return;}
+
         switch (UserType.typeOf(currentUser.getUserType())){
             case PHYSIST:
                 navigationView.getMenu().setGroupVisible(R.id.user_menu, true);
@@ -156,12 +223,24 @@ public class EcoSanteActivity extends ImagePickerActivity
         TextView fullName = header.findViewById(R.id.textViewPhysistFullName);
         fullName.setText(Utils.formatUser(this, currentUser));
         TextView speciality = header.findViewById(R.id.textViewPhysistSpeciality);
+        TextView district = header.findViewById(R.id.tvDistrictName);
+        TextView cluster = header.findViewById(R.id.tvClusterName);
+
         if(UserType.isPhysist(currentUser.getUserType())) {
             speciality.setText(Utils.niceFormat(currentUser.getSpeciality()));
         }
         if(UserType.isNurse(currentUser.getUserType())) {
-            speciality.setText(Utils.niceFormat(currentUser.getDistrictName()));
+            speciality.setText(R.string.nurse);
         }
+        if(UserType.isAdmin(currentUser.getUserType())) {
+            speciality.setText(R.string.admin);
+            district.setText("");
+        }else {
+            district.setText(Utils.niceFormat(currentUser.getDistrictName()));
+        }
+
+        cluster.setText(Utils.niceFormat(app.getClusterName()));
+
         ImageView headerIv = header.findViewById(R.id.imageViewHeader);
 
         if(headerIv !=null) {
@@ -210,43 +289,43 @@ public class EcoSanteActivity extends ImagePickerActivity
                 showFragment(Home.class, R.anim.fade_in, R.anim.fade_out);
                 break;
             //nurse
-            case R.id.nav_encountered:
-                showFragment(UserEncounters.class, R.anim.fade_in, R.anim.fade_out);
+            case R.id.nav_user_visits:
+                showFragment(MonitoredEncounters.class, R.anim.fade_in, R.anim.fade_out);
                 break;
-            case R.id.nav_waiting_list:
-                showFragment(WaitingPatients.class, R.anim.fade_in, R.anim.fade_out);
+            case R.id.nav_user_patients:
+                showFragment(MonitoredPatients.class, R.anim.fade_in, R.anim.fade_out);
                 break;
             case R.id.nav_supervisors:
                 showFragment(Supervisors.class, R.anim.fade_in, R.anim.fade_out);
                 break;
 
             //physician
-            case R.id.supervisednurses:
+            case R.id.nav_supervised_nurses:
                 showFragment(Nurses.class,R.anim.fade_in, R.anim.fade_out);
                 break;
-            case R.id.encounter_to_reviews:
-                showFragment(MonitoredEncounters.class,R.anim.fade_in, R.anim.fade_out);
+            case R.id.nav_supervised_visits:
+                showFragment(SupervisedEncounters.class,R.anim.fade_in, R.anim.fade_out);
                 break;
 
-            case R.id.patients:
-                showFragment(MonitoredPatients.class,R.anim.fade_in, R.anim.fade_out);
+            case R.id.nav_supervised_patients:
+                showFragment(SupervisedPatients.class,R.anim.fade_in, R.anim.fade_out);
                 break;
             //======
                 //admin
-            case R.id.districs:
+            case R.id.nav_my_districs:
                 showFragment(DistrictMap.class,R.anim.fade_in, R.anim.fade_out);
                 break;
 
-            case R.id.physicians:
+            case R.id.nav_admin_physicians:
                  showFragment(Physicians.class,R.anim.fade_in, R.anim.fade_out);
                  break;
 
 
-            case R.id.nurses:
+            case R.id.nav_admin_nurses:
                 showFragment(Nurses.class,R.anim.fade_in, R.anim.fade_out);
                 break;
                 //====== User
-            case R.id.nav_appointments_list:
+            case R.id.nav_user_appointments:
                 showFragment(UserAppointments.class, R.anim.fade_in, R.anim.fade_out);
                 break;
             case R.id.nav_profile:

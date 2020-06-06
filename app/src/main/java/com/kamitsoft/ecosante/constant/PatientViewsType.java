@@ -15,7 +15,7 @@ import androidx.annotation.StringRes;
 public enum PatientViewsType {
     PROFILE(R.id.action_profile, R.string.profile,  R.drawable.patient, PatientProfileView.class),// for user check
     SUMMARY(R.id.action_summary,R.string.summary, R.drawable.action, PatientSummaryView.class),
-    ENCOUNTERS(R.id.action_visits,R.string.encounters, R.drawable.encounters, PatientEncounters.class),
+    ENCOUNTERS(R.id.action_visits,R.string.myencounters, R.drawable.encounters, PatientEncounters.class),
     DOCUMENTS(R.id.action_docs,R.string.docs, R.drawable.docs, PatientDocuments.class),
     APPOINTMENTS(R.id.action_appointments,R.string.diary, R.drawable.appointment, PatientAppointments.class);
 

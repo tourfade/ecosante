@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,12 +15,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.adapters.UserEncountersAdapter;
+import com.kamitsoft.ecosante.client.nurse.MonitoredEncounters;
 import com.kamitsoft.ecosante.client.patient.Encounter;
+import com.kamitsoft.ecosante.client.patient.dialogs.EncounterHistoryDialog;
 import com.kamitsoft.ecosante.constant.StatusConstant;
+import com.kamitsoft.ecosante.model.ECounterItem;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
-import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.json.Status;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
 
 import java.util.List;
@@ -33,11 +37,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class MonitoredEncounters extends BaseFragment implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class SupervisedEncounters extends BaseFragment implements BottomNavigationView.OnNavigationItemSelectedListener {
     private RecyclerView recyclerview;
-    private UserEncountersAdapter encountersAdapter;
+    private UserEncountersAdapter supervisedEncountersAdapter;
     private EncountersViewModel model;
     private BottomNavigationView navBar;
     private StatusConstant currentStatus = StatusConstant.PENDING;
@@ -46,22 +49,29 @@ public class MonitoredEncounters extends BaseFragment implements BottomNavigatio
 
 
     private Observer<? super List<EncounterHeaderInfo>> observer  = encounters-> {
-        if(encounters ==null || encounters.size()<= 0){
+        if(encounters == null || encounters.size()<= 0){
             return;
         }
         Stream<EncounterHeaderInfo> data = encounters .stream()
                 .filter( e -> {
+                    if( e.getDistrictUuid()==null ||
+                            app.getCurrentUser().getDistrictUuid() == null
+                            || !app.getCurrentUser().getDistrictUuid().equals(e.getDistrictUuid())){
+                        return false;
+                    }
 
                     if(currentStatus == StatusConstant.FILTER_TREATED){
                         return  e.getSupervisor() != null
+                                && e.getSupervisor().physicianUuid != null
                                 && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid)
-                         &&(e.currentStatus().status == StatusConstant.ACCEPTED.status
+                         && (e.currentStatus().status == StatusConstant.ACCEPTED.status
                                 || e.currentStatus().status == StatusConstant.REVIEWED.status
                                 || e.currentStatus().status == StatusConstant.NEW.status);
                     }
 
                     if(currentStatus == StatusConstant.PENDING) {
                         return e.currentStatus().status == StatusConstant.PENDING.status
+                                && e.getSupervisor().physicianUuid != null
                                 && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid);
                     }
 
@@ -77,11 +87,48 @@ public class MonitoredEncounters extends BaseFragment implements BottomNavigatio
                 });
 
         List<EncounterHeaderInfo> list = data.collect(Collectors.toList());
-        encountersAdapter.syncData(list);
+        supervisedEncountersAdapter.syncData(list);
         if(currentStatus == StatusConstant.ARCHIVED){
             page = (list.size()/25);
         }
 
+    };
+    private Observer<? super List<ECounterItem>> counter = items ->{
+        int[] counter = new int[]{0,0,0,0};
+
+        items.stream().filter(e-> e.getSupervisor().physicianUuid != null
+                  && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid)
+                  && app.getCurrentUser().getDistrictUuid().equals(e.getDistrictUuid()))
+                .forEach(e -> {
+                    int cs = e.currentStatus().status;
+                    if( cs == StatusConstant.PENDING.status){
+                        counter[0]++;
+                        return;
+                    }
+
+                    if(  cs == StatusConstant.ACCEPTED.status
+                            || cs == StatusConstant.REVIEWED.status
+                            || cs == StatusConstant.NEW.status){
+                        counter[1]++;
+                        return;
+                    }
+
+                    if( cs == StatusConstant.ARCHIVED.status){
+                        counter[2]++;
+                        return;
+                    }
+
+                });
+
+        items.stream() .forEach(e -> {
+            if(!app.getCurrentUser().getUuid().equals(e.getMonitor().monitorUuid)
+                    && (e.getSupervisor() == null || e.getSupervisor().physicianUuid == null)){
+                counter[3]++;
+            } });
+        navBar.getOrCreateBadge(R.id.pending).setNumber(counter[0]);
+        navBar.getOrCreateBadge(R.id.treated).setNumber(counter[1]);
+        navBar.getOrCreateBadge(R.id.archive).setNumber(counter[2]);
+        navBar.getOrCreateBadge(R.id.unassigned).setNumber(counter[3]);
     };
 
 
@@ -112,51 +159,21 @@ public class MonitoredEncounters extends BaseFragment implements BottomNavigatio
         navBar = view.findViewById(R.id.bottom_navigation);
         navBar.setOnNavigationItemSelectedListener(this);
         navBar.setVisibility(View.VISIBLE);
-        encountersAdapter = new UserEncountersAdapter(getActivity());
-        recyclerview.setAdapter(encountersAdapter);
+        supervisedEncountersAdapter = new UserEncountersAdapter(getActivity());
+        recyclerview.setAdapter(supervisedEncountersAdapter);
         model = ViewModelProviders.of(this).get(EncountersViewModel.class);
-        model.getUserEncounters().observe(this, encounters-> {
-            encountersAdapter.syncData(encounters);
+        model.getUserEncounters().observe(this, observer);
+        model.getCount().observe(this, counter);
+
+        supervisedEncountersAdapter.setItemClickListener((itemPosition, v) -> {
+            EncounterHeaderInfo e = supervisedEncountersAdapter.getItem(itemPosition);
+            if(StatusConstant.canPhysicianEdit(e.currentStatus().status) ){
+                new Task().execute(e);
+            }else{
+                new EncounterHistoryDialog(e).show(getFragmentManager(),"history");
+
+            }
         });
-        model.getCount().observe(this,items ->{
-            int[] counter = new int[]{0,0,0,0};
-
-            items.stream().forEach(e -> {
-                int cs = e.currentStatus().status;
-
-                if( e.getSupervisor() != null
-                        && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid)
-                        && cs == StatusConstant.PENDING.status){
-                    counter[0]++;
-                }
-
-                if(  e.getSupervisor() != null
-                        && app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid)
-                        && (
-                        cs == StatusConstant.ACCEPTED.status
-                        || cs == StatusConstant.REVIEWED.status
-                        || cs == StatusConstant.NEW.status)){
-                    counter[1]++;
-                }
-
-                if( app.getCurrentUser().getUuid().equals(e.getSupervisor().physicianUuid) &&
-                        cs == StatusConstant.ARCHIVED.status){
-                    counter[2]++;
-                }
-
-
-                if(e.getSupervisor() == null || e.getSupervisor().physicianUuid == null){
-                    counter[3]++;
-                }
-
-            });
-            navBar.getOrCreateBadge(R.id.pending).setNumber(counter[0]);
-            navBar.getOrCreateBadge(R.id.treated).setNumber(counter[1]);
-            navBar.getOrCreateBadge(R.id.archive).setNumber(counter[2]);
-            navBar.getOrCreateBadge(R.id.unassigned).setNumber(counter[3]);
-        });
-
-        encountersAdapter.setItemClickListener((itemPosition, v) -> new Task().execute(encountersAdapter.getItem(itemPosition)));
         navBar.setSelectedItemId(R.id.pending);
 
     }

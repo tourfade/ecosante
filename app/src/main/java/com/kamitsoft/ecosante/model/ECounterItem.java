@@ -12,6 +12,7 @@ public class ECounterItem {
     private Monitor monitor;
     private Supervisor supervisor;
     private List<Status> status;
+    private String districtUuid;
 
     public String getUuid() {
         return uuid;
@@ -66,5 +67,13 @@ public class ECounterItem {
             }
 
         return current;
+    }
+
+    public String getDistrictUuid() {
+        return districtUuid;
+    }
+
+    public void setDistrictUuid(String districtUuid) {
+        this.districtUuid = districtUuid;
     }
 }

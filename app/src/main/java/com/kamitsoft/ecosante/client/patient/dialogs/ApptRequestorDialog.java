@@ -61,7 +61,7 @@ public class ApptRequestorDialog extends DialogFragment {
         model = ViewModelProviders.of(this).get(AppointmentsViewModel.class);
         usermodel = ViewModelProviders.of(this).get(UsersViewModel.class);
         if(readyForNew){
-            current = model.newAppointment();
+            current = model.newAppointment(app.getCurrentUser().getAccountId());
             currentPatient = app.getCurrentPatient();
             current.setPatientUuid(currentPatient.getUuid());
             current.setUserObject(getString(R.string.encounter_with)+" "+Utils.formatPatient(getContext(),currentPatient));

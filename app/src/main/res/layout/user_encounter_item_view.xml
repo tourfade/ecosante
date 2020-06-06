@@ -37,29 +37,27 @@
             android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp">
 
                 <ImageView
                     android:id="@+id/patientImg"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
                     app:srcCompat="@drawable/encounter" />
-
-
 
                 <LinearLayout
                     android:id="@+id/patientContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:layout_toLeftOf="@id/patientImg"
                     android:orientation="vertical">
 
@@ -89,51 +87,52 @@
                         android:background="@color/colorAccent" />
 
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/line3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/patientContainer"
-                    android:layout_toLeftOf="@id/patientImg"
-                    android:orientation="vertical">
 
-                    <TextView
-                        style="@style/TextView.InputLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="0dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="0dp"
-                        android:text="@string/dob_pob" />
-
-                    <TextView
-                        android:id="@+id/dobpob"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:maxLines="1"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="0dp"
-                        android:paddingBottom="7dp"
-                        android:text="65ans, né à Kaedi" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorAccent" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/line8"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/line3"
-                    android:layout_marginTop="10dp"
+                    android:layout_below="@id/patientContainer"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/line3"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="@string/dob_pob" />
+
+                        <TextView
+                            android:id="@+id/dobpob"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="7dp"
+                            android:text="65ans, né à Kaedi" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorAccent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_marginLeft="5dp"
+
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -166,45 +165,13 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/TextView.InputLabel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="0dp"
-                            android:paddingRight="0dp"
-                            android:paddingBottom="0dp"
-                            android:text="@string/visit_date" />
-
-                        <TextView
-                            android:id="@+id/date"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:maxLines="1"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="7dp"
-                            android:paddingRight="0dp"
-                            android:paddingBottom="7dp"
-                            android:text="21/10/2019" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/colorAccent" />
-
-                    </LinearLayout>
 
                 </LinearLayout>
                 <LinearLayout
                     android:layout_below="@id/line8"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="vertical">
 
                     <TextView

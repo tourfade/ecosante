@@ -1,14 +1,11 @@
 package com.kamitsoft.ecosante.model;
 
 
-import com.kamitsoft.ecosante.model.json.Supervisor;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -18,7 +15,7 @@ import java.util.UUID;
 @Entity
 public class UserInfo {
 
-    private int accountID;
+    private int accountId;
     @NonNull
     @PrimaryKey
     private String uuid;
@@ -232,12 +229,12 @@ public class UserInfo {
     }
 
 
-    public int getAccountID() {
-        return accountID;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setAccountID(int accountID) {
-        this.accountID = accountID;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public String getToken() {

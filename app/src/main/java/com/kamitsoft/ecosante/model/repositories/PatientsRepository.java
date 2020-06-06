@@ -66,7 +66,7 @@ public class PatientsRepository {
         new SummaryUpdateAsyncTask(summaryDAO).execute(bean);
     }
 
-    public void reset(UserAccountInfo accountInfo) {
+    public void reset() {
 
         dao.resetePatientsSet();
         dao.reseteDocumentsSet();

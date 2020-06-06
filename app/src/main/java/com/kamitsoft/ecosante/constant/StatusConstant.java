@@ -48,4 +48,25 @@ public enum StatusConstant {
         }
         return NEW;
     }
+
+    public static boolean canNurseEdit(int status) {
+       if (status == StatusConstant.PENDING.status
+            || status == StatusConstant.REVIEWED.status
+            || status == StatusConstant.REJECTED.status
+            || status == StatusConstant.NEW.status){
+                return true;
+            }
+
+        return false;
+    }
+
+    public static boolean canPhysicianEdit(int status) {
+        if (status == StatusConstant.PENDING.status
+                    || status == StatusConstant.REVIEWED.status
+                    || status == StatusConstant.NEW.status){
+                return true;
+            }
+
+        return false;
+    }
 }

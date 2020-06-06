@@ -200,7 +200,7 @@ public class DistrictMap extends BaseFragment implements OnMapReadyCallback, Goo
         }
         DistrictInfo distric = new DistrictInfo();
         distric.setNeedUpdate(true);
-        distric.setAccountID(connectedUser.getAccountID());
+        distric.setAccountID(connectedUser.getAccountId());
         distric.setMaxNurse(20);
         distric.setMaxPhysist(20);
         LatLng center = map.getCameraPosition().target;

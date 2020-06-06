@@ -157,7 +157,7 @@ public class EncountersRepository {
                         && (System.currentTimeMillis() - stat.date.getTime() > 12*3600000)){//
                     e.setNeedUpdate(true);
                     e.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-                    e.setCurrentStatus(StatusConstant.ARCHIVED);
+                    e.setCurrentStatus(StatusConstant.ARCHIVED, "Automatique");
                     archives.add(e);
                 }
             });

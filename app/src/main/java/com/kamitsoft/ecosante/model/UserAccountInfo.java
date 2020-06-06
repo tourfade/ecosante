@@ -112,4 +112,5 @@ public class UserAccountInfo {
     public void setSubscriptionInfo(SubInstanceInfo subscriptionInfo) {
         this.subscriptionInfo = subscriptionInfo;
     }
+
 }

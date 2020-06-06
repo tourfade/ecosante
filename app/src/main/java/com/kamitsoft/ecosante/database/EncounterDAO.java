@@ -28,7 +28,7 @@ public interface EncounterDAO {
     @Query("SELECT * FROM encounterinfo WHERE patientUuid =:patientUuid AND deleted<= 0 ORDER BY createdAt DESC")
     LiveData<List<EncounterInfo>> getPatientEncounters(String patientUuid);
 
-    @Query("SELECT e.uuid, e.patientUuid, " +
+    @Query("SELECT e.uuid, e.patientUuid, e.districtUuid," +
             "e.monitor,e.createdAt, " +
             "e.pressureSystolic,e.pressureDiastolic, " +
             "e.glycemy, e.glycemyState,  p.patientID, " +
@@ -113,7 +113,7 @@ public interface EncounterDAO {
     @Query("SELECT * FROM medicationinfo WHERE  needUpdate >= 1")
     LiveData<List<MedicationInfo>> dirtyMed();
 
-    @Query("SELECT uuid, patientUuid, monitor, supervisor, status FROM encounterinfo ")
+    @Query("SELECT uuid, patientUuid, monitor, supervisor,districtUuid, status FROM encounterinfo ")
     LiveData<List<ECounterItem>>getCounts();
 
 }

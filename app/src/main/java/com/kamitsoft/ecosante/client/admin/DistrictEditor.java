@@ -10,42 +10,65 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
 import com.kamitsoft.ecosante.client.adapters.UsersAdapter;
-import com.kamitsoft.ecosante.client.patient.dialogs.AllergiesEditorDialog;
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.DistrictViewModel;
-import com.skydoves.colorpickerpreference.ColorEnvelope;
-import com.skydoves.colorpickerpreference.ColorPickerView;
-import com.skydoves.colorpickerpreference.FlagMode;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class DistrictEditor extends BaseFragment {
+public class DistrictEditor extends BaseFragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private EditText  districtName, description,population,maxNurse,maxPhysist;
-    private TextView physicianTitle, nurseTitle;
     private DistrictViewModel districtViewModel;
     private DistrictInfo editingDistrict;
-    private UsersAdapter nursesAdapter, physicianAdapter;
-    private RecyclerView nurses, physicians;
+    private UsersAdapter  membersAdapter;
+    private RecyclerView  members;
     private View fillColor;
+    private TextView titleTv;
+
+    private BottomNavigationView navBar;
+    private UserType type = UserType.PHYSIST;
+    private int[] counts = new int[]{0, 0};
+    private Observer<? super List<UserInfo>> observer = docs -> {
+        if(editingDistrict == null){return;}
+        counts[0] = 0;
+        counts[1] = 0;
+        docs.forEach(u->{
+            if(editingDistrict.getUuid().equals(u.getDistrictUuid())){
+                counts[0]+=  UserType.isPhysist(u.getUserType())?1:0;
+                counts[1]+=  UserType.isNurse(u.getUserType())?1:0;
+            }
+
+        });
+        navBar.getOrCreateBadge(R.id.member_physicians).setNumber(counts[0]);
+        navBar.getOrCreateBadge(R.id.member_nurses).setNumber(counts[1]);
+
+        List<UserInfo> districtDocs = docs.stream()
+                .filter(m -> type.type == m.getUserType()
+                        && editingDistrict.getUuid().equals(m.getDistrictUuid()))
+                .collect(Collectors.toList());
+        membersAdapter.syncData(districtDocs);
+
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,34 +88,23 @@ public class DistrictEditor extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        physicianAdapter = new UsersAdapter(getActivity());
-        nursesAdapter = new UsersAdapter(getActivity());
-        nurses = view.findViewById(R.id.nurses);
-        nurses.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL,false));
-        physicians = view.findViewById(R.id.physicians);
-        physicians.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL,false));
-        physicianTitle = view.findViewById(R.id.physicianTitle);
-        nurseTitle = view .findViewById(R.id.nurseTitle);
-        nurses.setAdapter(nursesAdapter);
-        physicians.setAdapter(physicianAdapter);
+        titleTv  = view.findViewById(R.id.member_title);
+        navBar = view.findViewById(R.id.bottom_navigation);
+        navBar.setOnNavigationItemSelectedListener(this);
+        navBar.setSelectedItemId(R.id.member_physicians);
         app.getCurrentDistrict().observe(this, districtInfo -> {
             editingDistrict = districtInfo;
             edit = true;
             initValues();
             unvalidate();
         });
-        model.getUsers().observe(this, docs -> {
-            if(editingDistrict == null){return;}
-            List<UserInfo> districtDocs = docs.stream().filter(m -> UserType.PHYSIST.type == m.getUserType() && editingDistrict.getUuid().equals(m.getDistrictUuid())).collect(Collectors.toList());
-            physicianAdapter.syncData(districtDocs);
-            physicianTitle.setText((districtDocs==null?0: districtDocs.size()) +" Medecins");
+        membersAdapter = new UsersAdapter(getActivity());
+        members = view.findViewById(R.id.admin_members);
+        members.setAdapter(membersAdapter);
+        members.setLayoutManager(new LinearLayoutManager(getActivity(),
+                RecyclerView.VERTICAL,false));
 
-            List<UserInfo> districtNurses= docs.stream().filter(m -> UserType.NURSE.type == m.getUserType() && editingDistrict.getUuid().equals(m.getDistrictUuid())).collect(Collectors.toList());
-            nursesAdapter.syncData(districtNurses);
-            nurseTitle.setText((districtNurses==null?0: districtNurses.size()) +" Infirmiers");
-        });
-
+        model.getUsers().observe(this, observer);
 
         districtViewModel = ViewModelProviders.of(this).get(DistrictViewModel.class);
         fillColor = view.findViewById(R.id.color);
@@ -263,8 +275,28 @@ public class DistrictEditor extends BaseFragment {
 
     }
 
+    @Override
+    protected Class<?> getEntity() {
+        return UserInfo.class;
+    }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        titleTv.setText(item.getTitle());
+        item.setChecked(true);
+        model.getUsers().removeObserver(observer);
 
+        switch (item.getItemId()){
+            case R.id.member_physicians:
+                type = UserType.PHYSIST;
+                break;
+            case R.id.member_nurses:
+                type = UserType.NURSE;
+                break;
+        }
 
+        model.getUsers().observe(this, observer);
 
+        return false;
+    }
 }

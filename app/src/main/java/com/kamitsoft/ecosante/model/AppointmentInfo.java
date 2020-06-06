@@ -6,11 +6,13 @@ import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(indices = {@Index("place"), @Index("details")})
 public class AppointmentInfo {
+    private  int accountId;
     @PrimaryKey
     @NonNull
     private String uuid;
@@ -50,7 +52,11 @@ public class AppointmentInfo {
         this.patientObject = patientObject;
     }
 
-    public AppointmentInfo(){
+    public AppointmentInfo(){ }
+
+    @Ignore
+    public AppointmentInfo(int accountId){
+        this.accountId = accountId;
         uuid = UUID.randomUUID().toString();
         createdAt = new Timestamp(System.currentTimeMillis());
     }
@@ -209,5 +215,13 @@ public class AppointmentInfo {
 
     public void setNeedUpdate(boolean needUpdate) {
         this.needUpdate = needUpdate;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 }

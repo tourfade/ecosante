@@ -15,22 +15,21 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.constant.TitleType;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.Drug;
+import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
+import com.kamitsoft.ecosante.model.json.Status;
 import com.kamitsoft.ecosante.services.DateDeserializer;
 import com.kamitsoft.ecosante.services.FirebaseChannels;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -455,7 +454,7 @@ public class Utils {
     public static void subscribe(UserInfo userInfo) {
 
         unSubscribe(userInfo);
-        int accountID = userInfo.getAccountID();
+        int accountID = userInfo.getAccountId();
         FirebaseMessaging.getInstance()
                 .subscribeToTopic(FirebaseChannels.ACCOUNT+accountID)
                 .addOnCompleteListener(Utils::subScribeComplete);
@@ -513,7 +512,7 @@ public class Utils {
     }
 
     public static void unSubscribe(UserInfo userInfo) {
-        int accountID = userInfo.getAccountID();
+        int accountID = userInfo.getAccountId();
 
         if(userInfo.getDistrictUuid() != null)
             FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+userInfo.getDistrictUuid());
@@ -524,6 +523,8 @@ public class Utils {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSE+userInfo.getUuid());
 
     }
+
+
 
     @FunctionalInterface
     public interface OnDateSelectedListener{

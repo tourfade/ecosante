@@ -17,9 +17,9 @@
     <string name="profile">Profil</string>
     <string name="account">Compte</string>
     <string name="disconnect">Deconnecter</string>
-    <string name="encounters">Visites</string>
+    <string name="myencounters">Visites</string>
     <string name="service">Service</string>
-    <string name="maypatient_list">Liste d\'attente</string>
+    <string name="mypatients">Mes Patients</string>
     <string name="menu_tappointments">Rendez-vous</string>
     <string name="dmi">Digital Medical Initiative</string>
     <string name="email">Email</string>
@@ -166,7 +166,7 @@
     <string name="dob_pob">Age et Lieu de Naissance</string>
     <string name="nurses">Infirmiers/eres</string>
     <string name="physiscians">Medecins</string>
-    <string name="encounter_to_reviews">Visite superviées</string>
+    <string name="supervised_visits">Visite superviées</string>
     <string name="patient_search">Recherche de Patients</string>
     <string name="username">Nom d\'utilisateur</string>
     <string name="passwordConfirmation">Confirmation mot de passe</string>
@@ -277,5 +277,6 @@
     <string name="unassigned">Non Assignés</string>
     <string name="waiting">En Attente</string>
     <string name="treated">Traitées</string>
+    <string name="e_history">Historique</string>
 
 </resources>

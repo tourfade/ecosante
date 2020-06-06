@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -147,7 +148,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         dysphnea = findViewById(R.id.dysphnea);
         autonomy = findViewById(R.id.autonomy);
         orientation = findViewById(R.id.orientation);
-
+        findViewById(R.id.reject).setVisibility(isSavable()?View.VISIBLE:View.GONE);
+        findViewById(R.id.accept).setVisibility(isSavable()?View.VISIBLE:View.GONE);
+        findViewById(R.id.save).setVisibility(isSavable()?View.VISIBLE:View.GONE);
 
 
         findViewById(R.id.cancel).setOnClickListener(v->{
@@ -166,7 +169,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         findViewById(R.id.reject).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
             setSuperviser();
-            encounterInfo.setCurrentStatus(StatusConstant.REJECTED);
+            encounterInfo.setCurrentStatus(StatusConstant.REJECTED, Utils.formatUser(getApplicationContext(), app.getCurrentUser()));
             model.insert(encounterInfo);
             app.exitEncounter();
             onBackPressed();
@@ -174,7 +177,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         findViewById(R.id.accept).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
             setSuperviser();
-            encounterInfo.setCurrentStatus(StatusConstant.ACCEPTED);
+            encounterInfo.setCurrentStatus(StatusConstant.ACCEPTED, Utils.formatUser(getApplicationContext(), app.getCurrentUser()));
             model.insert(encounterInfo);
             app.exitEncounter();
             onBackPressed();
@@ -229,7 +232,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
             Supervisor s = new Supervisor();
             s.supFullName = Utils.formatUser(getApplicationContext(), cuser);
             s.physicianUuid = cuser.getUuid();
-            s.accountId = cuser.getAccountID();
+            s.accountId = cuser.getAccountId();
             s.nurseUuid = encounterInfo.getUserUuid();
             encounterInfo.setSupervisor(s);
             model.insert(encounterInfo);
@@ -239,8 +242,20 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         setSuperviser();
         UserInfo cuser = app.getCurrentUser();
         if(UserType.isPhysist(cuser.getUserType())) {
-            model.insert(encounterInfo);
+            if(isSavable()){
+                model.insert(encounterInfo);
+            }else{
+                Toast.makeText(getApplicationContext(), "Visite archivée, Impossible de mobifier ",Toast.LENGTH_LONG).show();
+
+            }
         }
+    }
+
+    private boolean isSavable() {
+        if(encounterInfo.currentStatus().status == StatusConstant.ARCHIVED.status){
+            return false;
+        }
+        return true;
     }
 
     private void checkAvailableSupervisor(String encUuid) {
@@ -468,6 +483,10 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     }
 
     private void showBehaviors(BehaviorType behave) {
+        if(!isSavable()){
+            Toast.makeText(getApplicationContext(), "Visite archivée, Impossible de mobifier ",Toast.LENGTH_LONG).show();
+            return;
+        }
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(behave.title);
         alertDialogBuilder.setCancelable(true);
@@ -489,7 +508,10 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         alertDialog.show();
     }
     public void showVital(VitalType vitalType){
-
+        if(!isSavable()){
+            Toast.makeText(getApplicationContext(), "Visite archivée, Impossible de mobifier ",Toast.LENGTH_LONG).show();
+            return;
+        }
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(vitalType.title);
         alertDialogBuilder.setIcon(vitalType.drawable);

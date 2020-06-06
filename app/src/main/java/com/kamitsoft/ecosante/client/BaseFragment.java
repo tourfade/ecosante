@@ -49,7 +49,7 @@ public class BaseFragment extends Fragment {
         });
 
         model = ViewModelProviders.of(this).get(UsersViewModel.class);
-
+        model.getLiveConnectedUser().observe(this, u-> connectedUser  = u);
 
     }
 

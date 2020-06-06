@@ -90,9 +90,7 @@ public class FCMService extends FirebaseMessagingService  {
             return;
         }
 
-        Log.i("XXXXX0", ""+data.get("entity"));
         if(Boolean.parseBoolean(data.getOrDefault("syncRequest", "false"))){
-            Log.i("XXXXX00", ""+data.get("entity"));
             String entity = data.get("entity");
             entityRepository.setDirty(entity);
 
@@ -100,16 +98,7 @@ public class FCMService extends FirebaseMessagingService  {
         if(Boolean.parseBoolean(data.getOrDefault("updateRequest", "false"))){
             String uuid = data.get("uuid");
             int status = Integer.parseInt(data.get("status"));
-            /*if(app.getCurrentUser()!=null
-                    && app.getCurrentUser().getDistrictUuid() !=null
-                    &&  uuid.equals(app.getCurrentUser().getSupervisor().physicianUuid)){
-                notify("Changement de status",
-                        "Votre superviseur est "+ getApplicationContext().getString(UserStatusConstant.ofStatus(status).name),
-                        null, new long[] { 900});
-            }*/
-
             userRepository.remoteUpdateStatus(uuid,status);
-
         }
         RemoteMessage.Notification remote = remoteMessage.getNotification();
         if(remote != null && remote.getTitle().trim().length() > 0){
@@ -141,7 +130,7 @@ public class FCMService extends FirebaseMessagingService  {
 
         Intent intent = new Intent(this, EcoSanteActivity.class);
 
-        if(EncounterInfo.class.getSimpleName().equalsIgnoreCase(data.get("entity"))){
+        if(data!=null && data.get("euuid")!=null && EncounterInfo.class.getSimpleName().equalsIgnoreCase(data.get("entity"))){
             intent = new Intent(this, Encounter.class);
             intent.putExtra("euuid", data.get("euuid"));
         }

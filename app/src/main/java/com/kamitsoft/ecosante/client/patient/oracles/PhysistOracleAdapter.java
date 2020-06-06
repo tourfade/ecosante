@@ -2,7 +2,6 @@ package com.kamitsoft.ecosante.client.patient.oracles;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,8 @@ import android.widget.TextView;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
-import com.kamitsoft.ecosante.constant.Gender;
-import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
-import com.kamitsoft.ecosante.database.UserDAO;
 import com.kamitsoft.ecosante.model.PhysicianInfo;
-import com.kamitsoft.ecosante.model.UserAccountInfo;
-import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 import com.kamitsoft.ecosante.services.OracleProxy;
 
 import java.io.IOException;
@@ -30,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Response;
@@ -53,7 +46,7 @@ public class PhysistOracleAdapter extends ArrayAdapter {
         mContext = context;
         KsoftDatabase.getInstance(context)
                 .userDAO()
-                .getConnectedAccount()
+                .getLiveConnectedAccount()
                 .observe((ComponentActivity)context, accountInfo -> {
                     if(accountInfo !=null)
                         token = accountInfo.getJwtToken();
