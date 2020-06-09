@@ -1,6 +1,8 @@
 package com.kamitsoft.ecosante.client.patient;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -87,6 +89,11 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
         if(getIntent().getStringExtra("euuid") == null) {
             encounterInfo = app.getCurrentEncounter();
+            super.locateUser(location -> {
+                encounterInfo.setLat(location.getLatitude());
+                encounterInfo.setLon(location.getLongitude());
+            });
+
         }else{
             encounterInfo = encounterModel.getEncounter(getIntent().getStringExtra("euuid"));
             app.setCurrentEncounter(encounterInfo);

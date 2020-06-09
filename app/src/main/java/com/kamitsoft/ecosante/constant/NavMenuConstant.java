@@ -15,17 +15,18 @@ public enum NavMenuConstant {
     NAV_USER_PATIENTS(2,true,1,R.id.nav_user_patients, R.string.mypatients),
     NAV_USER_VISITS(3,true, 1,R.id.nav_user_visits, R.string.myencounters),
     NAV_NURSE_SUPERVISORS(4, true, 2, R.id.nav_supervisors, R.string.supervisors),
+    NAV_NURSE_DISTRIC(5, true, 2, R.id.nav_nurs_distric, R.string.district),
 
-    NAV_SUPERVISED_NURSES(4,true, 3,R.id.nav_supervised_nurses, R.string.supervised_nurses),
-    NAV_SUPERVISED_VISITS(5,true, 3,R.id.nav_supervised_visits, R.string.supervised_visits),
-    NAV_SUPERVISED_PATIENTS(6,true, 3,R.id.nav_supervised_patients, R.string.supervise_patients),
+    NAV_SUPERVISED_NURSES(6,true, 3,R.id.nav_supervised_nurses, R.string.supervised_nurses),
+    NAV_SUPERVISED_VISITS(7,true, 3,R.id.nav_supervised_visits, R.string.supervised_visits),
+    NAV_SUPERVISED_PATIENTS(8,true, 3,R.id.nav_supervised_patients, R.string.supervise_patients),
 
-    NAV_ADMIN_DISTRICTS(7, true, 4,R.id.nav_my_districs, R.string.districts),
-    NAV_ADMIN_PHYSICIANS(8,true, 4,R.id.nav_admin_physicians, R.string.physiscians),
-    NAV_ADMIN_NURSES(9,true, 4,R.id.nav_admin_nurses, R.string.nurses),
-    NAV_USER_PROFILE(10,false,0,R.id.nav_profile, R.string.profile),
-    NAV_USER_DISCONNECT(11, false,0,R.id.nav_disconnect, R.string.disconnect),
-    NAV_USER_STATUS(12,false,1,R.id.nav_available, R.string.available);//-1
+    NAV_ADMIN_DISTRICTS(9, true, 4,R.id.nav_my_districs, R.string.districts),
+    NAV_ADMIN_PHYSICIANS(10,true, 4,R.id.nav_admin_physicians, R.string.physiscians),
+    NAV_ADMIN_NURSES(11,true, 4,R.id.nav_admin_nurses, R.string.nurses),
+    NAV_USER_PROFILE(12,false,0,R.id.nav_profile, R.string.profile),
+    NAV_USER_DISCONNECT(13, false,0,R.id.nav_disconnect, R.string.disconnect),
+    NAV_USER_STATUS(14,false,1,R.id.nav_available, R.string.available);//-1
 
     public final @IdRes int id;
     public final @StringRes int name;

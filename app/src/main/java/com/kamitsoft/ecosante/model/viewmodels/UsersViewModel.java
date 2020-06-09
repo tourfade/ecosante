@@ -115,6 +115,7 @@ public class UsersViewModel extends AndroidViewModel {
                 case NAV_USER_VISITS:
                     counts.put(id, repository.countVisits());
                     break;
+                case NAV_NURSE_DISTRIC:
                 case NAV_SUPERVISED_PATIENTS:
                 case NAV_USER_PATIENTS:
                     counts.put(id, repository.countPatients());

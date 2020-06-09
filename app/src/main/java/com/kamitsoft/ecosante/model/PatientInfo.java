@@ -52,9 +52,10 @@ public class PatientInfo {
     private boolean deleted;
     private String districtUuid;
     private boolean needUpdate;
+    private double lat;
+    private double lon;
 
-    public PatientInfo() {
-    }
+    public PatientInfo(){ }
 
     @Ignore
     public PatientInfo(int accountId){
@@ -328,5 +329,21 @@ public class PatientInfo {
 
     public void setAccountId(int accountId) {
         this.accountId = accountId;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 }

@@ -35,6 +35,12 @@
         <item
             app:actionLayout="@layout/badge"
             android:checkable="true"
+            android:id="@+id/nav_nurs_distric"
+            android:icon="@drawable/district"
+            android:title="@string/district" />
+        <item
+            app:actionLayout="@layout/badge"
+            android:checkable="true"
             android:id="@+id/nav_supervisors"
             android:icon="@drawable/phys"
             android:title="@string/supervisors" />

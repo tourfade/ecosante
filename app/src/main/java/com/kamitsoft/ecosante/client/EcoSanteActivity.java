@@ -16,6 +16,7 @@ import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.client.admin.DistrictMap;
+import com.kamitsoft.ecosante.client.nurse.NurseDistrictMap;
 import com.kamitsoft.ecosante.client.nurse.Supervisors;
 import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
 import com.kamitsoft.ecosante.constant.NavMenuConstant;
@@ -289,6 +290,9 @@ public class EcoSanteActivity extends ImagePickerActivity
                 showFragment(Home.class, R.anim.fade_in, R.anim.fade_out);
                 break;
             //nurse
+            case R.id.nav_nurs_distric:
+                showFragment(NurseDistrictMap.class, R.anim.fade_in, R.anim.fade_out);
+                break;
             case R.id.nav_user_visits:
                 showFragment(MonitoredEncounters.class, R.anim.fade_in, R.anim.fade_out);
                 break;

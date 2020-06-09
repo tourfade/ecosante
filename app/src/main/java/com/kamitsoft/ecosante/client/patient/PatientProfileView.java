@@ -95,8 +95,13 @@ public class PatientProfileView extends PatientBaseFragment  {
             if (patientInfo == null) { return;}
             oldavatar = patientInfo.getAvatar();
             this.currentPatient = patientInfo;
-            currentPatient.setNeedUpdate(true);
-
+            this.currentPatient.setNeedUpdate(true);
+            if(isNew){
+                ((ImagePickerActivity)getActivity()).locateUser(location -> {
+                    this.currentPatient.setLat(location.getLatitude());
+                    this.currentPatient.setLon(location.getLongitude());
+                });
+            }
             initPatientInfo();
         });
 

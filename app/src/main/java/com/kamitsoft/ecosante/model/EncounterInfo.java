@@ -73,6 +73,8 @@ public class EncounterInfo {
     private boolean deleted;
     private String districtUuid;
     private boolean needUpdate;
+    private double lat;
+    private double lon;
 
     public String getRunningTreatment() {
         return runningTreatment;
@@ -515,5 +517,21 @@ public class EncounterInfo {
 
     public void setAccountId(int accountId) {
         this.accountId = accountId;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 }

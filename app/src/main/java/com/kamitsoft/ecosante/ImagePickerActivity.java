@@ -1,9 +1,15 @@
 package com.kamitsoft.ecosante;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,6 +44,11 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 
 public class ImagePickerActivity extends AppCompatActivity {
+    public LocFoundCallBack callback;
+
+    public interface LocFoundCallBack{
+        void onLocated(Location location);
+    }
     private DiskCache cache ;
     private HasFinishedSelection hasFinishedSelection;
     protected boolean square;
@@ -60,6 +71,7 @@ public class ImagePickerActivity extends AppCompatActivity {
 
 
 
+    public static final int LOCATION_PICKER = 1222;
     public static final int FILE_CHOOSER = 1221;
     protected String avatar;
     private ImageView imageView;
@@ -156,6 +168,12 @@ public class ImagePickerActivity extends AppCompatActivity {
                 avatar = null;
             });
         }
+        if(requestCode == LOCATION_PICKER) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locateUser(callback);
+            }
+        }
 
     }
 
@@ -198,6 +216,24 @@ public class ImagePickerActivity extends AppCompatActivity {
 
         return extension;
     }
+
+    public void locateUser(LocFoundCallBack lf) {
+        this.callback = lf;
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PICKER);
+            return;
+        }
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        Location location = locationManager
+                .getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        if (location != null && lf !=null) {
+            lf.onLocated(location);
+        }
+    }
+
+
 
     class Saver extends   AsyncTask<CropImage.ActivityResult, Void, Bitmap>{
 
