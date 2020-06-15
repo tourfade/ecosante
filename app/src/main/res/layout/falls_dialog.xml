@@ -38,11 +38,11 @@
                 android:layout_weight="2"
                 android:hint="@string/fall_description">
 
-                <EditText
+                <EditText android:importantForAutofill="no"
                     android:id="@+id/notes"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="textMultiLine|textCapSentences|textImeMultiLine|textAutoComplete"
+                    android:inputType="textNoSuggestions|textMultiLine|textCapSentences|textImeMultiLine|textAutoComplete"
                     android:text="bla bla bla" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,7 +56,7 @@
                 android:layout_weight="1"
                 android:hint="Date Evénement">
 
-                <EditText
+                <EditText android:importantForAutofill="no"
                     android:id="@+id/fall_date"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

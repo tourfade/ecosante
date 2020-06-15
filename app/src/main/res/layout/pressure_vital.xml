@@ -25,7 +25,7 @@
             android:textAlignment="center"
             android:text="Systol(cmHg)" />
 
-        <EditText
+        <EditText android:importantForAutofill="no"
             android:id="@+id/systolic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -59,7 +59,7 @@
             android:padding="5dp"
             android:text="Diastol(cmHg)" />
 
-        <EditText
+        <EditText android:importantForAutofill="no"
             android:id="@+id/diastolic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

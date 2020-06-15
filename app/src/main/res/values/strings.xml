@@ -191,7 +191,6 @@
     <string name="renewal"># Renouv.</string>
     <string name="prescription">Prescriptions/Medicaments</string>
     <string name="done">Effectué</string>
-    <string name="newOrReportedMedication">Nouveau/Report de médicament</string>
     <string name="todo">À faire</string>
     <string name="new_med">Nouveau</string>
     <string name="running">En Cours</string>
@@ -278,5 +277,7 @@
     <string name="waiting">En Attente</string>
     <string name="treated">Traitées</string>
     <string name="e_history">Historique</string>
+    <string name="add">Ajouter</string>
+    <string name="update">Sauver</string>
 
 </resources>

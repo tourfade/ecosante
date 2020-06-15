@@ -41,7 +41,6 @@ public class BaseFragment extends Fragment {
         if(getEntity() != null)
         entityModel.getDirtyEntities().observe(this, entitySyncs -> {
             for(EntitySync e:entitySyncs){
-
                 if(e.getEntity().equalsIgnoreCase(getEntity().getSimpleName()) && e.isDirty()){
                     app.service().requestSync(getEntity(),null);
                 }
@@ -89,6 +88,7 @@ public class BaseFragment extends Fragment {
     }
 
     protected final void requestSync() {
+        entityModel.init(getEntity());
         app.service().requestSync(getEntity(),() -> {
             if(swr != null)
                 swr.post(()->swr.setRefreshing(false));

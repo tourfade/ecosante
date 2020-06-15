@@ -116,6 +116,8 @@ public class SignIn extends AppCompatActivity {
                             UserAccountInfo ua = response.body();
                             if(paccount == null || !ua.getUserUuid().equals(paccount.getUserUuid())){
                                 app.service().reset(ua);
+                            }else {
+                                app.nullifyUser();
                             }
 
                             ua.getUserInfo().setAccountId(ua.getAccountId());

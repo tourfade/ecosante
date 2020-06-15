@@ -20,7 +20,7 @@
             android:text="Valeur # bat/mn" />
 
 
-        <EditText
+        <EditText android:importantForAutofill="no"
             android:textAlignment="center"
             android:id="@+id/heartrate"
             android:layout_width="match_parent"

@@ -99,7 +99,6 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
             app.setCurrentEncounter(encounterInfo);
         }
 
-        encounterInfo.setNeedUpdate(true);
 
         setTitle(getString(R.string.encounter));
         model = ViewModelProviders.of(this).get(EncountersViewModel.class);
@@ -241,10 +240,12 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
             s.physicianUuid = cuser.getUuid();
             s.accountId = cuser.getAccountId();
             s.nurseUuid = encounterInfo.getUserUuid();
+            s.email = cuser.getEmail();
             encounterInfo.setSupervisor(s);
             model.insert(encounterInfo);
         }
     }
+
     public void setSuperviserAndSave() {
         setSuperviser();
         UserInfo cuser = app.getCurrentUser();
@@ -268,7 +269,6 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     private void checkAvailableSupervisor(String encUuid) {
         app.service().getAvailableSupervisors();
     }
-
 
     private void initViewListeners() {
         findViewById(R.id.pressureC).setOnClickListener(this);
@@ -372,6 +372,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     }
 
     private  void initValue(){
+
+        encounterInfo.setNeedUpdate(true);
+
         UserInfo user = app.getCurrentUser();
         if(user !=null){
             reviewActions.setVisibility(user.getUserType() == UserType.PHYSIST.type?View.VISIBLE:View.GONE);
@@ -409,7 +412,6 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -514,6 +516,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }
+
     public void showVital(VitalType vitalType){
         if(!isSavable()){
             Toast.makeText(getApplicationContext(), "Visite archivée, Impossible de mobifier ",Toast.LENGTH_LONG).show();
@@ -692,7 +695,6 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         }
     }
 
-
     private void mapDialogBehaveValues(BehaviorType behave,AlertDialog d  ) {
 
         int qt = 0;
@@ -817,6 +819,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
         }
     }
+
     private void setBehaviorsValues(BehaviorType behaviorType) {
         switch (behaviorType){
             case SMOKING:
@@ -846,6 +849,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
         }
     }
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()){
@@ -866,7 +870,6 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
 
     }
 

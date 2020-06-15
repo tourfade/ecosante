@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.adapters.PatientEncountersAdapter;
+import com.kamitsoft.ecosante.client.patient.prescription.PrescriptionActivity;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
 
@@ -64,21 +65,21 @@ public class PatientEncounters extends PatientBaseFragment {
         });
 
         encounterAdapter.setItemClickListener((itemPosition, v) -> {
+            EncounterInfo encounter = encounterAdapter.getItem(itemPosition);
+
             if(v.getId() == R.id.item_delete){
-                EncounterInfo item = encounterAdapter.getItem(itemPosition);
-                item.setDeleted(true);
-                item.setNeedUpdate(true);
-                model.update(item);
+                openLabs(encounter);
                 return;
             }
             if(v.getId() == R.id.item_edit){
-                Intent i = new Intent(getContext(), Encounter.class);
-                app.setCurrentEncounter(encounterAdapter.getItem(itemPosition));
-
-                startActivityForResult(i,102);
-                getActivity().overridePendingTransition(R.anim.enter_from_right,R.anim.exit_to_left);
+                openPrescriptions(encounter);
                 return;
             }
+            Intent i = new Intent(getContext(), Encounter.class);
+            app.setCurrentEncounter(encounter);
+            startActivityForResult(i,102);
+            getActivity().overridePendingTransition(R.anim.enter_from_right,R.anim.exit_to_left);
+
 
         });
         newEncounter = view.findViewById(R.id.newItem);
@@ -89,6 +90,19 @@ public class PatientEncounters extends PatientBaseFragment {
             startActivityForResult(i,101);
             getActivity().overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
         });
+
+    }
+
+    private void openLabs(EncounterInfo encounter) {
+
+    }
+
+    private void openPrescriptions(EncounterInfo enounter) {
+        app.setCurrentEncounter(enounter);
+        Intent i = new Intent(getContext(), PrescriptionActivity.class);
+
+        startActivityForResult(i,103);
+        getActivity().overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
 
     }
 

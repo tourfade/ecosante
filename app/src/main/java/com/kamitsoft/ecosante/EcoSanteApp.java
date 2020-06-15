@@ -159,10 +159,13 @@ public class EcoSanteApp extends MultiDexApplication {
         return db;
     }
 
-
+    public void nullifyUser() {
+        currentUser = null;
+    }
     public UserInfo getCurrentUser() {
-        if(currentUser == null)
-            currentUser =   new UsersRepository(this).getConnected();
+        if(currentUser == null) {
+            currentUser = usersRepository.getConnected();
+        }
         return currentUser;
     }
 
@@ -284,4 +287,6 @@ public class EcoSanteApp extends MultiDexApplication {
     public String getClusterName() {
         return usersRepository.getAccount()==null? null: usersRepository.getAccount().getAccount();
     }
+
+
 }

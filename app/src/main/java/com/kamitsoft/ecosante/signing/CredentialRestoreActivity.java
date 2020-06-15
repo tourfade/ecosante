@@ -15,14 +15,10 @@ import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
-import com.kamitsoft.ecosante.client.EcoSanteActivity;
 import com.kamitsoft.ecosante.model.RestoreInfo;
-import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.services.ApiSyncService;
 import com.kamitsoft.ecosante.services.Proxy;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Calendar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,7 +49,7 @@ public class CredentialRestoreActivity extends AppCompatActivity {
         dob = findViewById(R.id.input_dob);
         mobile = findViewById(R.id.input_mobile);
         progressBar = findViewById(R.id.progressBar);
-        Utils.manageDataPicker(this,dob,dateTime);
+        Utils.manageDatePicker(this,dob,dateTime);
         findViewById(R.id.btn_restore).setOnClickListener(v -> {
 
             v.setEnabled(false);

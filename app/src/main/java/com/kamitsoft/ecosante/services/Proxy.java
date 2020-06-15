@@ -6,6 +6,7 @@ package com.kamitsoft.ecosante.services;
 
 
 
+import com.kamitsoft.ecosante.dto.PrescriptionDTO;
 import com.kamitsoft.ecosante.model.Act;
 import com.kamitsoft.ecosante.model.Analysis;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
@@ -16,9 +17,7 @@ import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
-import com.kamitsoft.ecosante.model.PhysNursPat;
 import com.kamitsoft.ecosante.model.RestoreInfo;
-import com.kamitsoft.ecosante.model.S3BucketUrl;
 import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.SyncData;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
@@ -72,11 +71,11 @@ public interface Proxy {
 
     @Multipart
     @POST("api/document/upload-avatar")
-    Call<S3BucketUrl> uploadAvatar(@Part MultipartBody.Part file, @Part MultipartBody.Part uuid);
+    Call<Void> uploadAvatar(@Part MultipartBody.Part file, @Part MultipartBody.Part uuid);
 
     @Multipart
     @POST("api/document/upload-document")
-    Call<S3BucketUrl> uploadDocument(@Part MultipartBody.Part file, @Part MultipartBody.Part uuid);
+    Call<Void> uploadDocument(@Part MultipartBody.Part file, @Part MultipartBody.Part uuid);
 //----------Worker--------------
     @GET("api/data/drugs/sync/{timestamp}")
     Call<List<Drug>> syncDrugs(@Path("timestamp") long timestamp);
@@ -111,4 +110,7 @@ public interface Proxy {
 
     @GET("api/encounter/archived/page/{page}/size/{size}")
     Call<List<EncounterInfo>> getPageArchivedEncounters(@Path("page") int page, @Path("size") int size);
+
+    @POST("/api/prescription/send/")
+    Call<Void> generatePrescription(@Body PrescriptionDTO dto);
 }

@@ -44,7 +44,9 @@ public class PatientEncountersAdapter extends AbstractAdapter<PatientEncountersA
         mdata = new ArrayList<>();
         app = (EcoSanteApp)context.getApplicationContext();
         String uuid = app.getCurrentPatient().getUuid();
-        app.getDb().encounterDAO().getPatientEncounters(uuid).observe((AppCompatActivity)context, encounters -> {
+        app.getDb().encounterDAO()
+                .getPatientEncounters(uuid)
+                .observe((AppCompatActivity)context, encounters -> {
             syncData(encounters);
         });
     }

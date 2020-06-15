@@ -43,11 +43,11 @@
         android:layout_marginLeft="5dp"
         android:hint="@string/notes">
 
-        <EditText
+        <EditText android:importantForAutofill="no"
             android:id="@+id/notes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="textMultiLine|textCapSentences|textImeMultiLine|textAutoComplete"
+            android:inputType="textNoSuggestions|textMultiLine|textCapSentences|textImeMultiLine|textAutoComplete"
             android:text="bla bla bla" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -63,7 +63,7 @@
         android:layout_marginTop="10dp"
         android:hint="@string/diag_date">
 
-        <EditText
+        <EditText android:importantForAutofill="no"
             android:id="@+id/diag_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -13,9 +13,10 @@ android {
     }
     buildTypes {
         debug {
+            //
             buildConfigField "String", "SERVER_URL", '"https://secure-brook-52919.herokuapp.com/"'
             //
-            //buildConfigField "String", "SERVER_URL", '"http://192.168.2.205:8181/"'
+            //buildConfigField "String", "SERVER_URL", '"http://192.168.2.23:8181/"'
             buildConfigField "String", "DOCUMENT_BUCKET", '"https://kamitsoft-document.s3.ca-central-1.amazonaws.com/"'
             buildConfigField "String", "AVATAR_BUCKET", '"https://kamitsoft-avatar.s3.ca-central-1.amazonaws.com/"'
 

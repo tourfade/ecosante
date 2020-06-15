@@ -94,7 +94,7 @@ public class SurgeriesEditorDialog extends DialogFragment implements View.OnLong
 
     void initListeners(AlertDialog d) {
         if (editable) {
-            date.setOnClickListener(v -> Utils.manageDataPicker(getContext(), date, calendar));
+            date.setOnClickListener(v -> Utils.manageDatePicker(getContext(), date, calendar));
 
             Button positiveButton = d.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {

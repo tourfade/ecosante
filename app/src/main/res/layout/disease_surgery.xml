@@ -37,7 +37,7 @@
         android:layout_marginLeft="5dp"
         android:hint="@string/notes">
 
-        <EditText
+        <EditText android:importantForAutofill="no"
             android:id="@+id/notes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -57,7 +57,7 @@
         android:layout_marginTop="10dp"
         android:hint="Date de l'opération">
 
-        <EditText
+        <EditText android:importantForAutofill="no"
             android:id="@+id/surgery_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

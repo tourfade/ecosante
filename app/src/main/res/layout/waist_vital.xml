@@ -15,7 +15,7 @@
         android:padding="5dp"
         android:text="Tour de taille en cm" />
 
-    <EditText
+    <EditText android:importantForAutofill="no"
         android:textAlignment="center"
         android:selectAllOnFocus="true"
         android:id="@+id/waistSize"

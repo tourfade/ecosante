@@ -1,6 +1,7 @@
 package com.kamitsoft.ecosante.client.patient;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.client.EcoSanteActivity;
 import com.kamitsoft.ecosante.constant.PatientViewsType;
 import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
@@ -53,7 +55,12 @@ public class PatientActivity extends ImagePickerActivity implements BottomNaviga
         app.getCurrentLivePatient().observe(this, patientInfo -> {
             toolbar.setSubtitle(Utils.formatPatient(PatientActivity.this,app.getCurrentPatient()));
 
+
         });
+        if(app.getCurrentPatient() == null){
+            startActivity(new Intent(this, EcoSanteActivity.class));
+            finish();
+        }
         model.getEncounterCounts(app.getCurrentPatient().getUuid()).observe(this, ec->{
             if(ec != null ) {
                 navBar.getOrCreateBadge(PatientViewsType.ENCOUNTERS.value).setNumber(ec);

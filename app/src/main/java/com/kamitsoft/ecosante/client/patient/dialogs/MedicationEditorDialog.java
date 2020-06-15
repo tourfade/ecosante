@@ -9,16 +9,20 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
+import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.patient.oracles.DrugOracleAdapter;
 import com.kamitsoft.ecosante.constant.MedicationStatus;
+import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.Drug;
 import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.viewmodels.MedicationViewModel;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.DialogFragment;
@@ -37,6 +41,7 @@ public class MedicationEditorDialog  extends DialogFragment implements View.OnCl
     private  MedicationStatus medStatus;
     private  MedicationViewModel medModel;
     private  OnSaving completion;
+    private  EcoSanteApp app;
 
     public MedicationEditorDialog(MedicationInfo med, boolean isNew, OnSaving completion){
         this.curentMedication = med;
@@ -48,13 +53,13 @@ public class MedicationEditorDialog  extends DialogFragment implements View.OnCl
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         medModel = ViewModelProviders.of(this).get(MedicationViewModel.class);
-
+        app = (EcoSanteApp) (getActivity().getApplication());
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(readyForNew? getString(R.string.newOrReportedMedication):curentMedication.getDrugName());
+        alertDialogBuilder.setTitle(readyForNew? getString(R.string.medication):curentMedication.getDrugName());
         alertDialogBuilder.setCancelable(true);
         alertDialogBuilder.setView(R.layout.medication_dialog);
         alertDialogBuilder.setIcon(R.drawable.drug);
-        alertDialogBuilder.setPositiveButton(readyForNew?"Ajouter":"Modifier",(dialog, which)->{
+        alertDialogBuilder.setPositiveButton(readyForNew?R.string.add:R.string.update,(dialog, which)->{
             curentMedication.setDrugName(drug.getText().toString());
             curentMedication.setDirection(directions.getText().toString());
             curentMedication.setStartingDate(new Timestamp(sdCalendar.getTimeInMillis()));
@@ -105,13 +110,13 @@ public class MedicationEditorDialog  extends DialogFragment implements View.OnCl
 
     }
     void initListeners(){
+
         startingDate.setOnClickListener(this);
         endingDate.setOnClickListener(this);
         drug.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedDrug = autoCompleteAdapter.getItem(position);
-
             }
 
             @Override
@@ -119,12 +124,13 @@ public class MedicationEditorDialog  extends DialogFragment implements View.OnCl
                 selectedDrug = null;
             }
         });
+        status.setAdapter(MedicationStatus.getAdapter(getContext(), app.getCurrentUser().getUserType()));
         status.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 medStatus = MedicationStatus.atIndex(position);
-
                 endingDate.setEnabled(medStatus == MedicationStatus.TERMINATED);
+
                 if(MedicationStatus.TERMINATED != medStatus){
                     endingDate.setText("N/A");
                 }
@@ -134,7 +140,6 @@ public class MedicationEditorDialog  extends DialogFragment implements View.OnCl
                     renewal.setEnabled(false);
                     renewal.setSelection(0);
                 }
-
 
             }
 
@@ -146,12 +151,16 @@ public class MedicationEditorDialog  extends DialogFragment implements View.OnCl
     }
 
     void initValues(){
+        if(readyForNew && UserType.isNurse(app.getCurrentUser().getUserType())){
+            curentMedication.setStatus(MedicationStatus.RUNNING.status);
+        }
         medStatus = MedicationStatus.ofStatus(curentMedication.getStatus());
+
         drug.setText(Utils.niceFormat(curentMedication.getDrugName()));
         directions.setText(Utils.niceFormat(curentMedication.getDirection()));
 
         startingDate.setText(Utils.format(curentMedication.getStartingDate()));
-        status.setSelection(curentMedication.getStatus());
+        status.setSelection(medStatus.index);
         renewal.setSelection(curentMedication.getRenewal());
         endingDate.setText(medStatus!= MedicationStatus.TERMINATED? Utils.format(curentMedication.getEndingDate()):"N/A");
 
@@ -172,6 +181,18 @@ public class MedicationEditorDialog  extends DialogFragment implements View.OnCl
             ((EditText)v).setText(Utils.niceFormat(Utils.format(current.getTime())));
 
         },  current.get(Calendar.YEAR), current.get(Calendar.MONTH), current.get(Calendar.DAY_OF_MONTH) );
+
+        if(v.getId() == R.id.starting_date){
+            if(readyForNew && UserType.isNurse(app.getCurrentUser().getUserType())){
+                datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+            }
+        }else{
+            if(readyForNew && UserType.isNurse(app.getCurrentUser().getUserType())){
+                datePickerDialog.getDatePicker().setMinDate(sdCalendar.getTimeInMillis());
+                datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+
+            }
+        }
 
         datePickerDialog.show();
     }

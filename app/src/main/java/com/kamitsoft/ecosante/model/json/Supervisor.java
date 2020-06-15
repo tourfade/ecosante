@@ -16,6 +16,7 @@ public class Supervisor {
     public boolean active;
     public Timestamp createdAt;
     public Timestamp updatedAt;
+    public String email;
 
     public Supervisor(){
         createdAt = new Timestamp(System.currentTimeMillis());

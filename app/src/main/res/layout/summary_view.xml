@@ -50,7 +50,7 @@
                             android:id="@+id/ecosantedocotor"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="textAutoComplete"
+                            android:inputType="textNoSuggestions|textAutoComplete"
                             android:maxLines="1"
                             android:paddingLeft="7dp"
                             android:text="Dr Habib Dieye" />
@@ -71,7 +71,7 @@
                             android:layout_weight="1"
                             android:hint="Cellulaire">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/ecosantedocotorMobile"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -87,11 +87,11 @@
                             android:layout_weight="1"
                             android:hint="Email">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/ecosantedocotorEmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="textEmailAddress"
+                                android:inputType="textNoSuggestions|textEmailAddress"
                                 android:maxLines="1"
                                 android:padding="8dp"
                                 android:text="ftoure@gmail.com" />
@@ -106,11 +106,11 @@
                         android:layout_below="@id/ecosantedocotorContactContainer"
                         android:hint="Medecin Spécialiste Traitant">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/specialistdocotor"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="textCapWords"
+                            android:inputType="textNoSuggestions|textCapWords"
                             android:maxLines="1"
                             android:padding="8dp"
                             android:text="Dr Habib Dieye" />
@@ -129,7 +129,7 @@
                             android:layout_weight="1"
                             android:hint="Cellulaire">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/specialistdocotorMobile"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -145,11 +145,11 @@
                             android:layout_weight="1"
                             android:hint="Email">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/specialistdocotorEmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="textEmailAddress"
+                                android:inputType="textNoSuggestions|textEmailAddress"
                                 android:maxLines="1"
                                 android:padding="8dp"
                                 android:text="ftoure@gmail.com" />
@@ -333,7 +333,7 @@
                         android:layout_marginTop="10dp"
                         android:hint="@string/long_terme_treatment">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/longTermTreatment"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -933,11 +933,11 @@
 
                         android:hint="@string/notes">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/diseasenotes"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="textWebEditText|textMultiLine|textCapSentences|textAutoComplete|textImeMultiLine"
+                            android:inputType="textNoSuggestions|textWebEditText|textMultiLine|textCapSentences|textAutoComplete|textImeMultiLine"
                             android:padding="8dp"
                             android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." />
                     </com.google.android.material.textfield.TextInputLayout>

@@ -19,11 +19,11 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
+        <EditText android:importantForAutofill="no"
             android:id="@+id/docname"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="text"
+            android:inputType="textNoSuggestions|text"
             android:maxLines="1"
             android:padding="10dp"
             android:selectAllOnFocus="true" />
@@ -53,7 +53,7 @@
         app:layout_constraintTop_toBottomOf="@id/docnamecont"
         app:layout_constraintRight_toRightOf="parent">
 
-        <EditText
+        <EditText android:importantForAutofill="no"
             android:id="@+id/docdate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

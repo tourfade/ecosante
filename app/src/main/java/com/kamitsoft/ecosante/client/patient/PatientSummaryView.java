@@ -2,6 +2,7 @@ package com.kamitsoft.ecosante.client.patient;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -22,13 +24,13 @@ import com.kamitsoft.ecosante.client.patient.dialogs.SurgeriesEditorDialog;
 import com.kamitsoft.ecosante.client.patient.oracles.PhysistOracleAdapter;
 import com.kamitsoft.ecosante.constant.BloodGroup;
 import com.kamitsoft.ecosante.constant.Gender;
-import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.SummaryInfo;
 import com.kamitsoft.ecosante.model.json.ExtraData;
 import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -294,7 +296,7 @@ public class PatientSummaryView extends PatientBaseFragment {
                 return;
             }
             if(isChecked){
-                Utils.manageDataPicker(getActivity(), currentSummary.getIdmDate(), date -> {
+                Utils.manageDatePicker(getActivity(), currentSummary.getIdmDate(), date -> {
                     idm.setText(Utils.niceFormat(Utils.format(date)));
                     currentSummary.setIdmDate(new Timestamp(date.getTime()));
                 });
@@ -309,7 +311,7 @@ public class PatientSummaryView extends PatientBaseFragment {
                 return;
             }
             if(isChecked){
-                Utils.manageDataPicker(getActivity(),currentSummary.getIdmDate(),date -> {
+                Utils.manageDatePicker(getActivity(),currentSummary.getIdmDate(), date -> {
                     avc.setText(Utils.niceFormat(Utils.format(date)));
                     currentSummary.setAvcDate(new Timestamp(date.getTime()));
                 });
@@ -378,7 +380,7 @@ public class PatientSummaryView extends PatientBaseFragment {
                 return;
             }
             if(isChecked){
-                Utils.manageDataPicker(getActivity(),
+                Utils.manageDatePicker(getActivity(),
                         currentSummary.getMenopauseDate(),
                         date -> {
                             currentSummary.setMenopauseDate(new Timestamp(date.getTime()));
@@ -524,32 +526,34 @@ public class PatientSummaryView extends PatientBaseFragment {
     void prepareDiabeteDialog(View v) {
 
         final Calendar calendar = Calendar.getInstance();
+
         showDesease(diabete, R.string.diabetes, R.layout.disease_diabete, R.drawable.diabete,
                 d -> {
                     currentSummary.getDiabete().form = Utils.intFromSpiner(d.findViewById(R.id.diabeteType));
                     currentSummary.getDiabete().note = Utils.stringFromEditText(d.findViewById(R.id.notes));
                     currentSummary.getDiabete().date = calendar.getTimeInMillis();
-
-                    initItem(diabete);
-                },
+                     initItem(diabete);
+                },//mapper
                 d -> {
                     EditText date = d.findViewById(R.id.diag_date);
-                    Utils.manageDataPicker(getActivity(), date, calendar);
+                    Utils.manageDatePicker(getActivity(), date, calendar);
                     Utils.initEditText(d.findViewById(R.id.notes),Utils.niceFormat(currentSummary.getDiabete().note));
                     long dd = currentSummary.getDiabete().date;
                     if(dd > 0) {
                         calendar.setTimeInMillis(dd);
                     }
-                    Utils.initEditText(date,Utils.format(dd > 0 ? new Timestamp(dd):calendar.getTime()));
-                    Utils.initSpiner(d.findViewById(R.id.diabeteType),currentSummary.getDiabete().form);
+                    Utils.initEditText(date, Utils.format(calendar.getTime()));
+                    int form = currentSummary.getDiabete().form;
+                    if(form >= 0)
+                        Utils.initSpiner(d.findViewById(R.id.diabeteType),form);
 
-                },
+                },//initializer
                 d -> {
                     currentSummary.getDiabete().form = -1;
                     currentSummary.getDiabete().note = "";
                     currentSummary.getDiabete().date = 0;
                     initItem(diabete);
-                });
+                });//remover
 
     }
 
@@ -564,7 +568,7 @@ public class PatientSummaryView extends PatientBaseFragment {
                 },
                 d -> {
                     EditText date = d.findViewById(R.id.diag_date);
-                    Utils.manageDataPicker(getActivity(), date, calendar);
+                    Utils.manageDatePicker(getActivity(), date, calendar);
                     if(currentSummary.getFalciform().percent >= 0) {
                         Utils.initEditText(d.findViewById(R.id.percent), Utils.niceFormat(currentSummary.getFalciform().percent));
                     }

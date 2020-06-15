@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -12,8 +13,10 @@ import com.kamitsoft.ecosante.DiskCache;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.constant.PrescriptionType;
 import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
+import com.kamitsoft.ecosante.dto.PrescriptionDTO;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
 import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
@@ -803,6 +806,7 @@ public class ApiSyncService extends Service {
         });
 
     }
+
     public void getPageArchivedEncounters(int page, Completion completion) {
         proxy.getPageArchivedEncounters(page, 10).enqueue(new Callback<List<EncounterInfo>>() {
             @Override
@@ -841,6 +845,7 @@ public class ApiSyncService extends Service {
             }
         });
     }
+
     private void observFiles(){
         fileRepository.getFiles().observeForever(files -> {
             if (files != null) {
@@ -853,9 +858,9 @@ public class ApiSyncService extends Service {
                             MultipartBody.Part uuid = MultipartBody.Part.createFormData("doid", uf.getFkey());
                             MultipartBody.Part file = MultipartBody.Part.createFormData("file", uf.getFkey(), requestFile);
                             if(uf.getType() == 0) {
-                                proxy.uploadAvatar(file, uuid).enqueue(new Callback<S3BucketUrl>() {
+                                proxy.uploadAvatar(file, uuid).enqueue(new Callback<Void>() {
                                     @Override
-                                    public void onResponse(Call<S3BucketUrl> call, Response<S3BucketUrl> response) {
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
 
                                         if (response.code() == 200) {
                                             cache.remove(uf.getFkey());
@@ -870,7 +875,7 @@ public class ApiSyncService extends Service {
                                     }
 
                                     @Override
-                                    public void onFailure(Call<S3BucketUrl> call, Throwable t) {
+                                    public void onFailure(Call<Void> call, Throwable t) {
                                         t.printStackTrace();
                                         uf.setLastTry(System.currentTimeMillis());
                                         uf.setTries(uf.getTries() + 1);
@@ -879,9 +884,9 @@ public class ApiSyncService extends Service {
                                     }
                                 });
                             }else {
-                                proxy.uploadDocument(file, uuid).enqueue(new Callback<S3BucketUrl>() {
+                                proxy.uploadDocument(file, uuid).enqueue(new Callback<Void>() {
                                     @Override
-                                    public void onResponse(Call<S3BucketUrl> call, Response<S3BucketUrl> response) {
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
 
                                         if (response.code() == 200) {
                                             cache.remove(uf.getFkey());
@@ -896,7 +901,7 @@ public class ApiSyncService extends Service {
                                     }
 
                                     @Override
-                                    public void onFailure(Call<S3BucketUrl> call, Throwable t) {
+                                    public void onFailure(Call<Void> call, Throwable t) {
                                         t.printStackTrace();
                                         uf.setLastTry(System.currentTimeMillis());
                                         uf.setTries(uf.getTries() + 1);
@@ -914,6 +919,31 @@ public class ApiSyncService extends Service {
         });
     }
 
+    public void sendPrescription(String euuid,  Map<String, String> des,Completion completion) {
+        EncounterInfo encounter = encounterRepository.getEncounter(euuid);
+        PrescriptionDTO dto = new PrescriptionDTO();
+        dto.setPatientEmail(des.get("pat"));
+        des.remove("pat");
+        dto.setEmails(des.values().toArray(new String[]{}));
+        dto.setEncounterUuid(encounter.getUuid());
+        dto.setPatientUuid(encounter.getPatientUuid());
+        dto.setPhysistUuid(encounter.getSupervisor().physicianUuid);
+        dto.setPrescriptionType(PrescriptionType.PHARMACY.ordinal());
+
+        proxy.generatePrescription(dto).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                completion.onReady();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                t.printStackTrace();
+                Log.i("XXXXXXX", "xxe"+t.getMessage());
+            }
+        });
+
+    }
 
     private EntitySync getEntity(Class<?> beanClass){
         assert (beanClass !=null);

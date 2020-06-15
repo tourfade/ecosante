@@ -96,12 +96,6 @@ public class PatientProfileView extends PatientBaseFragment  {
             oldavatar = patientInfo.getAvatar();
             this.currentPatient = patientInfo;
             this.currentPatient.setNeedUpdate(true);
-            if(isNew){
-                ((ImagePickerActivity)getActivity()).locateUser(location -> {
-                    this.currentPatient.setLat(location.getLatitude());
-                    this.currentPatient.setLon(location.getLongitude());
-                });
-            }
             initPatientInfo();
         });
 
@@ -413,7 +407,10 @@ public class PatientProfileView extends PatientBaseFragment  {
             currentPatient.getMonitor().patientUuid = currentPatient.getUuid();
             currentPatient.getMonitor().active = true;
             currentPatient.getMonitor().monitorFullName = Utils.formatUser(getContext(),app.getCurrentUser());
-
+            ((ImagePickerActivity)getActivity()).locateUser(location -> {
+                this.currentPatient.setLat(location.getLatitude());
+                this.currentPatient.setLon(location.getLongitude());
+            });
         }
         int res = Gender.FEMALE.sex==currentPatient.getSex()?R.drawable.patient_f:R.drawable.patient;
 

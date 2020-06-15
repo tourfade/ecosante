@@ -35,7 +35,7 @@
                         android:id="@+id/nameContainer"
                         android:hint="@string/district_name">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/district_name"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -61,7 +61,7 @@
                     android:id="@+id/descriptionContainer"
                     android:hint="@string/district_description">
 
-                    <EditText
+                    <EditText android:importantForAutofill="no"
                         android:id="@+id/district_description"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -83,7 +83,7 @@
                         android:id="@+id/popContainner"
                         android:hint="@string/population">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/population"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -99,7 +99,7 @@
                         android:id="@+id/maxNursContainner"
                         android:hint="@string/max_nurse">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/max_nurse"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -115,7 +115,7 @@
                         android:id="@+id/max_physContainner"
                         android:hint="@string/max_physician">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/max_physist"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

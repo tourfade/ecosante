@@ -81,9 +81,11 @@ public class FCMService extends FirebaseMessagingService  {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> data = remoteMessage.getData();
         currentUser = userRepository.getConnected();
+
         if(currentUser == null || currentUser.getUuid().equals(data.get("emitter"))){
             return;
         }
+
         if(Boolean.parseBoolean(data.getOrDefault("syncPayment", "false"))){
             Intent msg = new Intent(ACTION_PAYMENT);
             msg.addCategory(CAT_PAYMENT_SUCCESS);
@@ -95,15 +97,18 @@ public class FCMService extends FirebaseMessagingService  {
             entityRepository.setDirty(entity);
 
         }
+
         if(Boolean.parseBoolean(data.getOrDefault("updateRequest", "false"))){
             String uuid = data.get("uuid");
             int status = Integer.parseInt(data.get("status"));
             userRepository.remoteUpdateStatus(uuid,status);
         }
+
         RemoteMessage.Notification remote = remoteMessage.getNotification();
         if(remote != null && remote.getTitle().trim().length() > 0){
             notify(remote, data);
         }
+
 
     }
 

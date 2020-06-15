@@ -1,4 +1,4 @@
-package com.kamitsoft.ecosante.client.adapters;
+package com.kamitsoft.ecosante.client.patient.prescription;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -12,29 +12,26 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.client.adapters.ItemClickListener;
 import com.kamitsoft.ecosante.constant.MedicationStatus;
 import com.kamitsoft.ecosante.model.MedicationInfo;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by hassa on 01/06/2017.
  */
 
-public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.MyHolder>  {
+public class PresMedAdapter extends RecyclerView.Adapter<PresMedAdapter.MyHolder>  {
 
     private static final int VIEW_TYPE_NORMAL = 0;
     private static final int VIEW_TYPE_EMPTY = 1;
@@ -46,7 +43,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     static ItemClickListener myClickListener;
 
     // create constructor to innitilize context and data sent from MainActivity
-    public MedicationsAdapter(Context context) {
+    public PresMedAdapter(Context context) {
         this.context = context;
         mdata = new ArrayList<>();
         decimalFormatf = DecimalFormat.getNumberInstance();
@@ -82,7 +79,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         MyHolder vh;
 
         if (viewType == VIEW_TYPE_NORMAL){
-            v = LayoutInflater.from(this.context).inflate(R.layout.medication_item, parent, false);
+            v = LayoutInflater.from(this.context).inflate(R.layout.pres_med_item, parent, false);
             vh = new MyHolder(v);
         }else {
             v = LayoutInflater.from(this.context).inflate(R.layout.layout_empty, parent, false);
@@ -102,32 +99,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             myHolder.drugName.setText(current.getDrugName() );
             myHolder.drugRenew.setText(String.valueOf(current.getRenewal()));
             myHolder.startingDate.setText(Utils.format(current.getStartingDate()));
-            //setAnimation(myHolder.itemView,position);
-            switch (MedicationStatus.ofStatus(current.getStatus())){
-                case NEW:
-                    myHolder.endingDateTitler.setText(R.string.new_med);
-                    myHolder.endingDate.setText(R.string.prescribed);
+            myHolder.directions.setText(current.getDirection());
 
-                    myHolder.sep.setBackgroundColor(context.getColor(R.color.colorAccent));
-                    break;
-                case RUNNING:
-                    myHolder.endingDateTitler.setText(R.string.running_since);
 
-                    myHolder.endingDate.setText(Utils.format(current.getStartingDate()));
-                    myHolder.sep.setBackgroundColor(Color.GREEN);
-                    break;
-                case TERMINATED:
-                    myHolder.sep.setBackgroundColor(Color.RED);
-                    myHolder.endingDateTitler.setText(R.string.terminate_at);
-                    myHolder.endingDate.setText(Utils.format(current.getEndingDate()));
-                    break;
-                default:
-                    myHolder.sep.setBackgroundColor(Color.LTGRAY);
-                    myHolder.endingDateTitler.setText(R.string.terminate_at);
-                    myHolder.endingDate.setText(Utils.format(current.getEndingDate()));
-                    break;
-
-            }
 
        }
 
@@ -174,14 +148,13 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     }
 
 
-    public static class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class MyHolder extends RecyclerView.ViewHolder  {
 
 
         View sep;
         TextView drugName;
-        TextView drugRenew, endingDateTitler;
-        TextView startingDate, endingDate;
-        ImageButton delete;
+        TextView drugRenew;
+        TextView startingDate,  directions;
         // create constructor to get widget reference
         public MyHolder(View itemView) {
              super(itemView);
@@ -189,42 +162,16 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
              drugName = itemView.findViewById(R.id.drug);
              drugRenew = itemView.findViewById(R.id.renewal);
              startingDate = itemView.findViewById(R.id.starting_date);
-             endingDate =   itemView.findViewById(R.id.ending_date);
-             endingDateTitler = itemView.findViewById(R.id.endingDateTitler);
-             delete = itemView.findViewById(R.id.item_delete);
-             if(delete != null) {
-                 delete.setOnClickListener(this);
-                 itemView.setOnClickListener(this);
-                 itemView.setOnLongClickListener(v -> {
-                     AnimatorSet anset = new AnimatorSet();
-                     anset.play(ObjectAnimator
-                             .ofInt(itemView.findViewById(R.id.insider), "scrollX", 0)
-                             .setDuration(200))
-                             .after(2000)
-                             .after(ObjectAnimator
-                                     .ofInt(itemView.findViewById(R.id.insider), "scrollX", 160)
-                                     .setDuration(200));
-                     anset.start();
+             directions = itemView.findViewById(R.id.posology);
 
-                     return true;
-                 });
-             }
         }
 
         public void clearAnimation(){
             itemView.clearAnimation();
         }
-        @Override
-        public void onClick(View v) {
-            if(myClickListener != null && getItemViewType() == VIEW_TYPE_NORMAL) {
-                myClickListener.onItemClick(getAdapterPosition(), v);
-            }
-        }
+
     }
 
-    public void setItemClickListener(ItemClickListener itemClickListener){
-        myClickListener = itemClickListener;
-    }
 
 
 

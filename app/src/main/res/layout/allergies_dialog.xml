@@ -68,7 +68,7 @@
                 android:focusable="false"
                 android:hint="Depuis">
 
-                <EditText
+                <EditText android:importantForAutofill="no"
                     android:id="@+id/allergy_date"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

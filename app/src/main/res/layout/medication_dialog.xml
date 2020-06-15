@@ -48,7 +48,7 @@
             android:layout_marginTop="10dp"
             android:hint="@string/direction">
 
-            <EditText
+            <EditText android:importantForAutofill="no"
                 android:id="@+id/directions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
@@ -85,8 +85,8 @@
                     android:id="@+id/status"
                     style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/medication_status"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="0dp"
                     android:paddingLeft="0dp"
                     android:paddingTop="10dp"
                     android:paddingRight="0dp"
@@ -104,7 +104,7 @@
                 android:focusable="false"
                 android:hint="@string/starting_date">
 
-                <EditText
+                <EditText android:importantForAutofill="no"
                     android:id="@+id/starting_date"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -159,7 +159,7 @@
                 android:layout_weight="1"
                 android:hint="@string/terminate_at">
 
-                <EditText
+                <EditText android:importantForAutofill="no"
                     android:id="@+id/ending_date"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

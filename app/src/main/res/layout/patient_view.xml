@@ -38,11 +38,11 @@
                         android:id="@+id/firstnameContainer"
                         android:hint="@string/firstname">
 
-                        <EditText
+                        |<EditText android:importantForAutofill="no"
                             android:id="@+id/firstname"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="textPersonName|textCapWords"
+                            android:inputType="textNoSuggestions|textPersonName|textCapWords"
                             android:maxLines="1"
                             android:padding="8dp"
                             android:text="Fadel" />
@@ -56,11 +56,11 @@
                         android:id="@+id/lastnameContainer"
                         android:hint="@string/lastname">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/lastname"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="textPersonName|textCapCharacters"
+                            android:inputType="textNoSuggestions|textPersonName|textCapCharacters"
                             android:textAllCaps="true"
                             android:maxLines="1"
                             android:padding="8dp"
@@ -79,12 +79,12 @@
                             android:id="@+id/dobContainer"
                             android:hint="@string/dob">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:focusable="false"
                                 android:id="@+id/dob"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="date"
+                                android:inputType="textNoSuggestions|date"
                                 android:maxLines="1"
                                 android:padding="8dp"
                                 android:text="06/11/1977" />
@@ -97,11 +97,11 @@
                             android:layout_weight="1"
                             android:hint="@string/pob">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/pob"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="textAutoComplete|textCapWords"
+                                android:inputType="textNoSuggestions|textAutoComplete|textCapWords"
                                 android:maxLines="1"
                                 android:padding="8dp"
                                 android:text="Kaedi" />
@@ -195,11 +195,11 @@
 
                             android:hint="@string/job">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/occupation"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="textAutoComplete|textCapWords"
+                                android:inputType="textNoSuggestions|textAutoComplete|textCapWords"
                                 android:maxLines="1"
                                 android:paddingBottom="12dp"
                                 android:text="Plombier" />
@@ -362,11 +362,11 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/adress">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/address"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="none|textCapWords"
+                            android:inputType="textNoSuggestions|none|textCapWords"
                             android:maxLines="1"
                             android:padding="8dp"
                             android:text="41 rue Sicap Mbao, Dakar" />
@@ -386,11 +386,11 @@
                             android:layout_weight="1"
                             android:hint="@string/fix">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/fixphone"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="phone"
+                                android:inputType="textNoSuggestions|phone"
                                 android:maxLines="1"
                                 android:padding="8dp"
                                 android:text="8194483485" />
@@ -402,11 +402,11 @@
                             android:layout_weight="1"
                             android:hint="@string/mobile">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/mobile"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="phone"
+                                android:inputType="textNoSuggestions|phone"
                                 android:maxLines="1"
                                 android:padding="8dp"
                                 android:text="77543452" />
@@ -426,11 +426,11 @@
                             android:layout_weight="1"
                             android:hint="@string/email">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/email"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="textEmailAddress"
+                                android:inputType="textNoSuggestions|textEmailAddress"
                                 android:maxLines="1"
                                 android:padding="8dp"
                                 android:text="ftoure@gmail.com" />
@@ -442,14 +442,14 @@
                             android:layout_weight="1"
                             android:hint="@string/matricule">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:focusable="false"
                                 android:clickable="true"
                                 android:id="@+id/matricule"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:textAllCaps="true"
-                                android:inputType="textCapCharacters"
+                                android:inputType="textNoSuggestions|textCapCharacters"
                                 android:maxLines="1"
                                 android:padding="8dp"
                                 android:text="77543452" />
@@ -483,11 +483,11 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/contactperson">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/contactPerson"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="textPersonName|textCapWords"
+                            android:inputType="text|textNoSuggestions|textCapWords"
                             android:maxLines="1"
                             android:padding="8dp"
                             android:text="Ousmane TOURE" />
@@ -508,11 +508,11 @@
                             android:layout_weight="1"
                             android:hint="@string/phone1">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/personContactphone1"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="phone"
+                                android:inputType="textNoSuggestions|phone"
                                 android:maxLines="1"
                                 android:padding="8dp"
                                 android:text="8194483485" />
@@ -525,11 +525,11 @@
                             android:layout_weight="1"
                             android:hint="@string/phone2">
 
-                            <EditText
+                            <EditText android:importantForAutofill="no"
                                 android:id="@+id/personContactphone2"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="phone"
+                                android:inputType="textNoSuggestions|phone"
                                 android:maxLines="1"
                                 android:padding="8dp"
                                 android:text="776432422" />
@@ -543,11 +543,11 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/adress">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/perosnContactAddress"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="textCapWords"
+                            android:inputType="textNoSuggestions|textCapWords"
                             android:maxLines="1"
                             android:padding="8dp"
                             android:text="12 rue Liber V, Dakar" />
