@@ -883,8 +883,37 @@ public class ApiSyncService extends Service {
 
                                     }
                                 });
-                            }else {
+                            }
+                            if(uf.getType() == 1){
                                 proxy.uploadDocument(file, uuid).enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+
+                                        if (response.code() == 200) {
+                                            cache.remove(uf.getFkey());
+                                            fileRepository.remove(uf.getFkey());
+                                        } else {
+
+                                            uf.setLastTry(System.currentTimeMillis());
+                                            uf.setTries(uf.getTries() + 1);
+                                            fileRepository.insert(uf);
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        t.printStackTrace();
+                                        uf.setLastTry(System.currentTimeMillis());
+                                        uf.setTries(uf.getTries() + 1);
+                                        database.fileDAO().update(uf);
+
+                                    }
+                                });
+                            }
+                            if(uf.getType() == 2){
+
+                                proxy.uploadSignature(file, uuid).enqueue(new Callback<Void>() {
                                     @Override
                                     public void onResponse(Call<Void> call, Response<Void> response) {
 
@@ -919,7 +948,7 @@ public class ApiSyncService extends Service {
         });
     }
 
-    public void sendPrescription(String euuid,  Map<String, String> des,Completion completion) {
+    public void sendPrescription(PrescriptionType type, String euuid,  Map<String, String> des,Completion completion) {
         EncounterInfo encounter = encounterRepository.getEncounter(euuid);
         PrescriptionDTO dto = new PrescriptionDTO();
         dto.setPatientEmail(des.get("pat"));
@@ -928,7 +957,7 @@ public class ApiSyncService extends Service {
         dto.setEncounterUuid(encounter.getUuid());
         dto.setPatientUuid(encounter.getPatientUuid());
         dto.setPhysistUuid(encounter.getSupervisor().physicianUuid);
-        dto.setPrescriptionType(PrescriptionType.PHARMACY.ordinal());
+        dto.setPrescriptionType(type.ordinal());
 
         proxy.generatePrescription(dto).enqueue(new Callback<Void>() {
             @Override

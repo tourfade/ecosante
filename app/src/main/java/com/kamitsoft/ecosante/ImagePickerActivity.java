@@ -46,6 +46,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class ImagePickerActivity extends AppCompatActivity {
     public LocFoundCallBack callback;
 
+
+
     public interface LocFoundCallBack{
         void onLocated(Location location);
     }
@@ -68,7 +70,9 @@ public class ImagePickerActivity extends AppCompatActivity {
     public void setPlaceholder(int placeholder) {
         this.placeholder = placeholder;
     }
-
+    public DiskCache getCache(){
+        return cache;
+    }
 
 
     public static final int LOCATION_PICKER = 1222;
@@ -157,7 +161,6 @@ public class ImagePickerActivity extends AppCompatActivity {
             }
         }
         if (requestCode == FILE_CHOOSER && resultCode == RESULT_OK) {
-
             avatar = UUID.randomUUID().toString() + "." + ext(data.getData());
             cache.put(avatar, data.getData(), () -> {
                 mimeType = getContentResolver().getType(data.getData());
@@ -244,35 +247,39 @@ public class ImagePickerActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if(null == bitmap){
-                if(hasFinishedSelection!=null){
-                    hasFinishedSelection.onSelectionFinished(null);
-                };
-                return;
-            }
-            avatar =  UUID.randomUUID().toString();
-            cache.put(avatar,bitmap, ()-> {
-                mimeType = "image/png";
-                if(!square) {
-                    Utils.load(getApplicationContext(),
-                            bucket,
-                            avatar,
-                            imageView,
-                            R.drawable.broken_mage,
-                            placeholder);
-                }else {
-                    Utils.loadSquare(getApplicationContext(),
-                            bucket,
-                            avatar,
-                            imageView,
-                            R.drawable.broken_mage,
-                            placeholder);
-                }
-                    if(hasFinishedSelection!=null){
-                        hasFinishedSelection.onSelectionFinished(avatar);
-                    }
-                avatar = null;});
+            cacheIt(bitmap);
         }
+    }
+
+    private void cacheIt(Bitmap bitmap) {
+        if(null == bitmap){
+            if(hasFinishedSelection!=null){
+                hasFinishedSelection.onSelectionFinished(null);
+            };
+            return;
+        }
+        avatar =  UUID.randomUUID().toString();
+        cache.put(avatar,bitmap, ()-> {
+            mimeType = "image/png";
+            if(!square) {
+                Utils.load(getApplicationContext(),
+                        bucket,
+                        avatar,
+                        imageView,
+                        R.drawable.broken_mage,
+                        placeholder);
+            }else {
+                Utils.loadSquare(getApplicationContext(),
+                        bucket,
+                        avatar,
+                        imageView,
+                        R.drawable.broken_mage,
+                        placeholder);
+            }
+            if(hasFinishedSelection!=null){
+                hasFinishedSelection.onSelectionFinished(avatar);
+            }
+            avatar = null;});
     }
 
 
@@ -285,6 +292,7 @@ public class ImagePickerActivity extends AppCompatActivity {
             file.setFkey(newuuid);
             file.setType(type);
             fileModel.insert(file);
+
         }
     }
 

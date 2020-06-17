@@ -3,7 +3,6 @@ package com.kamitsoft.ecosante.client.patient.prescription;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,23 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
-import com.kamitsoft.ecosante.client.adapters.MedicationsAdapter;
-import com.kamitsoft.ecosante.client.adapters.PatientEncountersAdapter;
 import com.kamitsoft.ecosante.constant.MedicationStatus;
+import com.kamitsoft.ecosante.constant.PrescriptionType;
 import com.kamitsoft.ecosante.model.EncounterInfo;
-import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
+import com.kamitsoft.ecosante.model.viewmodels.LabsViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.MedicationViewModel;
-import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -42,23 +35,23 @@ import androidx.recyclerview.widget.RecyclerView;
 public class PrescriptionActivity extends ImagePickerActivity  {
 
     private EcoSanteApp app;
-    private RecyclerView medicationsRecyclerView;
-    private PresMedAdapter medicationsAdapter;
-    private EncountersViewModel encountersViewModel;
-    private EncounterInfo prescription;
+    private RecyclerView recyclerView;
+    private PresRxAdapter medicationsAdapter;
+    private PresLabAdapter labAdapter;
+    private EncounterInfo encounter;
     private MedicationViewModel medModel;
+    private LabsViewModel labModel;
     private EditText email;
     private Button addEmail, sign, cancel;
     private LinearLayout recepients;
     private Map<String, String> recepientsEA = new HashMap<>();
+    private PrescriptionType type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.prescription);
         app = (EcoSanteApp)getApplication();
-        encountersViewModel = ViewModelProviders.of(this).get(EncountersViewModel.class);
-        medModel = ViewModelProviders.of(this).get(MedicationViewModel.class);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,30 +59,55 @@ public class PrescriptionActivity extends ImagePickerActivity  {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
-        medicationsRecyclerView = findViewById(R.id.drug_list);
-        medicationsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        medicationsAdapter = new PresMedAdapter(this);
-        medicationsRecyclerView.setAdapter(medicationsAdapter);
-        prescription = app.getCurrentEncounter();
+        recyclerView = findViewById(R.id.drug_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        encounter = app.getCurrentEncounter();
         toolbar.setSubtitle(Utils.formatPatient(this,app.getCurrentPatient()));
         app.getCurrentLivePatient().observe(this, patientInfo -> {
             toolbar.setSubtitle(Utils.formatPatient(PrescriptionActivity.this,app.getCurrentPatient()));
 
         });
+        type = PrescriptionType.getPrescriptionType(getIntent().getExtras().getInt("type"));
 
-        medModel.getEncounterMedications().observe(this, info -> {
-            if(prescription!=null) {
-                medicationsAdapter.syncData(info.stream()
-                        .filter(m -> m.getEncounterUuid().equals(prescription.getUuid())
-                                && m.getStatus() == MedicationStatus.NEW.status)
-                        .collect(Collectors.toList()));
-            }
-        });
+        switch (type){
+            case PHARMACY:
+                medModel = ViewModelProviders.of(this).get(MedicationViewModel.class);
+                medicationsAdapter = new PresRxAdapter(this);
+                recyclerView.setAdapter(medicationsAdapter);
+                medModel.getEncounterMedications().observe(this, info -> {
+                    if(encounter !=null) {
+                        medicationsAdapter.syncData(info.stream()
+                                .filter(m -> m.getEncounterUuid().equals(encounter.getUuid())
+                                        && m.getStatus() == MedicationStatus.NEW.status)
+                                .collect(Collectors.toList()));
+                    }
+                });
+                break;
+
+            case LAB:
+                labModel = ViewModelProviders.of(this).get(LabsViewModel.class);
+                labAdapter = new PresLabAdapter(this);
+                recyclerView.setAdapter(labAdapter);
+                labModel.getEncounterLabs().observe(this, info -> {
+                    if(encounter !=null) {
+                        labAdapter.syncData(info.stream()
+                                .filter(m -> m.getEncounterUuid().equals(encounter.getUuid())
+                                        && !m.isDone())
+                                .collect(Collectors.toList()));
+                    }
+                });
+                break;
+            default: finish();
+        }
+
+
 
         initWidgets();
-        if(!Utils.isNullOrEmpty(prescription.getSupervisor().email))
-            addEmail(prescription.getSupervisor().email,
-                    prescription.getSupervisor().supFullName,
+        if(!Utils.isNullOrEmpty(encounter.getSupervisor().email))
+            addEmail(encounter.getSupervisor().email,
+                    encounter.getSupervisor().supFullName,
                     "sup");
 
         if(!Utils.isNullOrEmpty(app.getCurrentPatient().getEmail()))
@@ -118,7 +136,9 @@ public class PrescriptionActivity extends ImagePickerActivity  {
             return;
         }
 
-        app.service().sendPrescription(prescription.getUuid(),
+        app.service().sendPrescription(
+                type,
+                encounter.getUuid(),
                 recepientsEA,
                 ()->{
             Toast.makeText(this, "La prescription a été envoyé",Toast.LENGTH_LONG).show();

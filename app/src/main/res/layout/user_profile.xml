@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -336,9 +337,67 @@
 
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
-
         <androidx.cardview.widget.CardView
             android:layout_below="@id/userContactCard"
+            android:id="@+id/signCard"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:elevation="4dp"
+            app:cardCornerRadius="5dp">
+            <LinearLayout
+                android:padding="10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    style="@style/TextView.InputLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Signature"/>
+                <com.github.gcacace.signaturepad.views.SignaturePad
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/signature_pad"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    app:penColor="@color/colorAccent"
+                    />
+                <LinearLayout
+                    android:padding="10dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:background="@drawable/radius5b"
+                        android:textColor="@color/common_google_signin_btn_text_dark_default"
+                        android:layout_below="@id/validityContainer"
+                        android:id="@+id/clearSign"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Effacer"
+                        android:layout_marginRight="5dp"
+                        android:elevation="4dp" />
+                    <Button
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/radius5o"
+                        android:textColor="@color/common_google_signin_btn_text_dark_default"
+                        android:layout_below="@id/validityContainer"
+                        android:id="@+id/acceptSign"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Valider"
+                        android:elevation="4dp" />
+            </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+
+            android:layout_below="@id/signCard"
             android:id="@+id/account"
             android:layout_margin="10dp"
             android:padding="10dp"

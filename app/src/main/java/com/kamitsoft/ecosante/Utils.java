@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
+import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
@@ -35,6 +40,8 @@ import java.util.Date;
 
 import androidx.annotation.AnyRes;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.FileProvider;
 
@@ -139,6 +146,42 @@ public class Utils {
 
 
         return fmt.format(patientAge)+(patientAge<= 1?"an":"ans");
+    }
+
+    public static void loadSignature(Context context, String bucket, String keyuuid,  SignaturePad to) {
+        DiskCache cache = new DiskCache(context);
+        if(cache.getFile(keyuuid).exists()){
+            Glide.with(context)
+                    .asBitmap()
+                    .load(cache.getFile(keyuuid)).
+                    into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                to.setSignatureBitmap(resource);
+                                to.setEnabled(false);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                to.clearView();
+                                to.setEnabled(true);
+                            }});
+
+        }else {
+            Glide.with(context)
+                    .asBitmap()
+                    .load(bucket+keyuuid)
+                    .into(new CustomTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            to.setSignatureBitmap(resource);
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                            to.clearView();
+                        }});
+        }
     }
 
     public static void load(Context context, String bucket, String keyuuid,  ImageView to, @DrawableRes  int failed, @DrawableRes  int placeholder) {

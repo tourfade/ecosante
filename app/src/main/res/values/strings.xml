@@ -279,5 +279,6 @@
     <string name="e_history">Historique</string>
     <string name="add">Ajouter</string>
     <string name="update">Sauver</string>
+    <string name="lab">Analyse</string>
 
 </resources>

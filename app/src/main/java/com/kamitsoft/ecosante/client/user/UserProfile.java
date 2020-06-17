@@ -3,8 +3,11 @@ package com.kamitsoft.ecosante.client.user;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
@@ -46,6 +50,7 @@ import com.kamitsoft.ecosante.model.Speciality;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -70,7 +75,7 @@ public class UserProfile extends BaseFragment {
     pob, address, fixphone,mobile,email;
     private TextView district;
     private AutoCompleteTextView speciality;
-    private Button renewSubscription, updatePassword;
+    private Button renewSubscription, updatePassword, clearSign, updateSign;
     private AppCompatSpinner sex, title;
     private UserInfo cu;
     private ImagePickerActivity picker;
@@ -80,6 +85,7 @@ public class UserProfile extends BaseFragment {
     private View specSupContainner;
     private UserInfo connectedUser;
     private String oldAvatar;
+    private SignaturePad mSignaturePad;
 
 
     @Override
@@ -108,7 +114,8 @@ public class UserProfile extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        mSignaturePad =  view.findViewById(R.id.signature_pad);
+        mSignaturePad.setEnabled(false);
         userPicture = view.findViewById(R.id.userPicture);
         title = view.findViewById(R.id.title);
         firstname = view.findViewById(R.id.firstname);
@@ -117,6 +124,8 @@ public class UserProfile extends BaseFragment {
         pob = view.findViewById(R.id.pob);
         speciality = view.findViewById(R.id.speciality);
         district = view.findViewById(R.id.districtSelector);
+        clearSign = view.findViewById(R.id.clearSign);
+        updateSign = view.findViewById(R.id.acceptSign);
 
         specSupContainner = view.findViewById(R.id.specSupContainner);
         address = view.findViewById(R.id.address);
@@ -129,11 +138,51 @@ public class UserProfile extends BaseFragment {
         cu = app.getEditingUser();
         oldAvatar = cu.getAvatar();
         connectedUser = app.getCurrentUser();
+        initSignPad();
         initListeners();
         initValues();
 
     }
 
+    public void updateSign(View v){
+        String signUuid = "sign_"+cu.getUuid();
+
+        picker.getCache().put(signUuid,
+                              mSignaturePad.getTransparentSignatureBitmap(true),
+                              ()-> {
+                                  picker.syncAvatar(signUuid, null, 2);
+                                  mSignaturePad.setEnabled(false);
+                              });
+
+
+    }
+
+    public void cleanSign(View v){
+        mSignaturePad.clearView();
+        mSignaturePad.setEnabled(true);
+
+    }
+
+    private void initSignPad() {
+
+        mSignaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
+
+            @Override
+            public void onStartSigning() {
+                //Event triggered when the pad is touched
+            }
+
+            @Override
+            public void onSigned() {
+                //Event triggered when the pad is signed
+            }
+
+            @Override
+            public void onClear() {
+                //Event triggered when the pad is cleared
+            }
+        });
+    }
 
 
     @Override
@@ -177,7 +226,6 @@ public class UserProfile extends BaseFragment {
 
     public void edit(boolean editable){
         super.edit = editable;
-
         userPicture.setEnabled(edit);
         title.setEnabled(edit);
         firstname.setEnabled(edit);
@@ -198,6 +246,8 @@ public class UserProfile extends BaseFragment {
             picker.setSelectionFinishedListener((avatar)-> cu.setAvatar(avatar));
             userPicture.setOnClickListener(picker::pick);
         }
+        clearSign.setOnClickListener(this::cleanSign);
+        updateSign.setOnClickListener(this::updateSign);
 
         renewSubscription.setOnClickListener(v->{});
         updatePassword.setOnClickListener(v->{
@@ -357,6 +407,9 @@ public class UserProfile extends BaseFragment {
         Utils.load(getActivity(), BuildConfig.AVATAR_BUCKET, cu.getAvatar(), userPicture,
                 type.placeholder,
                 type.placeholder);
+        Utils.loadSignature(getActivity(), BuildConfig.SIGN_BUCKET, "sign_"+cu.getUuid(), mSignaturePad);
+
+
 
         title.setSelection(TitleType.typeOf(cu.getTitle()).index);
         firstname.setText(Utils.niceFormat(cu.getFirstName()));
@@ -430,4 +483,6 @@ public class UserProfile extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
     }
+
+
 }

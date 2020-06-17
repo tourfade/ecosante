@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.material.badge.BadgeDrawable;
+import com.google.gson.Gson;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.client.patient.PatientActivity;
 import com.kamitsoft.ecosante.model.EncounterInfo;

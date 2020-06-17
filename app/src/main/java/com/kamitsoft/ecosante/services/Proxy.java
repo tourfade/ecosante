@@ -74,6 +74,10 @@ public interface Proxy {
     Call<Void> uploadAvatar(@Part MultipartBody.Part file, @Part MultipartBody.Part uuid);
 
     @Multipart
+    @POST("api/document/upload-signature")
+    Call<Void> uploadSignature(@Part MultipartBody.Part file, @Part MultipartBody.Part uuid);
+
+    @Multipart
     @POST("api/document/upload-document")
     Call<Void> uploadDocument(@Part MultipartBody.Part file, @Part MultipartBody.Part uuid);
 //----------Worker--------------

@@ -11,6 +11,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.adapters.PatientEncountersAdapter;
 import com.kamitsoft.ecosante.client.patient.prescription.PrescriptionActivity;
+import com.kamitsoft.ecosante.constant.PrescriptionType;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
 
@@ -68,11 +69,11 @@ public class PatientEncounters extends PatientBaseFragment {
             EncounterInfo encounter = encounterAdapter.getItem(itemPosition);
 
             if(v.getId() == R.id.item_delete){
-                openLabs(encounter);
+                openPrescriptions(encounter,PrescriptionType.LAB);
                 return;
             }
             if(v.getId() == R.id.item_edit){
-                openPrescriptions(encounter);
+                openPrescriptions(encounter,PrescriptionType.PHARMACY);
                 return;
             }
             Intent i = new Intent(getContext(), Encounter.class);
@@ -93,14 +94,11 @@ public class PatientEncounters extends PatientBaseFragment {
 
     }
 
-    private void openLabs(EncounterInfo encounter) {
 
-    }
-
-    private void openPrescriptions(EncounterInfo enounter) {
+    private void openPrescriptions(EncounterInfo enounter, PrescriptionType type) {
         app.setCurrentEncounter(enounter);
         Intent i = new Intent(getContext(), PrescriptionActivity.class);
-
+        i.putExtra("type",type.ordinal());
         startActivityForResult(i,103);
         getActivity().overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
 

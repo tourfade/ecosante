@@ -1,21 +1,18 @@
 package com.kamitsoft.ecosante.client.patient.prescription;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.adapters.ItemClickListener;
-import com.kamitsoft.ecosante.constant.MedicationStatus;
+import com.kamitsoft.ecosante.constant.LabType;
+import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
 
 import java.text.DecimalFormat;
@@ -31,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by hassa on 01/06/2017.
  */
 
-public class PresMedAdapter extends RecyclerView.Adapter<PresMedAdapter.MyHolder>  {
+public class PresLabAdapter extends RecyclerView.Adapter<PresLabAdapter.MyHolder>  {
 
     private static final int VIEW_TYPE_NORMAL = 0;
     private static final int VIEW_TYPE_EMPTY = 1;
@@ -39,11 +36,10 @@ public class PresMedAdapter extends RecyclerView.Adapter<PresMedAdapter.MyHolder
    // private final EcoSanteApp app;
 
     private Context context;
-    private List<MedicationInfo> mdata;
-    static ItemClickListener myClickListener;
+    private List<LabInfo> mdata;
 
     // create constructor to innitilize context and data sent from MainActivity
-    public PresMedAdapter(Context context) {
+    public PresLabAdapter(Context context) {
         this.context = context;
         mdata = new ArrayList<>();
         decimalFormatf = DecimalFormat.getNumberInstance();
@@ -79,7 +75,7 @@ public class PresMedAdapter extends RecyclerView.Adapter<PresMedAdapter.MyHolder
         MyHolder vh;
 
         if (viewType == VIEW_TYPE_NORMAL){
-            v = LayoutInflater.from(this.context).inflate(R.layout.pres_med_item, parent, false);
+            v = LayoutInflater.from(this.context).inflate(R.layout.pres_lab_item, parent, false);
             vh = new MyHolder(v);
         }else {
             v = LayoutInflater.from(this.context).inflate(R.layout.layout_empty, parent, false);
@@ -94,24 +90,19 @@ public class PresMedAdapter extends RecyclerView.Adapter<PresMedAdapter.MyHolder
     public void onBindViewHolder(MyHolder myHolder, int position) {
 
        if (getItemViewType(position) == VIEW_TYPE_NORMAL){
-
-            MedicationInfo current = mdata.get(position);
-            myHolder.drugName.setText(current.getDrugName() );
-            myHolder.drugRenew.setText(String.valueOf(current.getRenewal()));
-            myHolder.startingDate.setText(Utils.format(current.getStartingDate()));
-            myHolder.directions.setText(current.getDirection());
-
-
-
+           LabInfo current = mdata.get(position);
+           myHolder.lab.setText(Utils.niceFormat(current.getLabName()));
+           myHolder.category.setText(LabType.ofType(current.getType()).title);
+           myHolder.notes.setText(Utils.niceFormat(current.getNotes()));
        }
 
 
     }
 
-    public @Nullable MedicationInfo getItem(int position){
+    public @Nullable LabInfo getItem(int position){
         return  mdata !=null && mdata.size() > 0? mdata.get(position):null;
     }
-    public void syncData(MedicationInfo data) {
+    public void syncData(LabInfo data) {
         int idx = mdata.indexOf(data);
         if (idx >= 0) {
             mdata.set(idx, data);
@@ -122,28 +113,14 @@ public class PresMedAdapter extends RecyclerView.Adapter<PresMedAdapter.MyHolder
         }
 
     }
-    public void syncData(List<MedicationInfo> data) {
+    public void syncData(List<LabInfo> data) {
         mdata = data;
         notifyDataSetChanged();
     }
 
 
-    int lastpos = -1;
-    private void setAnimation(View itemView, int position) {
-        if(position > lastpos){
 
-            Animation anim = AnimationUtils.loadAnimation(context,android.R.anim.fade_in);
-            itemView.startAnimation(anim);
-        }
-        lastpos = position;
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(MyHolder holder) {
-        holder.clearAnimation();
-    }
-
-    public List<MedicationInfo> getData() {
+    public List<LabInfo> getData() {
         return mdata;
     }
 
@@ -151,24 +128,19 @@ public class PresMedAdapter extends RecyclerView.Adapter<PresMedAdapter.MyHolder
     public static class MyHolder extends RecyclerView.ViewHolder  {
 
 
-        View sep;
-        TextView drugName;
-        TextView drugRenew;
-        TextView startingDate,  directions;
+
+        TextView lab;
+        TextView category;
+        TextView notes;
         // create constructor to get widget reference
         public MyHolder(View itemView) {
-             super(itemView);
-             sep = itemView.findViewById(R.id.sep);
-             drugName = itemView.findViewById(R.id.drug);
-             drugRenew = itemView.findViewById(R.id.renewal);
-             startingDate = itemView.findViewById(R.id.starting_date);
-             directions = itemView.findViewById(R.id.posology);
+            super(itemView);
+            lab = itemView.findViewById(R.id.lab);
+            category = itemView.findViewById(R.id.category);
+            notes = itemView.findViewById(R.id.notes);
 
         }
 
-        public void clearAnimation(){
-            itemView.clearAnimation();
-        }
 
     }
 

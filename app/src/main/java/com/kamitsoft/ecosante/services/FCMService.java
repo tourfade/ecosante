@@ -81,7 +81,7 @@ public class FCMService extends FirebaseMessagingService  {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> data = remoteMessage.getData();
         currentUser = userRepository.getConnected();
-
+        Log.i("CCCCCCCC", "***"+new Gson().toJson(data));
         if(currentUser == null || currentUser.getUuid().equals(data.get("emitter"))){
             return;
         }
