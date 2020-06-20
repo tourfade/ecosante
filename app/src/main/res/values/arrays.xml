@@ -96,9 +96,9 @@
         <item>SS</item>
     </string-array>
     <string-array name="diabete_forms" >
+        <item>Indeterminé</item>
         <item>Type 1</item>
         <item>Type 2</item>
-        <item>Autre</item>
     </string-array>
     <string-array name="days">
 

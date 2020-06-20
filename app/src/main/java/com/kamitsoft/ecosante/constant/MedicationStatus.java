@@ -1,6 +1,12 @@
 package com.kamitsoft.ecosante.constant;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import com.kamitsoft.ecosante.R;
 
@@ -11,6 +17,7 @@ public enum MedicationStatus {
     RUNNING(1,1,R.string.running),//1
     TERMINATED(2,2,R.string.terminated),//2
     UNKNOWN(3,-1,R.string.unknown);//-1
+    private static Context appContext;
     public final int status;
     public final int title;
     public final int index;
@@ -41,5 +48,35 @@ public enum MedicationStatus {
         return UNKNOWN;
     }
 
+    public static  SpinnerAdapter getAdapter(Context context, int type){
+        appContext = context;
+        return new ArrayAdapter<MedicationStatus>(context, R.layout.m_spinner_item, values()){
 
+            @Override
+            public boolean isEnabled(int position) {
+                if(UserType.isNurse(type) && ( MedicationStatus.NEW.index == position))
+                    return false;
+                return true;
+            }
+            // Change color item
+            @Override
+            public View getDropDownView(int position, View convertView,  ViewGroup parent) {
+                View mView = super.getDropDownView(position, convertView, parent);
+                TextView mTextView = (TextView) mView;
+                if (!isEnabled(position)) {
+                    mTextView.setTextColor(Color.GRAY);
+                } else {
+                    mTextView.setTextColor(Color.BLACK);
+                }
+                return mView;
+            }
+        };
+
+
+    }
+
+    @Override
+    public String toString() {
+        return title(appContext);
+    }
 }

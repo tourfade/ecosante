@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -85,7 +84,7 @@ public class FallsEditorDialog extends DialogFragment implements View.OnLongClic
 
     void initListeners(AlertDialog d) {
         if (editable) {
-            date.setOnClickListener(v -> Utils.manageDataPicker(getContext(), date, calendar));
+            date.setOnClickListener(v -> Utils.manageDatePicker(getContext(), date, calendar));
 
             Button positiveButton = d.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {

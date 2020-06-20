@@ -51,7 +51,7 @@ public class ApptEditorDialog extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         model = ViewModelProviders.of(this).get(AppointmentsViewModel.class);
         if(readyForNew){
-            current = model.newAppointment();
+            current = model.newAppointment(app.getCurrentUser().getAccountId());
             currentPatient = app.getCurrentPatient();
             current.setPatientUuid(currentPatient.getUuid());
 

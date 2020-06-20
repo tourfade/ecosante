@@ -71,11 +71,11 @@
                         android:id="@+id/lastnameContainer"
                         android:hint="@string/lastname">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/lastname"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="textPersonName|textCapCharacters"
+                            android:inputType="textNoSuggestions|textPersonName|textCapCharacters"
 
                             android:maxLines="1"
                             android:padding="8dp"
@@ -93,11 +93,11 @@
                     android:id="@+id/firstnameContainer"
                     android:hint="@string/firstname">
 
-                    <EditText
+                    <EditText android:importantForAutofill="no"
                         android:id="@+id/firstname"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:inputType="textPersonName|textCapWords"
+                        android:inputType="textNoSuggestions|textPersonName|textCapWords"
                         android:textAllCaps="true"
                         android:maxLines="1"
                         android:padding="8dp"
@@ -116,7 +116,7 @@
                         android:id="@+id/dobContainer"
                         android:hint="@string/dob">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:focusable="false"
                             android:id="@+id/dob"
                             android:layout_width="match_parent"
@@ -134,7 +134,7 @@
                         android:layout_weight="1.5"
                         android:hint="@string/pob">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/pob"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -263,11 +263,11 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/adress">
 
-                    <EditText
+                    <EditText android:importantForAutofill="no"
                         android:id="@+id/address"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:inputType="none|textCapWords"
+                        android:inputType="textNoSuggestions|none|textCapWords"
                         android:maxLines="1"
                         android:padding="8dp"
                         android:text="41 rue Sicap Mbao, Dakar" />
@@ -287,7 +287,7 @@
                         android:layout_weight="1"
                         android:hint="@string/fix">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/fixphone"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -303,7 +303,7 @@
                         android:layout_weight="1"
                         android:hint="@string/mobile">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/mobile"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -322,11 +322,11 @@
                     android:layout_marginTop="10dp"
                     android:hint="@string/email">
 
-                    <EditText
+                    <EditText android:importantForAutofill="no"
                         android:id="@+id/email"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textNoSuggestions|textEmailAddress"
                         android:maxLines="1"
                         android:padding="8dp"
                         android:text="ftoure@gmail.com" />
@@ -364,12 +364,12 @@
                         android:layout_height="wrap_content"
                         android:hint="Validité Abonnement">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:focusable="false"
                             android:id="@+id/validity_date"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="none"
+                            android:inputType="textNoSuggestions|none"
                             android:maxLines="1"
                             android:padding="8dp"
                             android:text="20/Avril 2020" />

@@ -13,6 +13,7 @@ import java.util.UUID;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -20,6 +21,7 @@ public class EncounterInfo {
     @PrimaryKey
     @NonNull
     private String uuid;
+    private int accountId;
     private int patientID;
     private Timestamp createdAt;
     private float pressureSystolic;
@@ -71,6 +73,8 @@ public class EncounterInfo {
     private boolean deleted;
     private String districtUuid;
     private boolean needUpdate;
+    private double lat;
+    private double lon;
 
     public String getRunningTreatment() {
         return runningTreatment;
@@ -232,11 +236,16 @@ public class EncounterInfo {
         this.emaciation = emaciation;
     }
 
+    @Ignore
     public  EncounterInfo(){
 
+    }
+    public  EncounterInfo(int accountId){
         uuid = UUID.randomUUID().toString();
+        this.accountId = accountId;
         createdAt = new Timestamp(System.currentTimeMillis());
         updatedAt = new Timestamp(System.currentTimeMillis());
+        needUpdate = true;
 
     }
 
@@ -481,9 +490,9 @@ public class EncounterInfo {
         return current;
     }
 
-    public void setCurrentStatus(StatusConstant statusConstant){
+    public void setCurrentStatus(StatusConstant statusConstant, String author){
 
-        getStatus().add(0,new Status(statusConstant.status));
+        getStatus().add(0,new Status(statusConstant.status, author));
     }
 
     public void setDistrictUuid(String districtUuid) {
@@ -500,5 +509,29 @@ public class EncounterInfo {
 
     public void setNeedUpdate(boolean needUpdate) {
         this.needUpdate = needUpdate;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 }

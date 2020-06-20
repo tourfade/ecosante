@@ -1,11 +1,11 @@
 package com.kamitsoft.ecosante.client.patient;
 
+import android.Manifest;
 import android.app.Activity;
-import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -50,7 +51,6 @@ import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.LabsViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.MedicationViewModel;
 
-import java.sql.Timestamp;
 import java.util.stream.Collectors;
 
 
@@ -72,7 +72,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     private EncountersViewModel model;
     private EntitiesViewModel entityModel;
     private EncountersViewModel encounterModel;
-    private View editActions, reviesActions;
+    private View editActions, reviewActions;
     private TextView encounterAt, encounteredBy;
 
     @Override
@@ -89,12 +89,16 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
         if(getIntent().getStringExtra("euuid") == null) {
             encounterInfo = app.getCurrentEncounter();
+            super.locateUser(location -> {
+                encounterInfo.setLat(location.getLatitude());
+                encounterInfo.setLon(location.getLongitude());
+            });
+
         }else{
             encounterInfo = encounterModel.getEncounter(getIntent().getStringExtra("euuid"));
             app.setCurrentEncounter(encounterInfo);
         }
 
-        encounterInfo.setNeedUpdate(true);
 
         setTitle(getString(R.string.encounter));
         model = ViewModelProviders.of(this).get(EncountersViewModel.class);
@@ -110,7 +114,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         entityModel = ViewModelProviders.of(this).get(EntitiesViewModel.class);
         encounterModel = ViewModelProviders.of(this).get(EncountersViewModel.class);
         editActions = findViewById(R.id.editActions);
-        reviesActions = findViewById(R.id.reviewActions);
+        reviewActions = findViewById(R.id.reviewActions);
         pressure = findViewById(R.id.pressure);
         temperature = findViewById(R.id.temperature);
         weight = findViewById(R.id.weight);
@@ -150,7 +154,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         dysphnea = findViewById(R.id.dysphnea);
         autonomy = findViewById(R.id.autonomy);
         orientation = findViewById(R.id.orientation);
-
+        findViewById(R.id.reject).setVisibility(isSavable()?View.VISIBLE:View.GONE);
+        findViewById(R.id.accept).setVisibility(isSavable()?View.VISIBLE:View.GONE);
+        findViewById(R.id.save).setVisibility(isSavable()?View.VISIBLE:View.GONE);
 
 
         findViewById(R.id.cancel).setOnClickListener(v->{
@@ -169,7 +175,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         findViewById(R.id.reject).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
             setSuperviser();
-            encounterInfo.setCurrentStatus(StatusConstant.REJECTED);
+            encounterInfo.setCurrentStatus(StatusConstant.REJECTED, Utils.formatUser(getApplicationContext(), app.getCurrentUser()));
             model.insert(encounterInfo);
             app.exitEncounter();
             onBackPressed();
@@ -177,7 +183,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         findViewById(R.id.accept).setOnClickListener(v->{
             setResult(Activity.RESULT_OK);
             setSuperviser();
-            encounterInfo.setCurrentStatus(StatusConstant.ACCEPTED);
+            encounterInfo.setCurrentStatus(StatusConstant.ACCEPTED, Utils.formatUser(getApplicationContext(), app.getCurrentUser()));
             model.insert(encounterInfo);
             app.exitEncounter();
             onBackPressed();
@@ -232,24 +238,37 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
             Supervisor s = new Supervisor();
             s.supFullName = Utils.formatUser(getApplicationContext(), cuser);
             s.physicianUuid = cuser.getUuid();
-            s.accountId = cuser.getAccountID();
+            s.accountId = cuser.getAccountId();
             s.nurseUuid = encounterInfo.getUserUuid();
+            s.email = cuser.getEmail();
             encounterInfo.setSupervisor(s);
             model.insert(encounterInfo);
         }
     }
+
     public void setSuperviserAndSave() {
         setSuperviser();
         UserInfo cuser = app.getCurrentUser();
         if(UserType.isPhysist(cuser.getUserType())) {
-            model.insert(encounterInfo);
+            if(isSavable()){
+                model.insert(encounterInfo);
+            }else{
+                Toast.makeText(getApplicationContext(), "Visite archivée, Impossible de mobifier ",Toast.LENGTH_LONG).show();
+
+            }
         }
+    }
+
+    private boolean isSavable() {
+        if(encounterInfo.currentStatus().status == StatusConstant.ARCHIVED.status){
+            return false;
+        }
+        return true;
     }
 
     private void checkAvailableSupervisor(String encUuid) {
         app.service().getAvailableSupervisors();
     }
-
 
     private void initViewListeners() {
         findViewById(R.id.pressureC).setOnClickListener(this);
@@ -353,12 +372,15 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     }
 
     private  void initValue(){
+
+        encounterInfo.setNeedUpdate(true);
+
         UserInfo user = app.getCurrentUser();
         if(user !=null){
-            reviesActions.setVisibility(user.getUserType() == UserType.PHYSIST.type?View.VISIBLE:View.GONE);
+            reviewActions.setVisibility(user.getUserType() == UserType.PHYSIST.type?View.VISIBLE:View.GONE);
             editActions.setVisibility(user.getUserType() == UserType.NURSE.type?View.VISIBLE:View.GONE);
         }else {
-            reviesActions.setVisibility(View.GONE);
+            reviewActions.setVisibility(View.GONE);
         }
 
         encounterAt.setText(getString(R.string.encoountered_at)+" "+ Utils.format(encounterInfo.getCreatedAt()));
@@ -390,7 +412,6 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -471,6 +492,10 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     }
 
     private void showBehaviors(BehaviorType behave) {
+        if(!isSavable()){
+            Toast.makeText(getApplicationContext(), "Visite archivée, Impossible de mobifier ",Toast.LENGTH_LONG).show();
+            return;
+        }
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(behave.title);
         alertDialogBuilder.setCancelable(true);
@@ -491,8 +516,12 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }
-    public void showVital(VitalType vitalType){
 
+    public void showVital(VitalType vitalType){
+        if(!isSavable()){
+            Toast.makeText(getApplicationContext(), "Visite archivée, Impossible de mobifier ",Toast.LENGTH_LONG).show();
+            return;
+        }
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(vitalType.title);
         alertDialogBuilder.setIcon(vitalType.drawable);
@@ -666,7 +695,6 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         }
     }
 
-
     private void mapDialogBehaveValues(BehaviorType behave,AlertDialog d  ) {
 
         int qt = 0;
@@ -791,6 +819,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
         }
     }
+
     private void setBehaviorsValues(BehaviorType behaviorType) {
         switch (behaviorType){
             case SMOKING:
@@ -820,6 +849,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
         }
     }
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()){
@@ -840,7 +870,6 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
 
     }
 

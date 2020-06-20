@@ -81,39 +81,34 @@ public class FCMService extends FirebaseMessagingService  {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> data = remoteMessage.getData();
         currentUser = userRepository.getConnected();
+
         if(currentUser == null || currentUser.getUuid().equals(data.get("emitter"))){
             return;
         }
+
         if(Boolean.parseBoolean(data.getOrDefault("syncPayment", "false"))){
             Intent msg = new Intent(ACTION_PAYMENT);
             msg.addCategory(CAT_PAYMENT_SUCCESS);
             return;
         }
 
-       // Log.i("XXXXXXXFCM", "--->"+remoteMessage);
-       if(Boolean.parseBoolean(data.getOrDefault("syncRequest", "false"))){
+        if(Boolean.parseBoolean(data.getOrDefault("syncRequest", "false"))){
             String entity = data.get("entity");
             entityRepository.setDirty(entity);
 
         }
+
         if(Boolean.parseBoolean(data.getOrDefault("updateRequest", "false"))){
             String uuid = data.get("uuid");
             int status = Integer.parseInt(data.get("status"));
-            /*if(app.getCurrentUser()!=null
-                    && app.getCurrentUser().getDistrictUuid() !=null
-                    &&  uuid.equals(app.getCurrentUser().getSupervisor().physicianUuid)){
-                notify("Changement de status",
-                        "Votre superviseur est "+ getApplicationContext().getString(UserStatusConstant.ofStatus(status).name),
-                        null, new long[] { 900});
-            }*/
-
             userRepository.remoteUpdateStatus(uuid,status);
-
         }
+
         RemoteMessage.Notification remote = remoteMessage.getNotification();
         if(remote != null && remote.getTitle().trim().length() > 0){
             notify(remote, data);
         }
+
 
     }
 
@@ -140,7 +135,7 @@ public class FCMService extends FirebaseMessagingService  {
 
         Intent intent = new Intent(this, EcoSanteActivity.class);
 
-        if(EncounterInfo.class.getSimpleName().equalsIgnoreCase(data.get("entity"))){
+        if(data!=null && data.get("euuid")!=null && EncounterInfo.class.getSimpleName().equalsIgnoreCase(data.get("entity"))){
             intent = new Intent(this, Encounter.class);
             intent.putExtra("euuid", data.get("euuid"));
         }

@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
-import com.kamitsoft.ecosante.client.patient.oracles.ActOracleAdapter;
 import com.kamitsoft.ecosante.client.patient.oracles.AllergenOracleAdapter;
 import com.kamitsoft.ecosante.model.json.ExtraData;
 
@@ -94,7 +93,7 @@ public class AllergiesEditorDialog extends DialogFragment implements View.OnLong
 
     void initListeners(AlertDialog d) {
         if (editable) {
-            date.setOnClickListener(v -> Utils.manageDataPicker(getContext(), date, calendar));
+            date.setOnClickListener(v -> Utils.manageDatePicker(getContext(), date, calendar));
 
             Button positiveButton = d.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {

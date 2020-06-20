@@ -39,4 +39,7 @@ public interface DistrictDAO {
 
     @Query("SELECT * FROM districtinfo WHERE needUpdate >= 1")
     LiveData<List<DistrictInfo>> dirty();
+
+    @Query("SELECT * FROM districtinfo WHERE uuid =:uuid")
+    LiveData<DistrictInfo> get(String uuid);
 }

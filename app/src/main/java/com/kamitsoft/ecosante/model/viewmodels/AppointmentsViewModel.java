@@ -56,11 +56,12 @@ public class AppointmentsViewModel extends AndroidViewModel {
         }
         return current;
     }
-    public AppointmentInfo newAppointment() {
+    public AppointmentInfo newAppointment(int accountID) {
         if(current == null) {
             current = new MutableLiveData<>();
         }
-        AppointmentInfo ai = new AppointmentInfo();
+        AppointmentInfo ai = new AppointmentInfo(accountID);
+
         ((MutableLiveData) current).setValue(ai);
        return ai;
     }

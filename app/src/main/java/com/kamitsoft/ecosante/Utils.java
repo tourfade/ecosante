@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,9 +27,6 @@ import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.services.DateDeserializer;
 import com.kamitsoft.ecosante.services.FirebaseChannels;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -338,6 +334,7 @@ public class Utils {
         if(date == null || date.length != 3){
             return "";
         }
+
         int age = cal.get(Calendar.YEAR)-date[0];
         String ageans="";
         if(age > 1 ){
@@ -345,20 +342,27 @@ public class Utils {
         }else if(age == 1 ){
             ageans = age+"an";
         }
-        int nbm = cal.get(Calendar.MONTH)-date[1];
+
+        int nbm = cal.get(Calendar.MONTH) - date[1];
         String month="";
-        if(nbm > 1 ) {
+
+        if(nbm > 0 ) {
             month = " "+nbm+"mois";
+        }
+        if(age == 0 && nbm == 0){
+            month = "Ce mois-ci";
         }
 
         return ageans+month;
     }
     public static String formattedAgeOf(long ms) {
         Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(ms);
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
-        cal.setTimeInMillis(ms);
-        return  formattedAgeOf(new int[]{year, month, 0},cal );
+
+
+        return  formattedAgeOf(new int[]{year, month, 0},Calendar.getInstance() );
     }
 
 
@@ -394,28 +398,32 @@ public class Utils {
                 +df.format(calendar.getTime());
     }
 
-    public static void manageDataPicker(Context context, EditText date, Calendar calendar) {
+    public static void manageDatePicker(Context context, EditText date, Calendar calendar) {
         date.setOnClickListener(view -> {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(context, (vie, year, month, dayOfMonth) -> {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                date.setText(Utils.niceFormat(Utils.format(calendar.getTime())));
+            DatePickerDialog datePickerDialog =
+                    new DatePickerDialog(context, (vieww, year, month, dayOfMonth) -> {
+                            calendar.set(Calendar.YEAR, year);
+                            calendar.set(Calendar.MONTH, month);
+                            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            },  calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                        date.setText(Utils.niceFormat(Utils.format(calendar.getTime())));
+                    },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
 
             datePickerDialog.show();
         });
     }
 
-    public static void manageDataPicker(Context context, Timestamp date, TextView tv) {
+    public static void manageDatePicker(Context context, Timestamp date, TextView tv) {
 
-        manageDataPicker(context, date, (selDate)->{
+        manageDatePicker(context, date, (selDate)->{
             tv.setText(Utils.niceFormat(Utils.format(selDate)));
         });
     }
 
-    public static void manageDataPicker(Context context, Timestamp date, OnDateSelectedListener selector) {
+    public static void manageDatePicker(Context context, Timestamp date, OnDateSelectedListener selector) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(date != null ? date.getTime():System.currentTimeMillis());
         DatePickerDialog datePickerDialog = new DatePickerDialog(context, (vie, year, month, dayOfMonth) -> {
@@ -455,7 +463,7 @@ public class Utils {
     public static void subscribe(UserInfo userInfo) {
 
         unSubscribe(userInfo);
-        int accountID = userInfo.getAccountID();
+        int accountID = userInfo.getAccountId();
         FirebaseMessaging.getInstance()
                 .subscribeToTopic(FirebaseChannels.ACCOUNT+accountID)
                 .addOnCompleteListener(Utils::subScribeComplete);
@@ -513,7 +521,7 @@ public class Utils {
     }
 
     public static void unSubscribe(UserInfo userInfo) {
-        int accountID = userInfo.getAccountID();
+        int accountID = userInfo.getAccountId();
 
         if(userInfo.getDistrictUuid() != null)
             FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSES_OF+userInfo.getDistrictUuid());
@@ -524,6 +532,8 @@ public class Utils {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(FirebaseChannels.NURSE+userInfo.getUuid());
 
     }
+
+
 
     @FunctionalInterface
     public interface OnDateSelectedListener{

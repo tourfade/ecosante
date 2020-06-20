@@ -11,11 +11,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.adapters.LabsAdapter;
 import com.kamitsoft.ecosante.client.patient.oracles.AnalysisOracleAdapter;
 import com.kamitsoft.ecosante.constant.LabType;
+import com.kamitsoft.ecosante.constant.MedicationStatus;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.Analysis;
 import com.kamitsoft.ecosante.model.LabInfo;
@@ -25,6 +27,7 @@ import com.kamitsoft.ecosante.model.viewmodels.LabsViewModel;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -37,7 +40,7 @@ public class LabEditorDialog extends DialogFragment {
     private final OnSaving completion;
 
     private  boolean readyForNew;
-    private LabsAdapter labsAdapter;
+    private  LabsAdapter labsAdapter;
     private  LabInfo curentLab;
     private  EditText notes, labValue;
     private  CheckBox done;
@@ -49,6 +52,7 @@ public class LabEditorDialog extends DialogFragment {
     private AutoCompleteTextView labName;
     private Analysis analys;
     private LabsViewModel labsModel;
+    private EcoSanteApp app;
 
     public LabEditorDialog(LabInfo labs, boolean isNew, OnSaving completion){
         this.curentLab = labs;
@@ -59,6 +63,7 @@ public class LabEditorDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         analysisOracle = new AnalysisOracleAdapter(getActivity());
+        app = (EcoSanteApp) (getActivity().getApplication());
 
         labsModel = ViewModelProviders.of(this).get(LabsViewModel.class);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -120,14 +125,22 @@ public class LabEditorDialog extends DialogFragment {
             labValue.setEnabled(isChecked);
             if(isChecked) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), (vie, year, month, dayOfMonth) -> {
+
                     calendar.set(Calendar.YEAR, year);
                     calendar.set(Calendar.MONTH, month);
                     calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+
+
                     done.setText("Le "+Utils.niceFormat(Utils.format(calendar.getTime())));
 
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                }, calendar.get(Calendar.YEAR),
+                   calendar.get(Calendar.MONTH),
+                   calendar.get(Calendar.DAY_OF_MONTH));
+                if(readyForNew && UserType.isNurse(app.getCurrentUser().getUserType())){
+                    datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
 
+                }
                 datePickerDialog.show();
             }else {
                 done.setText("");

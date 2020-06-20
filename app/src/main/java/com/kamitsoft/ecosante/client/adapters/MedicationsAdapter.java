@@ -56,7 +56,11 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     // return total item from List
     @Override
     public int getItemCount() {
-        return mdata.size();
+        if (mdata == null || mdata.size() == 0){
+            return 1;
+        }else {
+            return mdata.size();
+        }
 
     }
 
@@ -188,21 +192,23 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
              endingDate =   itemView.findViewById(R.id.ending_date);
              endingDateTitler = itemView.findViewById(R.id.endingDateTitler);
              delete = itemView.findViewById(R.id.item_delete);
-             delete.setOnClickListener(this);
-             itemView.setOnClickListener(this);
-             itemView.setOnLongClickListener(v -> {
-                AnimatorSet anset = new AnimatorSet();
-                anset.play(ObjectAnimator
-                        .ofInt( itemView.findViewById(R.id.insider), "scrollX", 0)
-                        .setDuration(200))
-                        .after(2000)
-                        .after(ObjectAnimator
-                                .ofInt( itemView.findViewById(R.id.insider), "scrollX", 130)
-                                .setDuration(200));
-                anset.start();
+             if(delete != null) {
+                 delete.setOnClickListener(this);
+                 itemView.setOnClickListener(this);
+                 itemView.setOnLongClickListener(v -> {
+                     AnimatorSet anset = new AnimatorSet();
+                     anset.play(ObjectAnimator
+                             .ofInt(itemView.findViewById(R.id.insider), "scrollX", 0)
+                             .setDuration(200))
+                             .after(2000)
+                             .after(ObjectAnimator
+                                     .ofInt(itemView.findViewById(R.id.insider), "scrollX", 160)
+                                     .setDuration(200));
+                     anset.start();
 
-                return true;
-             });
+                     return true;
+                 });
+             }
         }
 
         public void clearAnimation(){
@@ -210,7 +216,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         }
         @Override
         public void onClick(View v) {
-            if(myClickListener != null) {
+            if(myClickListener != null && getItemViewType() == VIEW_TYPE_NORMAL) {
                 myClickListener.onItemClick(getAdapterPosition(), v);
             }
         }

@@ -72,12 +72,12 @@
                     android:layout_marginTop="10dp"
                     android:hint="@string/acocunt">
 
-                    <EditText
+                    <EditText android:importantForAutofill="no"
                         android:id="@+id/input_account"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:imeOptions="actionNext"
-                        android:inputType="text"
+                        android:inputType="textNoSuggestions|text"
                         android:maxLines="1"
                         android:padding="8dp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -94,7 +94,7 @@
                         android:layout_height="match_parent"
                         android:imeOptions="actionNext"
                         android:importantForAutofill="no"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textNoSuggestions|textEmailAddress"
                         android:maxLines="1"
                         android:padding="8dp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -113,13 +113,12 @@
                         android:layout_weight="1"
                         android:hint="@string/mobile">
 
-                        <EditText
-                            android:id="@+id/input_mobile"
+                        <EditText android:id="@+id/input_mobile"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:imeOptions="actionNext"
                             android:importantForAutofill="no"
-                            android:inputType="textEmailAddress"
+                            android:inputType="textNoSuggestions|textEmailAddress"
                             android:maxLines="1"
                             android:padding="8dp" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -132,14 +131,13 @@
                         android:focusable="false"
                         android:hint="@string/dob">
 
-                        <EditText
-                            android:focusable="false"
+                        <EditText android:focusable="false"
                             android:id="@+id/input_dob"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:imeOptions="actionNext"
                             android:importantForAutofill="no"
-                            android:inputType="textEmailAddress"
+                            android:inputType="textNoSuggestions|textEmailAddress"
                             android:maxLines="1"
                             android:padding="8dp" />
                     </com.google.android.material.textfield.TextInputLayout>

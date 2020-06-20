@@ -19,7 +19,6 @@ import androidx.multidex.MultiDexApplication;
 
 import com.facebook.stetho.Stetho;
 import com.kamitsoft.ecosante.constant.StatusConstant;
-import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
 import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
@@ -28,13 +27,10 @@ import com.kamitsoft.ecosante.model.LabInfo;
 import com.kamitsoft.ecosante.model.MedicationInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
-import com.kamitsoft.ecosante.model.json.Monitor;
 import com.kamitsoft.ecosante.model.json.Status;
 import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 import com.kamitsoft.ecosante.services.ApiSyncService;
 import com.kamitsoft.ecosante.services.WorkerService;
-
-import java.sql.Timestamp;
 
 
 public class EcoSanteApp extends MultiDexApplication {
@@ -104,10 +100,10 @@ public class EcoSanteApp extends MultiDexApplication {
             }
         });
 
-        new UsersRepository(this).getAccount().observeForever(acc->{
+        new UsersRepository(this).getLiveAccount().observeForever(acc->{
             Log.i("XXXXXX", "-->"+((acc==null)?null:acc.getUsername()));
 
-            if(acc == null || !acc.getUserUuid().equals(currentUser.getAccountID())){
+            if(acc == null || !acc.getUserUuid().equals(currentUser.getAccountId())){
                 currentUser = usersRepository.getConnected();
             }
         });
@@ -163,10 +159,13 @@ public class EcoSanteApp extends MultiDexApplication {
         return db;
     }
 
-
+    public void nullifyUser() {
+        currentUser = null;
+    }
     public UserInfo getCurrentUser() {
-        if(currentUser == null)
-            currentUser =   new UsersRepository(this).getConnected();
+        if(currentUser == null) {
+            currentUser = usersRepository.getConnected();
+        }
         return currentUser;
     }
 
@@ -179,8 +178,7 @@ public class EcoSanteApp extends MultiDexApplication {
     }
     public void newPatient() {
         exitPatient();
-        PatientInfo p = new PatientInfo();
-        p.setNeedUpdate(true);
+        PatientInfo p = new PatientInfo(currentUser.getAccountId());
         setCurrentPatient(p);
     }
     public void setCurrentPatient(PatientInfo currentPatient) {
@@ -201,9 +199,9 @@ public class EcoSanteApp extends MultiDexApplication {
         this.currentEncounter.setValue(currentEncounter);
     }
     public void setNewEncounter() {
-        EncounterInfo e = new EncounterInfo();
-        e.setNeedUpdate(true);
-        e.getStatus().add(new Status(StatusConstant.NEW.status));
+        EncounterInfo e = new EncounterInfo(currentUser.getAccountId());
+
+        e.getStatus().add(new Status(StatusConstant.NEW.status, Utils.formatUser(getApplicationContext(), currentUser)));
         e.setDistrictUuid(currentUser.getDistrictUuid());
         currentEncounter.setValue(e);
 
@@ -283,6 +281,11 @@ public class EcoSanteApp extends MultiDexApplication {
     public void setCurrentDistrict(DistrictInfo currentDistrict) {
         currentDistrict.setNeedUpdate(true);
         this.currentDistrict.postValue( currentDistrict);
+    }
+
+
+    public String getClusterName() {
+        return usersRepository.getAccount()==null? null: usersRepository.getAccount().getAccount();
     }
 
 

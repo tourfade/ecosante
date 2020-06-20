@@ -44,6 +44,7 @@ import java.util.stream.Stream;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.ColorUtils;
 import androidx.lifecycle.ViewModelProviders;
 
 public class DistrictMap extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, LocationListener, GoogleMap.OnMarkerDragListener {
@@ -100,6 +101,7 @@ public class DistrictMap extends BaseFragment implements OnMapReadyCallback, Goo
         view.findViewById(R.id.delSelectedPolygons).setOnClickListener(v -> {
             if(editingPoly != null && editingDistrict !=null){
                 editingPoly.remove();
+                editingDistrict.setNeedUpdate(true);
                 districtViewModel.delete(editingDistrict);
             }
             endEditing();
@@ -135,7 +137,7 @@ public class DistrictMap extends BaseFragment implements OnMapReadyCallback, Goo
     public void onResume() {
         super.onResume();
         endEditing();
-        contextActivity.setTitle("Carte des Districts");
+        contextActivity.setTitle("Carte des Districtes");
 
     }
 
@@ -145,7 +147,7 @@ public class DistrictMap extends BaseFragment implements OnMapReadyCallback, Goo
                                             .clickable(true)
                                             .strokeJointType(JointType.ROUND)
                                             .strokeColor(districtInfo.getArea().strokeColor)
-                                            .fillColor(districtInfo.getArea().fillColor)
+                                            .fillColor(ColorUtils.setAlphaComponent(districtInfo.getArea().fillColor, 30))
                                             .strokeWidth(2.5f)
                                             .geodesic(true)
                                             .zIndex(0f);
@@ -200,7 +202,7 @@ public class DistrictMap extends BaseFragment implements OnMapReadyCallback, Goo
         }
         DistrictInfo distric = new DistrictInfo();
         distric.setNeedUpdate(true);
-        distric.setAccountID(connectedUser.getAccountID());
+        distric.setAccountID(connectedUser.getAccountId());
         distric.setMaxNurse(20);
         distric.setMaxPhysist(20);
         LatLng center = map.getCameraPosition().target;
@@ -339,8 +341,7 @@ public class DistrictMap extends BaseFragment implements OnMapReadyCallback, Goo
             return;
         }
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        if (location != null)
-        {
+        if (location != null) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
 
             CameraPosition cameraPosition = new CameraPosition.Builder()

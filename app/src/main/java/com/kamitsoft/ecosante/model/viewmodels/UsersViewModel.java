@@ -2,38 +2,39 @@ package com.kamitsoft.ecosante.model.viewmodels;
 
 import android.app.Application;
 
+import com.kamitsoft.ecosante.constant.NavMenuConstant;
 import com.kamitsoft.ecosante.constant.UserType;
-import com.kamitsoft.ecosante.model.DocumentInfo;
+import com.kamitsoft.ecosante.model.CounterItem;
 import com.kamitsoft.ecosante.model.PhysNursPat;
 import com.kamitsoft.ecosante.model.SubConsumerInfo;
 import com.kamitsoft.ecosante.model.SubInstanceInfo;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
-import com.kamitsoft.ecosante.model.repositories.DocumentsRepository;
 import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.Attributes;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 public class UsersViewModel extends AndroidViewModel {
     private UsersRepository repository;
     private LiveData<UserAccountInfo> connectedAccount;
     private LiveData<SubConsumerInfo> consumerInfo;
     private LiveData<SubInstanceInfo> subInstanceInfo;
+    private Map<Integer, LiveData<List<CounterItem>>> counts;
 
 
     public UsersViewModel(Application app){
         super(app);
         repository = new UsersRepository(app);
-        connectedAccount = repository.getAccount();
+        connectedAccount = repository.getLiveAccount();
         consumerInfo = repository.getConsumer();
         subInstanceInfo = repository.getSubIntanceInfo();
+
     }
 
 
@@ -55,8 +56,11 @@ public class UsersViewModel extends AndroidViewModel {
         repository.update(doc);
     }
 
-    public LiveData<UserAccountInfo> getConnectedAccount() {
+    public LiveData<UserAccountInfo> getLiveConnectedAccount() {
         return connectedAccount;
+    }
+    public UserAccountInfo getConnectedAccount() {
+        return repository.getAccount();
     }
 
 
@@ -101,7 +105,41 @@ public class UsersViewModel extends AndroidViewModel {
     }
 
 
+    public LiveData<List<CounterItem>> getCount(int id) {
+        if(counts == null){
+            counts = new HashMap<>();
+        }
+        if(counts.get(id)  == null){
+            switch (NavMenuConstant.ofMenu(id)){
+                case NAV_SUPERVISED_VISITS:
+                case NAV_USER_VISITS:
+                    counts.put(id, repository.countVisits());
+                    break;
+                case NAV_NURSE_DISTRIC:
+                case NAV_SUPERVISED_PATIENTS:
+                case NAV_USER_PATIENTS:
+                    counts.put(id, repository.countPatients());
+                    break;
+                case NAV_ADMIN_DISTRICTS:
+                    counts.put(id, repository.countAdminsDistricts());
+                    break;
+                case NAV_SUPERVISED_NURSES:
+                case NAV_NURSE_SUPERVISORS:
+                case NAV_ADMIN_NURSES:
+                case NAV_ADMIN_PHYSICIANS:
+                    counts.put(id, repository.countUsers());
+                   break;
+                case NAV_USER_APPOINTMENTS:
+                    counts.put(id, repository.countAppts());
+                    break;
 
+
+            }
+
+        }
+
+        return counts.get(id);
+    }
 }
 
 

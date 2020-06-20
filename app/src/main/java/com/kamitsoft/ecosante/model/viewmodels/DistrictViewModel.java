@@ -29,6 +29,10 @@ public class DistrictViewModel extends AndroidViewModel {
         }
         return data;
     }
+    public LiveData<DistrictInfo> getDistrict(String uuid) {
+
+        return repository.getDistrict(uuid);
+    }
     public void insert(DistrictInfo info){
         info.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         repository.insert(info);

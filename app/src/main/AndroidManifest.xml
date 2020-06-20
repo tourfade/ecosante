@@ -31,6 +31,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".Splash"
             android:launchMode="singleInstance">
             <intent-filter>
@@ -40,20 +41,29 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".signing.SignIn"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".signing.SignUp"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".signing.CredentialRestoreActivity"
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".client.patient.prescription.PrescriptionActivity"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".client.EcoSanteActivity"
             android:label="@string/title_activity_dmi"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" >
@@ -76,12 +86,14 @@
         <activity
             android:name=".client.user.subscription.PaymentWebView"
             android:label="@string/payment"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".client.patient.Encounter"
             android:label="@string/encounter"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />

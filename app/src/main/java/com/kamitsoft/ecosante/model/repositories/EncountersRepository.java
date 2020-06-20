@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.database.EncounterDAO;
+import com.kamitsoft.ecosante.model.ECounterItem;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.LabInfo;
@@ -32,6 +33,10 @@ public class EncountersRepository {
         encounterDAO = app.getDb().encounterDAO();
         dirty = encounterDAO.dirty();
 
+    }
+
+    public LiveData<List<ECounterItem>> getCount() {
+        return encounterDAO.getCounts();
     }
     public LiveData<List<EncounterInfo>> getDirty(){
         return  dirty;
@@ -89,6 +94,9 @@ public class EncountersRepository {
     public void archive(){
         new Archive(encounterDAO).execute();
     }
+
+
+
     private static class insertAsyncTask extends AsyncTask<EncounterInfo, Void, Void> {
 
         private EncounterDAO mAsyncTaskDao;
@@ -147,8 +155,9 @@ public class EncountersRepository {
                 com.kamitsoft.ecosante.model.json.Status stat = e.currentStatus();
                 if(stat.status == StatusConstant.ACCEPTED.status
                         && (System.currentTimeMillis() - stat.date.getTime() > 12*3600000)){//
+                    e.setNeedUpdate(true);
                     e.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-                    e.setCurrentStatus(StatusConstant.ARCHIVED);
+                    e.setCurrentStatus(StatusConstant.ARCHIVED, "Automatique");
                     archives.add(e);
                 }
             });

@@ -25,9 +25,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class MonitoredPatients extends BaseFragment {
+public class SupervisedPatients extends BaseFragment {
     private RecyclerView recyclerview;
-    private WaitingPatientAdapter waitingList;
+    private WaitingPatientAdapter adapter;
     private View add;
     private PatientsViewModel model;
 
@@ -52,22 +52,20 @@ public class MonitoredPatients extends BaseFragment {
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
-        waitingList = new WaitingPatientAdapter(getActivity());
-        recyclerview.setAdapter(waitingList);
+        adapter = new WaitingPatientAdapter(getActivity());
+        recyclerview.setAdapter(adapter);
         model = ViewModelProviders.of(this).get(PatientsViewModel.class);
 
         model.getAllDatas().observe(this, patientInfos -> {
             patientInfos = patientInfos.stream()
-                    .filter(p-> p.getMonitor() != null
-                            && p.getMonitor().monitorUuid != null
-                            && !p.getMonitor().monitorUuid.equals(connectedUser.getUuid()))
+                    .filter(p-> p.getDistrictUuid()!=null && p.getDistrictUuid().equals(connectedUser.getDistrictUuid()))
                     .collect(Collectors.toList());
-             waitingList.syncData(patientInfos);
+            adapter.syncData(patientInfos);
         });
 
 
-        waitingList.setItemClickListener((itemPosition, v) -> {
-            app.setCurrentPatient(waitingList.getItem(itemPosition));
+        adapter.setItemClickListener((itemPosition, v) -> {
+            app.setCurrentPatient(adapter.getItem(itemPosition));
             Intent i = new Intent(getContext(), PatientActivity.class);
             i.putExtra("isNew",false );
             startActivity(i);

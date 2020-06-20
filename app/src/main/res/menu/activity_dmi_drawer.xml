@@ -11,25 +11,35 @@
             android:icon="@drawable/home"
             android:title="@string/menu_home" />
         <item
+            app:actionLayout="@layout/badge"
             android:checkable="true"
-            android:id="@+id/nav_appointments_list"
+            android:id="@+id/nav_user_appointments"
             android:icon="@drawable/appointment"
             android:title="@string/myappointments" />
         <item
+            app:actionLayout="@layout/badge"
             android:checkable="true"
-            android:id="@+id/nav_waiting_list"
+            android:id="@+id/nav_user_patients"
             android:icon="@drawable/waiting"
-            android:title="@string/maypatient_list" />
+            android:title="@string/mypatients" />
         <item
+            app:actionLayout="@layout/badge"
             android:checkable="true"
-            android:id="@+id/nav_encountered"
+            android:id="@+id/nav_user_visits"
             android:icon="@drawable/encounter"
-            android:title="@string/encounters" />
+            android:title="@string/myencounters" />
 
     </group>
 
     <group android:id="@+id/nurse_menu">
         <item
+            app:actionLayout="@layout/badge"
+            android:checkable="true"
+            android:id="@+id/nav_nurs_distric"
+            android:icon="@drawable/district"
+            android:title="@string/district" />
+        <item
+            app:actionLayout="@layout/badge"
             android:checkable="true"
             android:id="@+id/nav_supervisors"
             android:icon="@drawable/phys"
@@ -40,37 +50,43 @@
 
     <group android:id="@+id/physician_menu">
         <item
+            app:actionLayout="@layout/badge"
             android:checkable="true"
-            android:id="@+id/supervisednurses"
+            android:id="@+id/nav_supervised_nurses"
             android:icon="@drawable/nurses"
             android:title="@string/supervised_nurses" />
         <item
+            app:actionLayout="@layout/badge"
             android:checkable="true"
-            android:id="@+id/encounter_to_reviews"
+            android:id="@+id/nav_supervised_visits"
             android:icon="@drawable/encounters"
-            android:title="@string/encounter_to_reviews" />
+            android:title="@string/supervised_visits" />
         <item
+            app:actionLayout="@layout/badge"
             android:checkable="true"
-            android:id="@+id/patients"
+            android:id="@+id/nav_supervised_patients"
             android:icon="@drawable/patient"
             android:title="@string/supervise_patients" />
 
     </group>
     <group android:id="@+id/adminmenu">
         <item
+            app:actionLayout="@layout/badge"
             android:checkable="true"
-            android:id="@+id/districs"
+            android:id="@+id/nav_my_districs"
             android:icon="@drawable/district"
             android:title="@string/districts" />
 
         <item
+            app:actionLayout="@layout/badge"
             android:checkable="true"
-            android:id="@+id/physicians"
+            android:id="@+id/nav_admin_physicians"
             android:icon="@drawable/physicians"
             android:title="@string/physiscians" />
         <item
+            app:actionLayout="@layout/badge"
             android:checkable="true"
-            android:id="@+id/nurses"
+            android:id="@+id/nav_admin_nurses"
             android:icon="@drawable/nurses"
             android:title="@string/nurses" />
 

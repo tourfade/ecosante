@@ -67,6 +67,15 @@ public class PatientsViewModel extends AndroidViewModel {
     }
 
 
+    public LiveData<Integer> getEncounterCounts(String puuid) {
+        return repository.encounterCounts(puuid);
+    }
+    public LiveData<Integer> getDocumentCounts(String puuid) {
+        return repository.docCount(puuid);
+    }
+    public LiveData<Integer> getAppointmentCounts(String puuid) {
+        return repository.appCount(puuid);
+    }
 }
 
 

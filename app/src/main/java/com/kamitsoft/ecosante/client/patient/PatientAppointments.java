@@ -55,6 +55,7 @@ public class PatientAppointments extends PatientBaseFragment {
                         .filter(d -> !d.isDeleted() && d.getPatientUuid().equals(currentPatient.getUuid()))
                         .collect(Collectors.toList()));
             }
+
         });
         recyclerView =  view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

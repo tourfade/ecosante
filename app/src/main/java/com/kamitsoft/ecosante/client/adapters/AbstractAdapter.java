@@ -23,7 +23,11 @@ public abstract class AbstractAdapter<T extends AbstractAdapter.EdtiableHolder> 
         // create constructor to get widget reference
         public EdtiableHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             verso = itemView.findViewById(R.id.verso);
+            if(verso == null){
+                return;
+            }
             actions = new ImageButton[]{ itemView.findViewById(R.id.item_delete),itemView.findViewById(R.id.item_edit)};
             if(verso != null) {
                 for (View b :actions ) {
@@ -61,19 +65,18 @@ public abstract class AbstractAdapter<T extends AbstractAdapter.EdtiableHolder> 
             boolean click = false;
             if(verso !=null) {
                 if (anset!=null && anset.isRunning()) {
-
                     for(View b:actions){
                         if(v == b){
                             click = true;
                         }
                     }
-                    if(!click)
+                    if(!click) {
                         close();
-
+                    }
 
                 }
             }
-            if (click && myClickListener != null) {
+            if (myClickListener != null ) {
                 myClickListener.onItemClick(getAdapterPosition(), v);
             }
             close();

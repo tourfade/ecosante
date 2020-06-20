@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.constant.StatusConstant;
+import com.kamitsoft.ecosante.model.ECounterItem;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.json.Status;
@@ -50,7 +51,9 @@ public class EncountersViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<EncounterHeaderInfo>> getUserEncounters() {
-        userEncountersHeader = repository.getUserEncounterHeader();
+        if(userEncountersHeader== null) {
+            userEncountersHeader = repository.getUserEncounterHeader();
+        }
         return userEncountersHeader;
     }
 
@@ -58,7 +61,7 @@ public class EncountersViewModel extends AndroidViewModel {
         doc.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         Status status = doc.currentStatus();
         if(status.status == StatusConstant.NEW.status){
-            doc.setCurrentStatus(StatusConstant.PENDING);
+            doc.setCurrentStatus(StatusConstant.PENDING, status.author);
         }
         repository.insert(doc);
     }
@@ -70,6 +73,11 @@ public class EncountersViewModel extends AndroidViewModel {
 
     public EncounterInfo getEncounter(String euuid) {
         return repository.getEncounter(euuid);
+    }
+
+
+    public LiveData<List<ECounterItem>> getCount() {
+        return repository.getCount();
     }
 }
 

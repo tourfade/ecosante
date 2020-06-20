@@ -138,7 +138,7 @@ public class SurgeriesAdapter extends RecyclerView.Adapter<SurgeriesAdapter.MyHo
         }
         @Override
         public void onClick(View v) {
-            if(myClickListener != null) {
+            if(myClickListener != null ) {
                 myClickListener.onItemClick(getAdapterPosition(), v);
             }
         }

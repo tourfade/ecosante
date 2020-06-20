@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.database.UserDAO;
+import com.kamitsoft.ecosante.model.CounterItem;
 import com.kamitsoft.ecosante.model.PhysNursPat;
 import com.kamitsoft.ecosante.model.SubConsumerInfo;
 import com.kamitsoft.ecosante.model.SubInstanceInfo;
@@ -37,7 +38,7 @@ public class UsersRepository {
         userDAO = app.getDb().userDAO();
         allUsers = new HashMap<>();
         links = userDAO.getAllPnpLinks();
-        connectAccount = userDAO.getConnectedAccount();
+        connectAccount = userDAO.getLiveConnectedAccount();
         subConsumer = userDAO.getConsumerInfo();
         subInstance = userDAO.getSubInstance();
         all = userDAO.allUsers();
@@ -74,7 +75,7 @@ public class UsersRepository {
         }
         return allUsers.get(type);
     }
-    public LiveData<UserAccountInfo> getAccount() {
+    public LiveData<UserAccountInfo> getLiveAccount() {
         if(connectAccount ==null){
             connectAccount = new MutableLiveData<>();
         }
@@ -143,6 +144,30 @@ public class UsersRepository {
         if(connectedUser == null)
             connectedUser =  userDAO.getConnectedUser();
         return connectedUser;
+    }
+
+    public LiveData<List<CounterItem>> countVisits() {
+        return userDAO.countVisits();
+    }
+
+    public LiveData<List<CounterItem>> countPatients() {
+        return userDAO.countPatients();
+    }
+
+    public LiveData<List<CounterItem>> countAdminsDistricts() {
+        return userDAO.countDistricts();
+    }
+
+    public LiveData<List<CounterItem>> countUsers() {
+        return userDAO.countUsers();
+    }
+
+    public LiveData<List<CounterItem>> countAppts() {
+        return userDAO.countAppts();
+    }
+
+    public UserAccountInfo getAccount() {
+        return userDAO.getAccount();
     }
 
 

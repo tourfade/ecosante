@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:hint="Durée du Traitement">
 
-        <EditText
+        <EditText android:importantForAutofill="no"
             android:selectAllOnFocus="true"
             android:id="@+id/behaveQuantity"
             android:layout_width="match_parent"

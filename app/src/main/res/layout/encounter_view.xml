@@ -661,7 +661,7 @@
                     android:layout_weight="1"
                     android:hint="@string/field">
 
-                    <EditText
+                    <EditText android:importantForAutofill="no"
                         android:id="@+id/field"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -869,7 +869,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/running_treatment">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:id="@+id/running_treatment"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -887,7 +887,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/duration">
 
-                        <EditText
+                        <EditText android:importantForAutofill="no"
                             android:focusableInTouchMode="false"
                             android:clickable="false"
                             android:id="@+id/durationValue"
@@ -1013,7 +1013,7 @@
                     android:layout_marginTop="10dp"
                     android:hint="@string/advisings">
 
-                    <EditText
+                    <EditText android:importantForAutofill="no"
                         android:id="@+id/advisings"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

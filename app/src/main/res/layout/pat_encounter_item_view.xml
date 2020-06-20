@@ -257,8 +257,10 @@
                     android:layout_marginBottom="20dp"
                     android:layout_weight="1"
                     android:background="@color/colorPrimary"
+                    android:scaleType="centerInside"
                     android:elevation="6dp"
-                    android:src="@android:drawable/ic_menu_edit" />
+
+                    android:src="@drawable/drug" />
 
                 <ImageButton
                     android:id="@+id/item_delete"
@@ -271,7 +273,8 @@
                     android:layout_weight="1"
                     android:background="@color/colorAccent"
                     android:elevation="5dp"
-                    android:src="@android:drawable/ic_menu_delete" />
+                    android:scaleType="centerInside"
+                    android:src="@drawable/labs" />
             </LinearLayout>
         </LinearLayout>
 </androidx.cardview.widget.CardView>

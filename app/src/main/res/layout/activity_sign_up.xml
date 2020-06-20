@@ -68,7 +68,7 @@
                         android:layout_height="match_parent"
                         android:imeOptions="actionNext"
                         android:importantForAutofill="no"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textNoSuggestions|textEmailAddress"
                         android:maxLines="1"
                         android:padding="8dp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -80,7 +80,7 @@
                     android:layout_marginTop="5dp"
                     android:hint="Nouveau mot de passe">
 
-                    <EditText
+                    <EditText android:importantForAutofill="no"
                         android:id="@+id/input_password"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -97,7 +97,7 @@
                     android:layout_marginTop="5dp"
                     android:hint="Confirmer le mot de passe">
 
-                    <EditText
+                    <EditText android:importantForAutofill="no"
                         android:id="@+id/input_password_confirmation"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

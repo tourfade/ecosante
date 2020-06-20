@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +15,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.ImagePickerActivity;
@@ -25,27 +23,20 @@ import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
 import com.kamitsoft.ecosante.client.patient.oracles.DistrictOracleAdapter;
-import com.kamitsoft.ecosante.client.patient.oracles.PhysistOracleAdapter;
 import com.kamitsoft.ecosante.client.patient.oracles.SpecialityOracleAdapter;
 import com.kamitsoft.ecosante.constant.Gender;
 import com.kamitsoft.ecosante.constant.TitleType;
 import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.DistrictInfo;
-import com.kamitsoft.ecosante.model.PhysicianInfo;
 import com.kamitsoft.ecosante.model.Speciality;
 import com.kamitsoft.ecosante.model.UserInfo;
-import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.repositories.UsersRepository;
-import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Calendar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.lifecycle.ViewModelProviders;
 
 public class UserEditor extends BaseFragment {
 
@@ -114,7 +105,7 @@ public class UserEditor extends BaseFragment {
         initListeners();
         switch (UserType.typeOf(currentEditing.getUserType())){
             case PHYSIST:
-                if(currentEditing.getAccountID() == 0) {
+                if(currentEditing.getAccountId() == 0) {
                     edit(true);
                     getActivity().setTitle(R.string.new_physician);
                 }else{
@@ -125,7 +116,7 @@ public class UserEditor extends BaseFragment {
                 break;
 
             case NURSE:
-                if(currentEditing.getAccountID() == 0) {
+                if(currentEditing.getAccountId() == 0) {
                     edit(true);
                     getActivity().setTitle(R.string.new_nurse);
                 }else {
@@ -173,7 +164,7 @@ public class UserEditor extends BaseFragment {
                 break;
 
             case R.id.action_save:
-                currentEditing.setAccountID(connectedUser.getAccountID());
+                currentEditing.setAccountId(connectedUser.getAccountId());
                 model.insert(currentEditing);
                 picker.syncAvatar(currentEditing.getAvatar(), oldavatar, 0);
 
@@ -204,7 +195,7 @@ public class UserEditor extends BaseFragment {
         specialitySelector.setEnabled(edit);
         districtSelector.setEnabled(edit);
         mobile.setEnabled(edit);
-        email.setEnabled(currentEditing.getAccountID() <= 0);
+        email.setEnabled(currentEditing.getAccountId() <= 0);
         sex.setEnabled(edit);
     }
 
@@ -215,7 +206,7 @@ public class UserEditor extends BaseFragment {
             userPicture.setOnClickListener(picker::pick);
         }
         save.setOnClickListener(v->{
-            currentEditing.setAccountID(connectedUser.getAccountID());
+            currentEditing.setAccountId(connectedUser.getAccountId());
             model.insert(currentEditing);
             //model.setSupervisor(pnp);
             edit(false);

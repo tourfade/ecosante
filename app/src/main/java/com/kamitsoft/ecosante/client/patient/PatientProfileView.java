@@ -79,13 +79,12 @@ public class PatientProfileView extends PatientBaseFragment  {
     }
 
 
-
-
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         model = ViewModelProviders.of(this).get(PatientsViewModel.class);
+        swr = view.findViewById(R.id.swiperefresh);
+        swr.setOnRefreshListener(this::requestSync);
 
         patientPicture = view.findViewById(R.id.patientPicture);
         firstName = view.findViewById(R.id.firstname);
@@ -118,8 +117,7 @@ public class PatientProfileView extends PatientBaseFragment  {
             if (patientInfo == null) { return;}
             oldavatar = patientInfo.getAvatar();
             this.currentPatient = patientInfo;
-            currentPatient.setNeedUpdate(true);
-
+            this.currentPatient.setNeedUpdate(true);
             initPatientInfo();
         });
         dialogNfc=new AlertDialog.Builder(view.getContext())
@@ -474,7 +472,10 @@ public class PatientProfileView extends PatientBaseFragment  {
             currentPatient.getMonitor().patientUuid = currentPatient.getUuid();
             currentPatient.getMonitor().active = true;
             currentPatient.getMonitor().monitorFullName = Utils.formatUser(getContext(),app.getCurrentUser());
-
+            ((ImagePickerActivity)getActivity()).locateUser(location -> {
+                this.currentPatient.setLat(location.getLatitude());
+                this.currentPatient.setLon(location.getLongitude());
+            });
         }
         int res = Gender.FEMALE.sex==currentPatient.getSex()?R.drawable.patient_f:R.drawable.patient;
 

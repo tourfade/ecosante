@@ -30,6 +30,7 @@ public class PatientsRepository {
         dirty = dao.dirtyPatients();
         dirtySummaries = summaryDAO.getDirty();
 
+
     }
     public LiveData<List<PatientInfo>> getDirty() {
         return dirty;
@@ -65,7 +66,7 @@ public class PatientsRepository {
         new SummaryUpdateAsyncTask(summaryDAO).execute(bean);
     }
 
-    public void reset(UserAccountInfo accountInfo) {
+    public void reset() {
 
         dao.resetePatientsSet();
         dao.reseteDocumentsSet();
@@ -74,6 +75,18 @@ public class PatientsRepository {
 
     public PatientInfo getPatient(String uuid) {
       return  dao.getPatient(uuid);
+    }
+
+    public LiveData<Integer> encounterCounts(String puuid) {
+        return dao.countE(puuid);
+    }
+
+    public LiveData<Integer> docCount(String puuid) {
+        return dao.countD(puuid);
+    }
+
+    public LiveData<Integer> appCount(String puuid) {
+        return dao.countA(puuid);
     }
 
 

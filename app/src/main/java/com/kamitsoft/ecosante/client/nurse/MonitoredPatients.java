@@ -29,7 +29,7 @@ import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WaitingPatients extends BaseFragment {
+public class MonitoredPatients extends BaseFragment {
     private RecyclerView recyclerview;
     private WaitingPatientAdapter adapter;
     private PatientsViewModel model;

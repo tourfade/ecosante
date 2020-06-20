@@ -38,7 +38,11 @@ public class DocumentsListAdapter extends AbstractAdapter<DocumentsListAdapter.M
     // return total item from List
     @Override
     public int getItemCount() {
-        return mdata.size();
+        if (mdata == null || mdata.size() == 0){
+            return 1;
+        }else {
+            return mdata.size();
+        }
     }
 
     @Override

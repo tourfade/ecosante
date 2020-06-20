@@ -1,15 +1,14 @@
 package com.kamitsoft.ecosante.model;
 
 
-import com.kamitsoft.ecosante.database.PatientDAO;
 import com.kamitsoft.ecosante.model.json.Monitor;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -23,6 +22,7 @@ public class PatientInfo {
     @NonNull
     private String uuid;
     private int patientID;
+    private int accountId;
     private String userName;
     private String firstName;
     private String middleName;
@@ -52,9 +52,16 @@ public class PatientInfo {
     private boolean deleted;
     private String districtUuid;
     private boolean needUpdate;
+    private double lat;
+    private double lon;
 
-    public PatientInfo(){
+    public PatientInfo(){ }
+
+    @Ignore
+    public PatientInfo(int accountId){
         uuid = UUID.randomUUID().toString();
+        this.accountId = accountId;
+        needUpdate = true;
         createdAt = new Timestamp(System.currentTimeMillis());
         updatedAt = new Timestamp(System.currentTimeMillis());
         matricule = uuid.substring(0,4)+System.currentTimeMillis()%10000;
@@ -314,5 +321,29 @@ public class PatientInfo {
 
     public void setNeedUpdate(boolean needUpdate) {
         this.needUpdate = needUpdate;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 }

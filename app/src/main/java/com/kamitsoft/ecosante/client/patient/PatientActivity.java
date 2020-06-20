@@ -5,12 +5,15 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.*;
 import android.nfc.tech.Ndef;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.fragment.app.Fragment;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
@@ -18,13 +21,16 @@ import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.EcoSanteActivity;
 import com.kamitsoft.ecosante.client.nurse.WaitingPatients;
+import com.kamitsoft.ecosante.client.EcoSanteActivity;
 import com.kamitsoft.ecosante.constant.PatientViewsType;
+import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
 import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -45,6 +51,7 @@ public class PatientActivity extends ImagePickerActivity implements BottomNaviga
         super.onCreate(savedInstanceState);
         setContentView(R.layout.patient_layout);
         app = (EcoSanteApp)getApplication();
+        model = ViewModelProviders.of(this).get(PatientsViewModel.class);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Window window = getWindow();
@@ -56,24 +63,43 @@ public class PatientActivity extends ImagePickerActivity implements BottomNaviga
         navBar.setOnNavigationItemSelectedListener(this);
 
 
-
         toolbar.setSubtitle(Utils.formatPatient(this,app.getCurrentPatient()));
         app.getCurrentLivePatient().observe(this, patientInfo -> {
             toolbar.setSubtitle(Utils.formatPatient(PatientActivity.this,app.getCurrentPatient()));
 
+
         });
+        if(app.getCurrentPatient() == null){
+            startActivity(new Intent(this, EcoSanteActivity.class));
+            finish();
+        }
+        model.getEncounterCounts(app.getCurrentPatient().getUuid()).observe(this, ec->{
+            if(ec != null ) {
+                navBar.getOrCreateBadge(PatientViewsType.ENCOUNTERS.value).setNumber(ec);
+            }
+        });
+        model.getAppointmentCounts(app.getCurrentPatient().getUuid()).observe(this, ac->{
+            if(ac != null ) {
+                navBar.getOrCreateBadge(PatientViewsType.APPOINTMENTS.value).setNumber(ac);
+            }
+        });
+        model.getDocumentCounts(app.getCurrentPatient().getUuid()).observe(this, dc->{
+            if(dc != null ) {
+               navBar.getOrCreateBadge(PatientViewsType.DOCUMENTS.value).setNumber(dc);
+            }
+        });
+        boolean isNew = getIntent().getBooleanExtra("isNew", false);
+
+        navBar.setSelectedItemId(isNew? PatientViewsType.PROFILE.value :PatientViewsType.ENCOUNTERS.value);
+
+
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        navBar.setSelectedItemId(PatientViewsType.ENCOUNTERS.value);
 
-        /*BottomNavigationMenuView mview = (BottomNavigationMenuView)navBar.getChildAt(0);
-        BottomNavigationItemView itemView = (BottomNavigationItemView)mview.getChildAt(2);
-        View circ = LayoutInflater.from(this).inflate(R.layout.pat_menu_button, mview, false);
-        itemView.addView(circ);*/
     }
   /*  @Override
     public void onResume()
@@ -134,6 +160,7 @@ public class PatientActivity extends ImagePickerActivity implements BottomNaviga
         PatientViewsType type = PatientViewsType.typeOf(item.getItemId());
         setTitle(type.title);
         item.setChecked(true);
+
         showFragment(type);
         return false;
     }
@@ -148,6 +175,8 @@ public class PatientActivity extends ImagePickerActivity implements BottomNaviga
             if(currentFragment == null) {
                 currentFragment = type.fragment.newInstance();
             }
+
+
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             if(currentType != null){

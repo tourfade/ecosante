@@ -11,17 +11,20 @@ import android.widget.ProgressBar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kamitsoft.ecosante.R;
+import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.BaseFragment;
 import com.kamitsoft.ecosante.client.adapters.UserEncountersAdapter;
 import com.kamitsoft.ecosante.client.patient.Encounter;
+import com.kamitsoft.ecosante.client.patient.dialogs.DocEditorDialog;
+import com.kamitsoft.ecosante.client.patient.dialogs.EncounterHistoryDialog;
 import com.kamitsoft.ecosante.constant.StatusConstant;
+import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.EncounterHeaderInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.viewmodels.EncountersViewModel;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,7 +35,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class UserEncounters extends BaseFragment implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MonitoredEncounters extends BaseFragment implements BottomNavigationView.OnNavigationItemSelectedListener {
     private RecyclerView recyclerview;
     private UserEncountersAdapter encountersAdapter;
     private EncountersViewModel model;
@@ -40,6 +43,8 @@ public class UserEncounters extends BaseFragment implements BottomNavigationView
     private BottomNavigationView navBar;
     private StatusConstant currentStatus = StatusConstant.PENDING;
     private int page = 0;
+    private int currentID = R.id.active;
+
     private Observer<? super List<EncounterHeaderInfo>> observer  = encounters-> {
         if(encounters ==null || encounters.size()<= 0){
             return;
@@ -53,6 +58,7 @@ public class UserEncounters extends BaseFragment implements BottomNavigationView
         if(currentStatus == StatusConstant.ARCHIVED){
             page = (list.size()/25);
         }
+
     };
 
 
@@ -80,12 +86,44 @@ public class UserEncounters extends BaseFragment implements BottomNavigationView
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         encountersAdapter = new UserEncountersAdapter(getActivity());
         model = ViewModelProviders.of(this).get(EncountersViewModel.class);
+        model.getCount().observe(this,items ->{
+            int[] counter = new int[]{0,0,0,0};
 
+            items.stream().filter(e-> app.getCurrentUser().getUuid().equals(e.monitorUuid()))
+                .forEach(i->{
+                switch (StatusConstant.ofStatus(i.currentStatus().status)){
+                    case PENDING:  counter[0]++;break;
+                    case REJECTED: counter[1]++;break;
+                    case ACCEPTED: counter[2]++; break;
+                    case ARCHIVED: counter[3]++; break;
+                }
+                navBar.getOrCreateBadge(R.id.active).setNumber(counter[0]);
+                navBar.getOrCreateBadge(R.id.rejected).setNumber(counter[1]);
+                navBar.getOrCreateBadge(R.id.accepted).setNumber(counter[2]);
+                navBar.getOrCreateBadge(R.id.archive).setNumber(counter[3]);
+
+            });
+            ;
+        });
         model.getUserEncounters().observe(this, observer);
         recyclerview.setAdapter(encountersAdapter);
-        encountersAdapter.setItemClickListener((itemPosition, v) -> new Task().execute(encountersAdapter.getItem(itemPosition)));
+        encountersAdapter.setItemClickListener((itemPosition, v) -> {
+            EncounterHeaderInfo e = encountersAdapter.getItem(itemPosition);
+            if(UserType.isPhysist(connectedUser.getUserType())){
+                new Task().execute(e);
+                return;
+            }
+            if(StatusConstant.canNurseEdit(e.currentStatus().status) ){
+                new Task().execute(e);
+            }else{
+                new EncounterHistoryDialog(e).show(getFragmentManager(),"history");
+
+            }
+        });
         swr = view.findViewById(R.id.swiperefresh);
         swr.setOnRefreshListener(this::requestSync);
+
+
 
     }
 
@@ -103,7 +141,7 @@ public class UserEncounters extends BaseFragment implements BottomNavigationView
 
     @Override
     public String getTitle() {
-        return getString(R.string.encounters);
+        return getString(R.string.myencounters);
     }
 
     @Override
@@ -111,6 +149,7 @@ public class UserEncounters extends BaseFragment implements BottomNavigationView
         getActivity().setTitle(item.getTitle());
         item.setChecked(true);
         model.getUserEncounters().removeObserver(observer);
+        currentID = item.getItemId();
 
         switch (item.getItemId()){
             case R.id.archive:
@@ -129,6 +168,7 @@ public class UserEncounters extends BaseFragment implements BottomNavigationView
                 currentStatus = StatusConstant.ACCEPTED;
                 break;
         }
+
         model.getUserEncounters().observe(this, observer);
 
         return false;

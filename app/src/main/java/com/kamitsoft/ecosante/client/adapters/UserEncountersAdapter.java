@@ -57,7 +57,7 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
     // return total item from List
     @Override
     public int getItemCount() {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return 1;
         }else {
             return mdata.size();
@@ -66,7 +66,7 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
 
     @Override
     public int getItemViewType(int position) {
-        if (mdata == null){
+        if (mdata == null || mdata.size() == 0){
             return VIEW_TYPE_EMPTY;
         }else {
             return VIEW_TYPE_NORMAL;
@@ -107,7 +107,6 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
             myHolder.patient.setText(Utils.formatName(context, Utils.niceFormat(current.getFirstName())+" "+Utils.niceFormat(current.getMiddleName()),current.getLastName(),-1));
             myHolder.dobpob.setText(Utils.formatAge(current.getDob())+" né(é) à "+Utils.niceFormat(current.getPob()));
             myHolder.mobile.setText(current.getMobile());
-            myHolder.date.setText(Utils.format(current.getCreatedAt()));
             myHolder.status.setBackground(StatusConstant.ofStatus(current.currentStatus().status).drawable);
 
             if(UserType.isNurse(app.getCurrentUser().getUserType())){
@@ -115,19 +114,19 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
                 myHolder.monitor.setText(Utils.niceFormat(current.getSupervisor().supFullName));
             }
             if(UserType.isPhysist(app.getCurrentUser().getUserType())){
-                myHolder.monitorTitle.setText("Rencontre avec:");
+                myHolder.monitorTitle.setText("Vu  par:");
                 myHolder.monitor.setText(Utils.niceFormat(current.getMonitor().monitorFullName));
             }
 
 
-            int res = Gender.FEMALE.sex==current.getSex()?R.drawable.patient_f:R.drawable.patient;
             Utils.load(context, BuildConfig.AVATAR_BUCKET,
                     current.getAvatar(),
                     myHolder.avatar,
-                    res,res);
+                    R.mipmap.visit_icon_round,R.mipmap.visit_icon_round);
 
 
         }else {
+
         }
         setAnimation(myHolder.itemView,position);
 
@@ -167,7 +166,7 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
 
     public  class MyHolder extends AbstractAdapter.EdtiableHolder  implements View.OnClickListener {
 
-        TextView date,patient,dobpob,mobile,title, monitorTitle, monitor;
+        TextView patient,dobpob,mobile,title, monitorTitle, monitor;
         ImageView avatar;
         View status;
         // create constructor to get widget reference
@@ -176,7 +175,6 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
              status = itemView.findViewById(R.id.status);
              title =  itemView.findViewById(R.id.title);
              avatar = itemView.findViewById(R.id.patientImg);
-             date =   itemView.findViewById(R.id.date);
              patient =itemView.findViewById(R.id.patient);
              dobpob = itemView.findViewById(R.id.dobpob);
              mobile = itemView.findViewById(R.id.mobile);
@@ -192,7 +190,7 @@ public class UserEncountersAdapter extends AbstractAdapter<UserEncountersAdapter
         }
         @Override
         public void onClick(View v) {
-            if(myClickListener != null) {
+            if(myClickListener != null && getItemViewType() == VIEW_TYPE_NORMAL) {
                 myClickListener.onItemClick(getAdapterPosition(), v);
             }
         }

@@ -52,6 +52,11 @@ public class DistrictRepository {
     public void syncDelete(DistrictInfo... districtInfos) {
         dao.delete(districtInfos);
     }
+
+    public LiveData<DistrictInfo> getDistrict(String uuid) {
+        return dao.get(uuid);
+    }
+
     private static class InsertAsyncTask extends AsyncTask<DistrictInfo, Void, Void> {
 
         private DistrictDAO dao;

@@ -19,19 +19,15 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.EcoSanteActivity;
-import com.kamitsoft.ecosante.constant.UserType;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
-import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.viewmodels.UsersViewModel;
 import com.kamitsoft.ecosante.services.ApiSyncService;
 import com.kamitsoft.ecosante.services.AuthenticationInfo;
-import com.kamitsoft.ecosante.services.FirebaseChannels;
 import com.kamitsoft.ecosante.services.Proxy;
 
 public class SignIn extends AppCompatActivity {
@@ -116,8 +112,16 @@ public class SignIn extends AppCompatActivity {
                     public void onResponse(Call<UserAccountInfo> call, Response<UserAccountInfo> response) {
 
                         if (response.code() == 200){
+                            UserAccountInfo paccount = model.getConnectedAccount();
                             UserAccountInfo ua = response.body();
-                            ua.getUserInfo().setAccountID(ua.getAccountId());
+                            if(paccount == null || !ua.getUserUuid().equals(paccount.getUserUuid())){
+                                app.service().reset(ua);
+                            }else {
+                                app.nullifyUser();
+                            }
+
+                            ua.getUserInfo().setAccountId(ua.getAccountId());
+                            ua.setUserUuid(ua.getUserInfo().getUuid());
                             model.connect(ua, ua.getUserInfo());
                             Utils.subscribe(ua.getUserInfo());
 
