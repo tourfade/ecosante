@@ -1,10 +1,15 @@
 package com.kamitsoft.ecosante.client;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.nfc.*;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
 
+import android.widget.Toast;
 import androidx.annotation.AnimRes;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -12,6 +17,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import androidx.fragment.app.Fragment;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
 import com.kamitsoft.ecosante.BuildConfig;
@@ -20,11 +26,16 @@ import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.client.admin.DistrictList;
 import com.kamitsoft.ecosante.client.admin.DistrictMap;
 import com.kamitsoft.ecosante.client.nurse.Supervisors;
+import com.kamitsoft.ecosante.client.patient.Encounter;
+import com.kamitsoft.ecosante.client.patient.PatientActivity;
 import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
 import com.kamitsoft.ecosante.constant.UserStatusConstant;
+import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.repositories.UsersRepository;
+import com.kamitsoft.ecosante.nfcPackage.NfcMethod;
+import com.kamitsoft.ecosante.services.ApiSyncService;
 import com.kamitsoft.ecosante.signing.SignIn;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -51,6 +62,10 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.io.IOException;
+
+import static android.Manifest.permission.NFC;
+
 public class EcoSanteActivity extends ImagePickerActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -61,7 +76,10 @@ public class EcoSanteActivity extends ImagePickerActivity
     private UsersViewModel model;
     private UserInfo currentUser;
     private UserAccountInfo account;
-
+    private NfcAdapter nfcAdapter;
+    private PendingIntent nfcIntent;
+    private Fragment fragment;
+    private NfcMethod nfcMethod;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,10 +124,40 @@ public class EcoSanteActivity extends ImagePickerActivity
 
 
 
+
         showFragment(Home.class, R.anim.fade_in, R.anim.fade_out);
 
 
     }
+
+    public void onNewIntent(Intent intent) {
+
+        super.onNewIntent(intent);
+
+
+           String action = intent.getAction();
+        if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED) || action.equals(NfcAdapter.ACTION_TECH_DISCOVERED)){
+            String tagContent = "";
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            String[] techList = tag.getTechList();
+            if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED))
+            {
+                tagContent= nfcMethod.readFromIntent(intent);
+                app.service().getPatient(tagContent, data -> {
+                    app.setCurrentPatient(data[0]);
+                    Intent intents = new Intent(EcoSanteActivity.this, Encounter.class);
+                    intents.putExtra("isNew",true );
+                    startActivity(intents);
+
+                });
+            }
+
+        }
+
+
+
+    }
+
 
 
 
@@ -183,6 +231,7 @@ public class EcoSanteActivity extends ImagePickerActivity
     @Override
     protected void onResume() {
         super.onResume();
+       // nfcAdapter.enableForegroundDispatch(this, nfcIntent, null,null);
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
         app.exitPatient();
     }

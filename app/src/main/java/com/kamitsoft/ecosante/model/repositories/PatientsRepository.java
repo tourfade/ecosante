@@ -72,7 +72,9 @@ public class PatientsRepository {
         summaryDAO.resetSummariesSet();
     }
 
-
+    public PatientInfo getPatient(String uuid) {
+      return  dao.getPatient(uuid);
+    }
 
 
     private static class insertAsyncTask extends AsyncTask<PatientInfo, Void, Void> {
