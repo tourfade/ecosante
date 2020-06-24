@@ -98,7 +98,7 @@ public interface UserDAO {
     @Query("SELECT * FROM userinfo WHERE needUpdate >= 1")
     LiveData<List<UserInfo>> dirty();
 
-    @Query("SELECT uuid, null AS supervisor, accountId , null AS patientUuid, districtUuid, userType FROM userinfo WHERE  deleted = 0")
+    @Query("SELECT uuid, null AS supervisor, null AS monitor, accountId , null AS patientUuid, districtUuid, userType FROM userinfo WHERE  deleted = 0")
     LiveData<List<CounterItem>> countUsers();
 
     @Query("SELECT monitor, supervisor, accountId, userUuid AS uuid, patientUuid, districtUuid, 0 as userType FROM encounterinfo WHERE deleted = 0")

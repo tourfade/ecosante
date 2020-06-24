@@ -14,10 +14,12 @@ import com.kamitsoft.ecosante.database.converters.AreaTypeConverter;
 import com.kamitsoft.ecosante.database.converters.ArrayJsonTypeConverter;
 import com.kamitsoft.ecosante.database.converters.DiseaseDataTypeConverter;
 import com.kamitsoft.ecosante.database.converters.MonitorTypeConverter;
+import com.kamitsoft.ecosante.database.converters.RuleTypeConverter;
 import com.kamitsoft.ecosante.database.converters.StatusTypeConverter;
 import com.kamitsoft.ecosante.database.converters.SupervisorTypeConverter;
 import com.kamitsoft.ecosante.database.converters.TimestampTypeConverter;
 import com.kamitsoft.ecosante.model.Act;
+import com.kamitsoft.ecosante.model.AlarmInfo;
 import com.kamitsoft.ecosante.model.Allergen;
 import com.kamitsoft.ecosante.model.Analysis;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
@@ -61,7 +63,8 @@ import java.util.concurrent.Executors;
                     SummaryInfo.class,
                     LabInfo.class,
                     SubConsumerInfo.class,
-                    SubInstanceInfo.class},
+                    SubInstanceInfo.class,
+                    AlarmInfo.class},
         version = 2,exportSchema = false)
 @TypeConverters({TimestampTypeConverter.class,
                  DiseaseDataTypeConverter.class,
@@ -69,7 +72,8 @@ import java.util.concurrent.Executors;
                  MonitorTypeConverter.class,
                  StatusTypeConverter.class,
                  ArrayJsonTypeConverter.class,
-                 AreaTypeConverter.class})
+                 AreaTypeConverter.class,
+                 RuleTypeConverter.class})
 public abstract class KsoftDatabase extends RoomDatabase {
     private static KsoftDatabase INSTANCE;
 
@@ -86,6 +90,7 @@ public abstract class KsoftDatabase extends RoomDatabase {
     public abstract UnsyncFileDAO fileDAO();
     public abstract AllergenDAO allergenDAO();
     public abstract DistrictDAO districtDAO();
+    public abstract AlarmDAO alarmDAO();
 
     public synchronized static KsoftDatabase getInstance(Context context) {
         if (INSTANCE == null) {
