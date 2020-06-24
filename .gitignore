@@ -11,3 +11,13 @@
 /build
 /captures
 .externalNativeBuild
+/.idea/vcs.xml
+.idea/codeStyles/
+.idea/compiler.xml
+.idea/dbnavigator.xml
+.idea/encodings.xml
+.idea/gradle.xml
+.idea/misc.xml
+.idea/runConfigurations.xml
+app/libs/
+app/src/main/java/com/kamitsoft/ecosante/client/patient/laboratory/
