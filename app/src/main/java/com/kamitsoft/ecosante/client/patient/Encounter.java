@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -87,6 +88,8 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+
+        Log.i("XXXXXX2","->"+app.getCurrentEncounter());
         if(getIntent().getStringExtra("euuid") == null) {
             encounterInfo = app.getCurrentEncounter();
             super.locateUser(location -> {
@@ -202,7 +205,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         });
 
         if(app.getCurrentPatient() != null) {
+
             encounterModel.getEncounters().observe(this, encounterInfos -> {
+                Log.i("XXXXXX3","->"+app.getCurrentEncounter());
                 for (EncounterInfo e : encounterInfos) {
                     if (encounterInfo == null || e.getUuid().equals(encounterInfo.getUuid())) {
                         this.encounterInfo = e;
@@ -230,6 +235,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
             }
         });
     }
+
 
     public void setSuperviser() {
 

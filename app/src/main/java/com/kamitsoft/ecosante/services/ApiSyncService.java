@@ -78,7 +78,16 @@ public class ApiSyncService extends Service {
     private EntityRepository entityRepository;
     private DistrictRepository districtRepository;
 
+    public void getPatient(String uuid, CompletionWithData<PatientInfo> patientInfoCompletionWithData) {
 
+        PatientInfo patient=patientRepository.getPatient(uuid);
+        if(patient!=null && patientInfoCompletionWithData!= null) {
+
+            patientInfoCompletionWithData.onReady(patient);
+            return;
+        }
+        entityRepository.setDirty(PatientInfo.class.getSimpleName().toLowerCase());
+    }
 
 
     public class LocalBinder extends Binder {

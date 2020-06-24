@@ -1,11 +1,14 @@
 package com.kamitsoft.ecosante.client.nurse;
 
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
@@ -16,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.client.BaseFragment;
+import com.kamitsoft.ecosante.client.EcoSanteActivity;
 import com.kamitsoft.ecosante.client.adapters.WaitingPatientAdapter;
 import com.kamitsoft.ecosante.client.patient.PatientActivity;
 import com.kamitsoft.ecosante.model.EncounterInfo;
@@ -29,10 +33,12 @@ public class MonitoredPatients extends BaseFragment {
     private RecyclerView recyclerview;
     private WaitingPatientAdapter adapter;
     private PatientsViewModel model;
-
+    private NfcAdapter nfcAdapter;
+    private PendingIntent nfcIntent;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
     }
 
@@ -79,6 +85,23 @@ public class MonitoredPatients extends BaseFragment {
            getActivity().overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
 
        });
+        nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
+        //Check if NFC is available on device
+        if (nfcAdapter == null) {
+            // Device does not support NFC
+      //      Toast.makeText(this,"Device does not support NFC!",Toast.LENGTH_LONG).show();
+            //this.finish();
+        } else {
+            if (!nfcAdapter.isEnabled()) {
+                // NFC is disabled
+             //   Toast.makeText(this, "Enable NFC!",Toast.LENGTH_LONG).show();
+            } else {
+                app.newPatient();
+                nfcIntent = PendingIntent.getActivity(this.contextActivity,
+                        0, new Intent(getContext(),PatientActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+            }
+        }
 
     }
 
@@ -93,5 +116,11 @@ public class MonitoredPatients extends BaseFragment {
         return getString(R.string.line_up);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        nfcAdapter.enableForegroundDispatch(this.contextActivity, nfcIntent, null,
+                null);
+    }
 
 }

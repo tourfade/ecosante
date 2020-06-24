@@ -73,6 +73,9 @@ public class PatientsRepository {
         summaryDAO.resetSummariesSet();
     }
 
+    public PatientInfo getPatient(String uuid) {
+      return  dao.getPatient(uuid);
+    }
 
     public LiveData<Integer> encounterCounts(String puuid) {
         return dao.countE(puuid);

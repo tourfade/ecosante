@@ -1,19 +1,24 @@
 package com.kamitsoft.ecosante.client.patient;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.nfc.*;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.fragment.app.Fragment;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.client.EcoSanteActivity;
 import com.kamitsoft.ecosante.client.EcoSanteActivity;
 import com.kamitsoft.ecosante.constant.PatientViewsType;
 import com.kamitsoft.ecosante.model.viewmodels.EntitiesViewModel;
@@ -25,6 +30,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
+
+
 public class PatientActivity extends ImagePickerActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private EcoSanteApp app;
@@ -33,6 +40,8 @@ public class PatientActivity extends ImagePickerActivity implements BottomNaviga
     private PatientBaseFragment currentFragment;
     private BottomNavigationView navBar;
     private PatientViewsType currentType;
+    private NfcAdapter nfcAdapter;
+    private PendingIntent nfcIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +98,22 @@ public class PatientActivity extends ImagePickerActivity implements BottomNaviga
         super.onStart();
 
     }
+
+
+    public void onNewIntent(Intent intent) {
+
+        super.onNewIntent(intent);
+        setIntent(intent);
+
+        if (currentFragment instanceof PatientProfileView) {
+            PatientProfileView patientProfileView = (PatientProfileView) currentFragment;
+
+            String action = intent.getAction();
+            patientProfileView.writeTag(intent);
+            return;
+        }
+    }
+
 
     @Override
     public void onBackPressed() {

@@ -1,6 +1,12 @@
 package com.kamitsoft.ecosante.client.patient;
 
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.nfc.FormatException;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -15,21 +21,28 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
+import com.kamitsoft.ecosante.client.EcoSanteActivity;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
 import com.kamitsoft.ecosante.constant.Gender;
 import com.kamitsoft.ecosante.constant.MaritalStatus;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
+import com.kamitsoft.ecosante.nfcPackage.NfcMethod;
 
+import java.io.IOException;
 import java.util.Calendar;
+
+import static android.Manifest.permission.NFC;
 
 public class PatientProfileView extends PatientBaseFragment  {
     private ImageView patientPicture;
@@ -42,6 +55,13 @@ public class PatientProfileView extends PatientBaseFragment  {
     private PatientsViewModel model;
     private boolean isNew;
     private String oldavatar;
+    private NfcAdapter nfcAdapter;
+    private PendingIntent nfcIntent;
+    private AlertDialog.Builder dialogNfc;
+    private AlertDialog dialog;
+    private NfcMethod nfcMethod=new NfcMethod();
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +118,26 @@ public class PatientProfileView extends PatientBaseFragment  {
             this.currentPatient.setNeedUpdate(true);
             initPatientInfo();
         });
+        dialogNfc=new AlertDialog.Builder(view.getContext())
+                .setTitle("Sauvegarder")//Titre de la boite de dialogue
+                .setMessage("Veuillez approchez une puce NFC pour enregistrer.")//Message affiché
+
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+
+
+                // A null listener allows the button to dismiss the dialog and take no further action.
+                //Bouton pour fermer la boite de dialogue
+                .setNegativeButton("Retour", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert);//Ajoute une icône
+
+        dialog=dialogNfc.create();
 
         model.getAllDatas().observe(this, patientInfo -> {
             if (patientInfo == null || currentPatient == null) { return;}
@@ -112,6 +152,8 @@ public class PatientProfileView extends PatientBaseFragment  {
         });
 
     }
+
+
 
     @Override
     protected Class<?> getEntity() {
@@ -130,14 +172,37 @@ public class PatientProfileView extends PatientBaseFragment  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_edit:
                 edit(true);
                 break;
 
             case R.id.action_save:
-                save();
-                edit(false);
+
+                dialog.show();
+
+                    nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
+                //Vérifie si l'appareil suporte la technologie NFC
+                if (nfcAdapter == null) {// Si NFC n'est pas supporté
+
+                    //      Toast.makeText(this,"Device does not support NFC!",Toast.LENGTH_LONG).show();
+                    //this.finish();
+                } else {
+                    if (!nfcAdapter.isEnabled()) { // Si NFC n'est pas activé
+
+                        //   Toast.makeText(this, "Enable NFC!",Toast.LENGTH_LONG).show();
+
+                    } else {//Si tout va bien
+                        nfcIntent = PendingIntent.getActivity(this.getContext(),
+                                0, new Intent(this.getContext(), PatientActivity.class)
+                                        .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
+                        nfcAdapter.enableForegroundDispatch(this.contextActivity, nfcIntent, null,null);
+
+                        break;
+                    }
+
+        }
                 break;
 
         }
@@ -147,7 +212,7 @@ public class PatientProfileView extends PatientBaseFragment  {
 
     }
 
-    private void save() {
+    public void save() {
         currentPatient.setNeedUpdate(true);
         model.insert(currentPatient);
         picker.syncAvatar(currentPatient.getAvatar(),oldavatar, 0);
@@ -445,4 +510,19 @@ public class PatientProfileView extends PatientBaseFragment  {
     }
 
 
+    public void writeTag(Intent intent) {
+
+        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        try {
+            nfcMethod.write(app.getCurrentPatient().getUuid(),tag );
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (FormatException e) {
+            e.printStackTrace();
+        }
+        save();
+        edit(false);
+        dialog.dismiss();
+
+    }
 }
