@@ -38,6 +38,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
         <activity
@@ -68,19 +69,9 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" >
             <intent-filter>
-            <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-
-            <category android:name="android.intent.category.DEFAULT"/>
-
-
-            </intent-filter>
-            <intent-filter>
-            <action android:name="android.nfc.action.TECH_DISCOVERED" />
-            <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-            <action android:name="android.nfc.action.TAG_DISCOVERED" />
-            <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="application/vnd.com.kamisoft.dmi" />
             </intent-filter>
         </activity>
         <activity
@@ -108,19 +99,8 @@
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="application/vnd.com.kamisoft.dmi" />
 
-
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <meta-data
-                    android:name="android.nfc.action.TECH_DISCOVERED"
-                    android:resource="@xml/nfc_tech_list" />
-            <intent-filter>
-                <action android:name="android.nfc.action.TAG_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 

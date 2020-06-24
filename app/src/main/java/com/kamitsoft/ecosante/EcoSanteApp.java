@@ -76,6 +76,7 @@ public class EcoSanteApp extends MultiDexApplication {
         currentUser = usersRepository.getConnected();
 
         currentPatient.observeForever(patientInfo -> {
+            Log.i("XXXXXX4","->"+patientInfo);
             if(patientInfo == null){
                 this.currentEncounter.setValue(null);
                 this.currentDocument = null;

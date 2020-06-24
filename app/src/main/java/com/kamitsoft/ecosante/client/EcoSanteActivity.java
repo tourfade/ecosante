@@ -7,6 +7,7 @@ import android.nfc.*;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
 
+import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -16,12 +17,15 @@ import android.view.MenuItem;
 import androidx.fragment.app.Fragment;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.client.admin.DistrictMap;
 import com.kamitsoft.ecosante.client.nurse.NurseDistrictMap;
 import com.kamitsoft.ecosante.client.nurse.Supervisors;
+import com.kamitsoft.ecosante.client.patient.Encounter;
+import com.kamitsoft.ecosante.client.patient.PatientActivity;
 import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
 import com.kamitsoft.ecosante.constant.NavMenuConstant;
 import com.kamitsoft.ecosante.constant.UserStatusConstant;
@@ -73,7 +77,7 @@ public class EcoSanteActivity extends ImagePickerActivity
     private NfcAdapter nfcAdapter;
     private PendingIntent nfcIntent;
     private Fragment fragment;
-    private NfcMethod nfcMethod;
+    private NfcMethod nfcMethod=new NfcMethod();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,26 +98,26 @@ public class EcoSanteActivity extends ImagePickerActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        model.getLiveConnectedAccount().observe(this, account->{
+        model.getLiveConnectedAccount().observe(this, account -> {
             this.account = account;
-            if(account!=null && account.getGenPassword() && currentUser !=null){
+            if (account != null && account.getGenPassword() && currentUser != null) {
                 new PasswordEditorDialog(currentUser)
                         .show(getSupportFragmentManager(), "PasswordEditorDialog");
             }
         });
 
-        model.getLiveConnectedUser().observeForever(cu->{
+        model.getLiveConnectedUser().observeForever(cu -> {
             currentUser = cu;
 
-            if(currentUser != null) {
+            if (currentUser != null) {
                 initDrawerMenu();
                 initHeaderInfo();
                 initDrawerCount();
-                if(account!=null && account.getGenPassword() && currentUser !=null){
+                if (account != null && account.getGenPassword() && currentUser != null) {
                     new PasswordEditorDialog(currentUser)
                             .show(getSupportFragmentManager(), "PasswordEditorDialog");
                 }
-            }else{
+            } else {
                 disconnect();
             }
         });
@@ -122,7 +126,24 @@ public class EcoSanteActivity extends ImagePickerActivity
         navigationView.setCheckedItem(NavMenuConstant.NAV_USER_HOME.id);
         showFragment(Home.class, R.anim.fade_in, R.anim.fade_out);
 
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        //Vérifie si l'appareil suporte la technologie NFC
+        if (nfcAdapter == null) {// Si NFC n'est pas supporté
 
+            //      Toast.makeText(this,"Device does not support NFC!",Toast.LENGTH_LONG).show();
+            //this.finish();
+        } else {
+            if (!nfcAdapter.isEnabled()) { // Si NFC n'est pas activé
+
+                //   Toast.makeText(this, "Enable NFC!",Toast.LENGTH_LONG).show();
+
+            } else {//Si tout va bien
+                nfcIntent = PendingIntent.getActivity(this,
+                        0, new Intent(this, getClass())
+                                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+            }
+
+        }
     }
 
     private void initDrawerCount() {
@@ -192,32 +213,30 @@ public class EcoSanteActivity extends ImagePickerActivity
 
 
     }
+    @Override
     public void onNewIntent(Intent intent) {
-
         super.onNewIntent(intent);
+        Log.e("EcoSante","OnNewIntent");
 
-
-           String action = intent.getAction();
-        if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED) || action.equals(NfcAdapter.ACTION_TECH_DISCOVERED)){
+        String action = intent.getAction();
+        Log.e("EcoSanteAction","->"+intent);
+        if(action.equals(NfcAdapter.ACTION_TAG_DISCOVERED) ){
             String tagContent = "";
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            String[] techList = tag.getTechList();
-            if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED))
-            {
                 tagContent= nfcMethod.readFromIntent(intent);
+                Log.i("XXXXXXT","->"+tagContent);
                 app.service().getPatient(tagContent, data -> {
-                    app.setCurrentPatient(data[0]);
-                    Intent intents = new Intent(EcoSanteActivity.this, Encounter.class);
-                    intents.putExtra("isNew",true );
-                    startActivity(intents);
 
+                    app.setCurrentPatient(data[0]);
+                    Log.i("XXXXXX0","->"+app.getCurrentPatient());
+                    Intent i = new Intent(this, Encounter.class);
+                    i.putExtra("isNew", true);
+                    app.setNewEncounter();
+                    Log.i("XXXXXX","->"+app.getCurrentEncounter());
+                    startActivity(i);
+                    overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
                 });
-            }
 
         }
-
-
-
     }
 
 
@@ -304,11 +323,22 @@ public class EcoSanteActivity extends ImagePickerActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        app.exitPatient();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-       // nfcAdapter.enableForegroundDispatch(this, nfcIntent, null,null);
+       nfcAdapter.enableForegroundDispatch(this, nfcIntent, null,null);
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
-        app.exitPatient();
+
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        nfcAdapter.disableForegroundDispatch(this);
     }
 
     @Override

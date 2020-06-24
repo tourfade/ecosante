@@ -33,7 +33,6 @@ import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
 import com.kamitsoft.ecosante.client.EcoSanteActivity;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
-import com.kamitsoft.ecosante.client.nurse.WaitingPatients;
 import com.kamitsoft.ecosante.constant.Gender;
 import com.kamitsoft.ecosante.constant.MaritalStatus;
 import com.kamitsoft.ecosante.model.PatientInfo;
@@ -59,9 +58,8 @@ public class PatientProfileView extends PatientBaseFragment  {
     private NfcAdapter nfcAdapter;
     private PendingIntent nfcIntent;
     private AlertDialog.Builder dialogNfc;
-    private Boolean waitingNfc=true;
     private AlertDialog dialog;
-    private NfcMethod nfcMethod;
+    private NfcMethod nfcMethod=new NfcMethod();
 
 
 
@@ -121,22 +119,23 @@ public class PatientProfileView extends PatientBaseFragment  {
             initPatientInfo();
         });
         dialogNfc=new AlertDialog.Builder(view.getContext())
-                .setTitle("Sauvegarder")
-                .setMessage("Veuillez approchez une puce NFC pour enregistrer.")
+                .setTitle("Sauvegarder")//Titre de la boite de dialogue
+                .setMessage("Veuillez approchez une puce NFC pour enregistrer.")//Message affiché
 
                 // Specifying a listener allows you to take an action before dismissing the dialog.
                 // The dialog is automatically dismissed when a dialog button is clicked.
 
 
                 // A null listener allows the button to dismiss the dialog and take no further action.
+                //Bouton pour fermer la boite de dialogue
                 .setNegativeButton("Retour", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        waitingNfc=false;
+
 
                     }
                 })
-                .setIcon(android.R.drawable.ic_dialog_alert);
+                .setIcon(android.R.drawable.ic_dialog_alert);//Ajoute une icône
 
         dialog=dialogNfc.create();
 
@@ -183,16 +182,17 @@ public class PatientProfileView extends PatientBaseFragment  {
                 dialog.show();
 
                     nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
-                //Check if NFC is available on device
-                if (nfcAdapter == null) {
-                    // Device does not support NFC
+                //Vérifie si l'appareil suporte la technologie NFC
+                if (nfcAdapter == null) {// Si NFC n'est pas supporté
+
                     //      Toast.makeText(this,"Device does not support NFC!",Toast.LENGTH_LONG).show();
                     //this.finish();
                 } else {
-                    if (!nfcAdapter.isEnabled()) {
-                        // NFC is disabled
+                    if (!nfcAdapter.isEnabled()) { // Si NFC n'est pas activé
+
                         //   Toast.makeText(this, "Enable NFC!",Toast.LENGTH_LONG).show();
-                    } else {
+
+                    } else {//Si tout va bien
                         nfcIntent = PendingIntent.getActivity(this.getContext(),
                                 0, new Intent(this.getContext(), PatientActivity.class)
                                         .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -513,8 +513,6 @@ public class PatientProfileView extends PatientBaseFragment  {
     public void writeTag(Intent intent) {
 
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-
-
         try {
             nfcMethod.write(app.getCurrentPatient().getUuid(),tag );
         } catch (IOException e) {

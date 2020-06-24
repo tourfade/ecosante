@@ -8,10 +8,14 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 public class NfcMethod {
 
+    public NfcMethod()
+    {
 
+    }
 
     public void write(String text, Tag tag) throws IOException, FormatException {
         NdefRecord[] records = { createRecord(text) };
@@ -25,43 +29,31 @@ public class NfcMethod {
         // Close the connection
         ndef.close();
     }
-    private NdefRecord createRecord(String text) throws UnsupportedEncodingException {
-        String lang       = "en";
-        byte[] textBytes  = text.getBytes();
-        byte[] langBytes  = lang.getBytes("US-ASCII");
-        int    langLength = langBytes.length;
-        int    textLength = textBytes.length;
-        byte[] payload    = new byte[1 + langLength + textLength];
+    private NdefRecord createRecord(String text) {
 
-        // set status byte (see NDEF spec for actual bits)
-        payload[0] = (byte) langLength;
+        NdefRecord mimeRecord = new NdefRecord(
+                NdefRecord.TNF_MIME_MEDIA ,
+                "application/vnd.com.kamisoft.dmi".getBytes(Charset.forName("US-ASCII")),
+                new byte[0], text.getBytes(Charset.forName("US-ASCII")));
 
-        // copy langbytes and textbytes into payload
-        System.arraycopy(langBytes, 0, payload, 1,              langLength);
-        System.arraycopy(textBytes, 0, payload, 1 + langLength, textLength);
-
-        NdefRecord recordNFC = new NdefRecord(NdefRecord.TNF_WELL_KNOWN,  NdefRecord.RTD_TEXT,  new byte[0], payload);
-
-        return recordNFC;
+        return mimeRecord;
     }
 
     public String readFromIntent(Intent intent) {
         String action = intent.getAction();
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
-                || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
-                || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-            Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
+            Parcelable rawMsgs = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             NdefMessage[] msgs = null;
-            if (rawMsgs != null) {
+        /*    if (rawMsgs != null) {
                 msgs = new NdefMessage[rawMsgs.length];
                 for (int i = 0; i < rawMsgs.length; i++) {
                     msgs[i] = (NdefMessage) rawMsgs[i];
-                }
+                }*/
             }
-            return buildTagViews(msgs);
+            return "";//buildTagViews(msgs);
         }
-        return "";
-    }
+        //return "";
+   // }
     private String buildTagViews(NdefMessage[] msgs) {
         if (msgs == null || msgs.length == 0) return "";
 
@@ -69,7 +61,6 @@ public class NfcMethod {
         byte[] payload = msgs[0].getRecords()[0].getPayload();
         String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16"; // Get the Text Encoding
         int languageCodeLength = payload[0] & 0063; // Get the Language Code, e.g. "en"
-
 
         try {
             // Get the Text

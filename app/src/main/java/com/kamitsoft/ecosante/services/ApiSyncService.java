@@ -85,11 +85,8 @@ public class ApiSyncService extends Service {
 
             patientInfoCompletionWithData.onReady(patient);
             return;
-
         }
-
         entityRepository.setDirty(PatientInfo.class.getSimpleName().toLowerCase());
-
     }
 
 
