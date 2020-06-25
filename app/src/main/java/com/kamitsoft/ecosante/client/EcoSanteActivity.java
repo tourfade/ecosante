@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.*;
-import android.nfc.tech.Ndef;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -17,7 +16,6 @@ import android.view.MenuItem;
 import androidx.fragment.app.Fragment;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
@@ -25,15 +23,12 @@ import com.kamitsoft.ecosante.client.admin.DistrictMap;
 import com.kamitsoft.ecosante.client.nurse.NurseDistrictMap;
 import com.kamitsoft.ecosante.client.nurse.Supervisors;
 import com.kamitsoft.ecosante.client.patient.Encounter;
-import com.kamitsoft.ecosante.client.patient.PatientActivity;
 import com.kamitsoft.ecosante.client.user.dialog.PasswordEditorDialog;
 import com.kamitsoft.ecosante.constant.NavMenuConstant;
 import com.kamitsoft.ecosante.constant.UserStatusConstant;
 import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
-import com.kamitsoft.ecosante.model.repositories.UsersRepository;
-import com.kamitsoft.ecosante.nfcPackage.NfcMethod;
-import com.kamitsoft.ecosante.services.ApiSyncService;
+import com.kamitsoft.ecosante.nfc.NfcMethod;
 import com.kamitsoft.ecosante.signing.SignIn;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
@@ -60,10 +55,6 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import java.io.IOException;
-
-import static android.Manifest.permission.NFC;
-
 public class EcoSanteActivity extends ImagePickerActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -76,7 +67,6 @@ public class EcoSanteActivity extends ImagePickerActivity
     private UserAccountInfo account;
     private NfcAdapter nfcAdapter;
     private PendingIntent nfcIntent;
-    private Fragment fragment;
     private NfcMethod nfcMethod=new NfcMethod();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +134,7 @@ public class EcoSanteActivity extends ImagePickerActivity
             }
 
         }
+        handelIntent(getIntent());
     }
 
     private void initDrawerCount() {
@@ -216,30 +207,33 @@ public class EcoSanteActivity extends ImagePickerActivity
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.e("EcoSante","OnNewIntent");
+        handelIntent(intent);
+    }
 
+    private void handelIntent(Intent intent) {
         String action = intent.getAction();
-        Log.e("EcoSanteAction","->"+intent);
-        if(action.equals(NfcAdapter.ACTION_TAG_DISCOVERED) ){
-            String tagContent = "";
-                tagContent= nfcMethod.readFromIntent(intent);
-                Log.i("XXXXXXT","->"+tagContent);
-                app.service().getPatient(tagContent, data -> {
+        Log.i("XXXXXXXXXX", "action->"+action);
 
+        if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action) ){
+            String uuid = nfcMethod.readFromIntent(intent);
+            Log.i("XXXXXXXXXX", "uuid->"+uuid);
+            app.postService(service -> {
+                service.getPatient(uuid, data -> {
+                    Log.i("XXXXXXXXXX1", "uuid->" + data[0]);
                     app.setCurrentPatient(data[0]);
-                    Log.i("XXXXXX0","->"+app.getCurrentPatient());
+                    app.setNewEncounter();
                     Intent i = new Intent(this, Encounter.class);
                     i.putExtra("isNew", true);
-                    app.setNewEncounter();
-                    Log.i("XXXXXX","->"+app.getCurrentEncounter());
+
+                    Log.i("XXXXXXXXX2", "uuid->" + data[0]);
+
                     startActivity(i);
-                    overridePendingTransition(R.anim.slide_up,R.anim.fade_out);
+                    overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
                 });
+            });
 
         }
     }
-
-
 
 
     private void initDrawerMenu() {
@@ -331,7 +325,7 @@ public class EcoSanteActivity extends ImagePickerActivity
     @Override
     protected void onResume() {
         super.onResume();
-       nfcAdapter.enableForegroundDispatch(this, nfcIntent, null,null);
+        nfcAdapter.enableForegroundDispatch(this, nfcIntent, null,null);
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
 
     }

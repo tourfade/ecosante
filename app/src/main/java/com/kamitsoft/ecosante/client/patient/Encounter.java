@@ -89,13 +89,14 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
 
-        Log.i("XXXXXX2","->"+app.getCurrentEncounter());
         if(getIntent().getStringExtra("euuid") == null) {
             encounterInfo = app.getCurrentEncounter();
-            super.locateUser(location -> {
-                encounterInfo.setLat(location.getLatitude());
-                encounterInfo.setLon(location.getLongitude());
-            });
+            if(encounterInfo!=null) {
+                super.locateUser(location -> {
+                    encounterInfo.setLat(location.getLatitude());
+                    encounterInfo.setLon(location.getLongitude());
+                });
+            }
 
         }else{
             encounterInfo = encounterModel.getEncounter(getIntent().getStringExtra("euuid"));
@@ -105,8 +106,18 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
         setTitle(getString(R.string.encounter));
         model = ViewModelProviders.of(this).get(EncountersViewModel.class);
-        app.getCurrentLivePatient().observe(this, patientInfo ->
-                toolbar.setSubtitle( Utils.formatPatient(Encounter.this,patientInfo)));
+        app.getCurrentLivePatient().observe(this, patientInfo -> {
+            if(patientInfo == null){
+                return;
+            }
+            if(getIntent().getBooleanExtra("isNew", false)){
+                toolbar.setSubtitle(Utils.formatPatient(Encounter.this, patientInfo) +" né le "+ Utils.format(patientInfo.getDob()));
+            }else{
+                toolbar.setSubtitle(Utils.formatPatient(Encounter.this, patientInfo));
+
+            }
+        });
+
 
 
         encounterAt = findViewById(R.id.encounter_at);
@@ -266,7 +277,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     }
 
     private boolean isSavable() {
-        if(encounterInfo.currentStatus().status == StatusConstant.ARCHIVED.status){
+        if(encounterInfo==null || encounterInfo.currentStatus().status == StatusConstant.ARCHIVED.status){
             return false;
         }
         return true;
@@ -298,6 +309,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         autonomy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(encounterInfo == null){
+                    return;
+                }
                 encounterInfo.setAutonomy(position); ;
             }
 
@@ -309,6 +323,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         orientation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(encounterInfo == null){
+                    return;
+                }
                 encounterInfo.setOrientation(position);
             }
 
@@ -322,6 +339,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(encounterInfo == null){
+                    return;
+                }
                 encounterInfo.setField(s.toString());
             }
         });
@@ -335,6 +355,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(encounterInfo == null){
+                    return;
+                }
                 encounterInfo.setRunningTreatment(s.toString());
             }
         });
@@ -367,7 +390,10 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
-            encounterInfo.setAdvising(s.toString());
+                if(encounterInfo == null){
+                    return;
+                }
+                encounterInfo.setAdvising(s.toString());
             }
         });
 
@@ -378,7 +404,9 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
     }
 
     private  void initValue(){
-
+        if(encounterInfo == null){
+            return;
+        }
         encounterInfo.setNeedUpdate(true);
 
         UserInfo user = app.getCurrentUser();
@@ -388,6 +416,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         }else {
             reviewActions.setVisibility(View.GONE);
         }
+
 
         encounterAt.setText(getString(R.string.encoountered_at)+" "+ Utils.format(encounterInfo.getCreatedAt()));
         encounteredBy.setText(getString(R.string.by)+" "+encounterInfo.getMonitor().monitorFullName);

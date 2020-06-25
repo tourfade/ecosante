@@ -51,7 +51,7 @@ public class LabsAdapter extends RecyclerView.Adapter<LabsAdapter.MyHolder>  {
         mdata = new ArrayList<>();
         decimalFormatf = DecimalFormat.getNumberInstance();
         app = (EcoSanteApp)context.getApplicationContext();
-        String uuid = app.getCurrentEncounter().getUuid();
+
 
     }
 

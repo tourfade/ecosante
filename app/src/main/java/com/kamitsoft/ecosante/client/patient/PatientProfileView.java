@@ -24,25 +24,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.ImagePickerActivity;
 import com.kamitsoft.ecosante.R;
 import com.kamitsoft.ecosante.Utils;
-import com.kamitsoft.ecosante.client.EcoSanteActivity;
 import com.kamitsoft.ecosante.client.TextWatchAdapter;
 import com.kamitsoft.ecosante.constant.Gender;
 import com.kamitsoft.ecosante.constant.MaritalStatus;
 import com.kamitsoft.ecosante.model.PatientInfo;
 import com.kamitsoft.ecosante.model.viewmodels.PatientsViewModel;
-import com.kamitsoft.ecosante.nfcPackage.NfcMethod;
+import com.kamitsoft.ecosante.nfc.NfcMethod;
 
 import java.io.IOException;
 import java.util.Calendar;
-
-import static android.Manifest.permission.NFC;
 
 public class PatientProfileView extends PatientBaseFragment  {
     private ImageView patientPicture;

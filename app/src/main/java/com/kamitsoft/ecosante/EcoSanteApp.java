@@ -32,6 +32,9 @@ import com.kamitsoft.ecosante.model.repositories.UsersRepository;
 import com.kamitsoft.ecosante.services.ApiSyncService;
 import com.kamitsoft.ecosante.services.WorkerService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class EcoSanteApp extends MultiDexApplication {
     private UserInfo editingUser;
@@ -42,11 +45,12 @@ public class EcoSanteApp extends MultiDexApplication {
     private DocumentInfo currentDocument;
     private UsersRepository usersRepository;
     public static final String  CHANNEL_ID = "com.kamitsoft.dmi.dmichannel";
-
+    List<ServiceTask> tasks = new ArrayList<>();
     private  MutableLiveData<DistrictInfo> currentDistrict;
 
     private ApiSyncService myService;
     protected boolean mBound;
+
     protected ServiceConnection connection = new ServiceConnection() {
 
         @Override
@@ -55,6 +59,8 @@ public class EcoSanteApp extends MultiDexApplication {
                 ApiSyncService.LocalBinder binder = (ApiSyncService.LocalBinder) service;
                 myService = binder.getService();
                 mBound = true;
+                tasks.forEach(t->t.run(myService));
+                tasks.clear();
             }
         }
 
@@ -76,7 +82,6 @@ public class EcoSanteApp extends MultiDexApplication {
         currentUser = usersRepository.getConnected();
 
         currentPatient.observeForever(patientInfo -> {
-            Log.i("XXXXXX4","->"+patientInfo);
             if(patientInfo == null){
                 this.currentEncounter.setValue(null);
                 this.currentDocument = null;
@@ -102,7 +107,6 @@ public class EcoSanteApp extends MultiDexApplication {
         });
 
         new UsersRepository(this).getLiveAccount().observeForever(acc->{
-            Log.i("XXXXXX", "-->"+((acc==null)?null:acc.getUsername()));
 
             if(acc == null || !acc.getUserUuid().equals(currentUser.getAccountId())){
                 currentUser = usersRepository.getConnected();
@@ -122,6 +126,8 @@ public class EcoSanteApp extends MultiDexApplication {
 
 
     }
+
+
 
     private void creatChannel(){
         NotificationManager notificationManager =
@@ -148,6 +154,13 @@ public class EcoSanteApp extends MultiDexApplication {
 
     public ApiSyncService service(){
         return myService;
+    }
+    public void postService(ServiceTask task){
+        if(myService != null){
+            task.run(myService);
+        }else {
+            tasks.add(task);
+        }
     }
 
     @Override
