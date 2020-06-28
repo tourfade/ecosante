@@ -218,7 +218,7 @@ public class Encounter extends ImagePickerActivity implements View.OnClickListen
         if(app.getCurrentPatient() != null) {
 
             encounterModel.getEncounters().observe(this, encounterInfos -> {
-                Log.i("XXXXXX3","->"+app.getCurrentEncounter());
+
                 for (EncounterInfo e : encounterInfos) {
                     if (encounterInfo == null || e.getUuid().equals(encounterInfo.getUuid())) {
                         this.encounterInfo = e;

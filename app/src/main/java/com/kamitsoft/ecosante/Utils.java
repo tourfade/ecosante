@@ -183,7 +183,22 @@ public class Utils {
                         }});
         }
     }
-
+    public static void loadRectangle(Context context, String bucket, String keyuuid,  ImageView to, @DrawableRes  int failed, @DrawableRes  int placeholder) {
+        DiskCache cache = new DiskCache(context);
+        if(cache.getFile(keyuuid).exists()){
+            Glide.with(context)
+                    .load(cache.getFile(keyuuid))
+                    .error(failed)
+                    .placeholder(placeholder)
+                    .into(to);
+        }else {
+            Glide.with(context)
+                    .load(bucket+keyuuid)
+                    .error(failed)
+                    .placeholder(placeholder)
+                    .into(to);
+        }
+    }
     public static void load(Context context, String bucket, String keyuuid,  ImageView to, @DrawableRes  int failed, @DrawableRes  int placeholder) {
         DiskCache cache = new DiskCache(context);
         if(cache.getFile(keyuuid).exists()){
@@ -513,9 +528,7 @@ public class Utils {
 
         switch (UserType.typeOf(userInfo.getUserType())){
             case PHYSIST:
-                Log.i("XXXXXXX->T1", new Gson().toJson(FirebaseChannels.PHYSISTS_OF+userInfo.getDistrictUuid()));
-                Log.i("XXXXXXX->T2", new Gson().toJson(FirebaseChannels.PHYSISTS_OF+accountID));
-                Log.i("XXXXXXX->T3", new Gson().toJson(FirebaseChannels.PHYSIST+userInfo.getUuid()));
+
 
                 FirebaseMessaging.getInstance()
                         .subscribeToTopic(FirebaseChannels.PHYSISTS_OF+userInfo.getDistrictUuid())

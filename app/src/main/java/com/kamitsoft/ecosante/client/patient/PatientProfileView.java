@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.nfc.FormatException;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,7 +55,6 @@ public class PatientProfileView extends PatientBaseFragment  {
     private String oldavatar;
     private NfcAdapter nfcAdapter;
     private PendingIntent nfcIntent;
-    private AlertDialog.Builder dialogNfc;
     private AlertDialog dialog;
     private NfcMethod nfcMethod=new NfcMethod();
 
@@ -114,26 +115,11 @@ public class PatientProfileView extends PatientBaseFragment  {
             this.currentPatient.setNeedUpdate(true);
             initPatientInfo();
         });
-        dialogNfc=new AlertDialog.Builder(view.getContext())
-                .setTitle("Sauvegarder")//Titre de la boite de dialogue
-                .setMessage("Veuillez approchez une puce NFC pour enregistrer.")//Message affiché
-
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
-
-
-                // A null listener allows the button to dismiss the dialog and take no further action.
-                //Bouton pour fermer la boite de dialogue
-                .setNegativeButton("Retour", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert);//Ajoute une icône
-
-        dialog=dialogNfc.create();
+        dialog = new AlertDialog.Builder(getContext())
+                .setIcon(R.drawable.nfc)
+                .setTitle(R.string.writing_card)//Titre de la boite de dialogue
+                .setMessage(R.string.bring_card_closer)//Message affiché
+                .setNegativeButton(getString(R.string.cancel), (dialogInterface, i) -> {}).create();
 
         model.getAllDatas().observe(this, patientInfo -> {
             if (patientInfo == null || currentPatient == null) { return;}
@@ -177,29 +163,24 @@ public class PatientProfileView extends PatientBaseFragment  {
 
                 dialog.show();
 
-                    nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
+                nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
                 //Vérifie si l'appareil suporte la technologie NFC
-                if (nfcAdapter == null) {// Si NFC n'est pas supporté
-
-                    //      Toast.makeText(this,"Device does not support NFC!",Toast.LENGTH_LONG).show();
-                    //this.finish();
+                if (nfcAdapter == null) {
+                    Toast.makeText(getContext(),"Cet appareil ne supporte pas le NFC!",Toast.LENGTH_LONG).show();
+                    return true;
                 } else {
                     if (!nfcAdapter.isEnabled()) { // Si NFC n'est pas activé
-
-                        //   Toast.makeText(this, "Enable NFC!",Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getContext(), "Actiuver le NFC!",Toast.LENGTH_LONG).show();
+                        return true;
                     } else {//Si tout va bien
                         nfcIntent = PendingIntent.getActivity(this.getContext(),
                                 0, new Intent(this.getContext(), PatientActivity.class)
                                         .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-
                         nfcAdapter.enableForegroundDispatch(this.contextActivity, nfcIntent, null,null);
-
-                        break;
                     }
+                }
+                return true;
 
-        }
-                break;
 
         }
 
@@ -511,6 +492,8 @@ public class PatientProfileView extends PatientBaseFragment  {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         try {
             nfcMethod.write(app.getCurrentPatient().getUuid(),tag );
+
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (FormatException e) {

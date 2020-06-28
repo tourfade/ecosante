@@ -87,7 +87,7 @@ public class DistrictOracleAdapter extends ArrayAdapter {
 
                 //Call to database to get matching records using room
                 List<DistrictInfo> matchValues = localDatabaseRepo.finDistricts(searchStrLowerCase+"%");
-                Log.i("XXXXX", " key "+searchStrLowerCase+" "+matchValues.size());
+
                 results.values = matchValues;
                 results.count = matchValues.size();
             }

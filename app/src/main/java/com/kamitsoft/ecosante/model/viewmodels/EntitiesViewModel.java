@@ -2,6 +2,7 @@ package com.kamitsoft.ecosante.model.viewmodels;
 
 import android.app.Application;
 
+import com.kamitsoft.ecosante.model.ClusterInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.EntitySync;
 import com.kamitsoft.ecosante.model.repositories.DocumentsRepository;
@@ -47,6 +48,8 @@ public class EntitiesViewModel extends AndroidViewModel {
         es.setEntity(entity.getSimpleName().toLowerCase());
         repository.update(es);
     }
+
+
 }
 
 

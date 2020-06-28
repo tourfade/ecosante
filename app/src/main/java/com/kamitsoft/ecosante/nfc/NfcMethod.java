@@ -25,7 +25,9 @@ public class NfcMethod {
         ndef.connect();
         // Write the message
         ndef.writeNdefMessage(message);
-        // Close the connection
+        if(ndef.canMakeReadOnly()){
+            ndef.makeReadOnly();
+        }
         ndef.close();
     }
     private NdefMessage createNdfCode(String text) {

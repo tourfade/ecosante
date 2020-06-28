@@ -24,9 +24,10 @@ public enum NavMenuConstant {
     NAV_ADMIN_DISTRICTS(9, true, 4,R.id.nav_my_districs, R.string.districts),
     NAV_ADMIN_PHYSICIANS(10,true, 4,R.id.nav_admin_physicians, R.string.physiscians),
     NAV_ADMIN_NURSES(11,true, 4,R.id.nav_admin_nurses, R.string.nurses),
-    NAV_USER_PROFILE(12,false,0,R.id.nav_profile, R.string.profile),
-    NAV_USER_DISCONNECT(13, false,0,R.id.nav_disconnect, R.string.disconnect),
-    NAV_USER_STATUS(14,false,1,R.id.nav_available, R.string.available);//-1
+    NAV_ADMIN_CLUSTER(12, false, 4,R.id.nav_cluster, R.string.cluster),
+    NAV_USER_PROFILE(13,false,0,R.id.nav_profile, R.string.profile),
+    NAV_USER_DISCONNECT(14, false,0,R.id.nav_disconnect, R.string.disconnect),
+    NAV_USER_STATUS(15,false,1,R.id.nav_available, R.string.available);//-1
 
     public final @IdRes int id;
     public final @StringRes int name;

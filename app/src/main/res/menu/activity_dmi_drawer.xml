@@ -29,6 +29,8 @@
             android:icon="@drawable/encounter"
             android:title="@string/myencounters" />
 
+
+
     </group>
 
     <group android:id="@+id/nurse_menu">
@@ -89,6 +91,16 @@
             android:id="@+id/nav_admin_nurses"
             android:icon="@drawable/nurses"
             android:title="@string/nurses" />
+        <item android:title="@string/cluster">
+            <menu>
+
+                <item
+                    android:checkable="true"
+                    android:id="@+id/nav_cluster"
+                    android:icon="@drawable/cluster"
+                    android:title="Ecosanté" />
+            </menu>
+        </item>
 
     </group>
 

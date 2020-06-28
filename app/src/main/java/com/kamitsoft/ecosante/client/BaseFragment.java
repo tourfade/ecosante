@@ -28,7 +28,7 @@ public class BaseFragment extends Fragment {
     protected EcoSanteApp app;
     protected boolean edit;
     protected UserInfo connectedUser;
-    private   EntitiesViewModel entityModel;
+    protected EntitiesViewModel entityModel;
     protected UsersViewModel model;
     protected SwipeRefreshLayout swr;
 

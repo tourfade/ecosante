@@ -103,12 +103,10 @@ public class PatientActivity extends ImagePickerActivity implements BottomNaviga
     public void onNewIntent(Intent intent) {
 
         super.onNewIntent(intent);
-        setIntent(intent);
 
         if (currentFragment instanceof PatientProfileView) {
+            setIntent(intent);
             PatientProfileView patientProfileView = (PatientProfileView) currentFragment;
-
-            String action = intent.getAction();
             patientProfileView.writeTag(intent);
             return;
         }

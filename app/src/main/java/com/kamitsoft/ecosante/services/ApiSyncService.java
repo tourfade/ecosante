@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.DiskCache;
 import com.kamitsoft.ecosante.EcoSanteApp;
@@ -18,6 +19,7 @@ import com.kamitsoft.ecosante.constant.StatusConstant;
 import com.kamitsoft.ecosante.database.KsoftDatabase;
 import com.kamitsoft.ecosante.dto.PrescriptionDTO;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
+import com.kamitsoft.ecosante.model.ClusterInfo;
 import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.EncounterInfo;
@@ -32,6 +34,7 @@ import com.kamitsoft.ecosante.model.UserAccountInfo;
 import com.kamitsoft.ecosante.model.UserInfo;
 import com.kamitsoft.ecosante.model.json.Supervisor;
 import com.kamitsoft.ecosante.model.repositories.AppointmentsRepository;
+import com.kamitsoft.ecosante.model.repositories.ClusterRepository;
 import com.kamitsoft.ecosante.model.repositories.DistrictRepository;
 import com.kamitsoft.ecosante.model.repositories.DocumentsRepository;
 import com.kamitsoft.ecosante.model.repositories.EncountersRepository;
@@ -77,6 +80,8 @@ public class ApiSyncService extends Service {
     private FileRepository fileRepository;
     private EntityRepository entityRepository;
     private DistrictRepository districtRepository;
+    private ClusterRepository clusterRepository;
+    private CompletionWithData<PatientInfo> patientInfoCompletionWithData;
 
     public void getPatient(String uuid, CompletionWithData<PatientInfo> patientInfoCompletionWithData) {
 
@@ -87,6 +92,7 @@ public class ApiSyncService extends Service {
             return;
         }
         entityRepository.setDirty(PatientInfo.class.getSimpleName().toLowerCase());
+        this.patientInfoCompletionWithData = patientInfoCompletionWithData;
     }
 
 
@@ -135,7 +141,6 @@ public class ApiSyncService extends Service {
                 init(accountInfo);
             }
         });
-
 
         encounterRepository.getDirty().observeForever(toSynch -> {
             if(proxy == null ){
@@ -218,6 +223,14 @@ public class ApiSyncService extends Service {
 
         });
 
+        clusterRepository.getDirty().observeForever(toSynch -> {
+            if(proxy == null){
+                return;
+            }
+            if(toSynch.size() > 0)
+                syncCluster(getEntity(ClusterInfo.class), toSynch, null);
+        });
+
     }
 
     public void requestSync(Class<?> beanClass, Completion completion) {
@@ -267,7 +280,12 @@ public class ApiSyncService extends Service {
             if(entitySync.isDirty())
                 syncDistricts(entitySync,new ArrayList<>(),completion);
         }
+        if(beanClass == ClusterInfo.class){
+            syncCluster(entitySync,new ArrayList<>(),completion);
+        }
     }
+
+
 
     private void initRepositories() {
         encounterRepository = new EncountersRepository(app);
@@ -280,6 +298,7 @@ public class ApiSyncService extends Service {
         fileRepository = new FileRepository(app);
         entityRepository = new EntityRepository(app);
         districtRepository = new DistrictRepository(app);
+        clusterRepository = new ClusterRepository(app);
 
     }
 
@@ -358,6 +377,7 @@ public class ApiSyncService extends Service {
         proxy.syncPatients(data).enqueue(new Callback<List<PatientInfo>>(){
                     @Override
                     public void onResponse(Call<List<PatientInfo>> call, Response<List<PatientInfo>> response) {
+                        List<PatientInfo> updated = null;
                         if (response.code() == 200){
                             entitySync.setLastSynced(System.currentTimeMillis());
                             entityRepository.update(entitySync);
@@ -372,7 +392,7 @@ public class ApiSyncService extends Service {
                                 patientRepository.delete(deleted.toArray(new PatientInfo[]{}));
                             }
 
-                            List<PatientInfo> updated = response.body().stream()
+                            updated = response.body().stream()
                                     .filter((s) ->{
                                         s.setUpdatedAt(new Timestamp(data.timestamp));
                                         return !s.isDeleted(); })
@@ -394,6 +414,10 @@ public class ApiSyncService extends Service {
                         if(completion !=null){
                             completion.onReady();
                         }
+                        if(patientInfoCompletionWithData != null){
+                            patientInfoCompletionWithData.onReady(updated==null?null:updated.toArray(new PatientInfo[]{}));
+                            patientInfoCompletionWithData = null;
+                        }
 
                     }
                     @Override
@@ -401,6 +425,10 @@ public class ApiSyncService extends Service {
                         Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
                         if(completion !=null){
                             completion.onReady();
+                        }
+                        if(patientInfoCompletionWithData != null){
+                            patientInfoCompletionWithData.onReady(null);
+                            patientInfoCompletionWithData = null;
                         }
 
                     }
@@ -794,6 +822,40 @@ public class ApiSyncService extends Service {
         });
 
 
+
+    }
+
+    private void syncCluster(EntitySync entitySync, List<ClusterInfo> dirty, Completion completion) {
+        SyncData<List<ClusterInfo>> data = new SyncData<>();
+
+        data.timestamp = entitySync.getLastSynced();
+        data.data = dirty;
+        entitySync.setLastSynced(System.currentTimeMillis());
+        entitySync.setDirty(false);
+
+        proxy.syncCluster(data).enqueue(new Callback<List<ClusterInfo>>(){
+            @Override
+            public void onResponse(Call<List<ClusterInfo>> call, Response<List<ClusterInfo>> response) {
+
+                if (response.code() == 200){
+                    entityRepository.update(entitySync);
+                    //if(response.body() !=null && response.body().size() > 0)
+                        //clusterRepository.insert(response.body().toArray(new ClusterInfo[]{}));
+                }
+                if(completion !=null){
+                    completion.onReady();
+                }
+
+            }
+            @Override
+            public void onFailure(Call<List<ClusterInfo>> call, Throwable t) {
+                Toast.makeText(getApplication(), R.string.unknown_error, Toast.LENGTH_LONG).show();
+                if(completion !=null){
+                    completion.onReady();
+                }
+
+            }
+        });
 
     }
 

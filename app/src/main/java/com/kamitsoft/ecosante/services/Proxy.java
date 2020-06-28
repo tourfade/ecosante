@@ -10,6 +10,7 @@ import com.kamitsoft.ecosante.dto.PrescriptionDTO;
 import com.kamitsoft.ecosante.model.Act;
 import com.kamitsoft.ecosante.model.Analysis;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
+import com.kamitsoft.ecosante.model.ClusterInfo;
 import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.Drug;
@@ -117,4 +118,7 @@ public interface Proxy {
 
     @POST("/api/prescription/send/")
     Call<Void> generatePrescription(@Body PrescriptionDTO dto);
+
+    @POST("api/user/synccluster/")
+    Call<List<ClusterInfo>> syncCluster(@Body SyncData<List<ClusterInfo>> data);
 }

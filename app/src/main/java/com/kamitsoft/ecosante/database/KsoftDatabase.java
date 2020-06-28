@@ -23,6 +23,7 @@ import com.kamitsoft.ecosante.model.AlarmInfo;
 import com.kamitsoft.ecosante.model.Allergen;
 import com.kamitsoft.ecosante.model.Analysis;
 import com.kamitsoft.ecosante.model.AppointmentInfo;
+import com.kamitsoft.ecosante.model.ClusterInfo;
 import com.kamitsoft.ecosante.model.DistrictInfo;
 import com.kamitsoft.ecosante.model.DocumentInfo;
 import com.kamitsoft.ecosante.model.Drug;
@@ -64,6 +65,7 @@ import java.util.concurrent.Executors;
                     LabInfo.class,
                     SubConsumerInfo.class,
                     SubInstanceInfo.class,
+                    ClusterInfo.class,
                     AlarmInfo.class},
         version = 2,exportSchema = false)
 @TypeConverters({TimestampTypeConverter.class,
@@ -91,6 +93,7 @@ public abstract class KsoftDatabase extends RoomDatabase {
     public abstract AllergenDAO allergenDAO();
     public abstract DistrictDAO districtDAO();
     public abstract AlarmDAO alarmDAO();
+    public abstract ClusterDAO clusterDAO();
 
     public synchronized static KsoftDatabase getInstance(Context context) {
         if (INSTANCE == null) {

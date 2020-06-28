@@ -6,19 +6,18 @@ import android.content.Intent;
 import android.nfc.*;
 import android.os.Bundle;
 
-import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
 import android.view.MenuItem;
 
-import androidx.fragment.app.Fragment;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
+import com.kamitsoft.ecosante.client.admin.ClusterView;
 import com.kamitsoft.ecosante.client.admin.DistrictMap;
 import com.kamitsoft.ecosante.client.nurse.NurseDistrictMap;
 import com.kamitsoft.ecosante.client.nurse.Supervisors;
@@ -54,6 +53,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class EcoSanteActivity extends ImagePickerActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -119,13 +119,11 @@ public class EcoSanteActivity extends ImagePickerActivity
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         //Vérifie si l'appareil suporte la technologie NFC
         if (nfcAdapter == null) {// Si NFC n'est pas supporté
-
-            //      Toast.makeText(this,"Device does not support NFC!",Toast.LENGTH_LONG).show();
-            //this.finish();
+             Toast.makeText(this,"Device does not support NFC!",Toast.LENGTH_LONG).show();
         } else {
             if (!nfcAdapter.isEnabled()) { // Si NFC n'est pas activé
 
-                //   Toast.makeText(this, "Enable NFC!",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Enable NFC!",Toast.LENGTH_LONG).show();
 
             } else {//Si tout va bien
                 nfcIntent = PendingIntent.getActivity(this,
@@ -212,27 +210,34 @@ public class EcoSanteActivity extends ImagePickerActivity
 
     private void handelIntent(Intent intent) {
         String action = intent.getAction();
-        Log.i("XXXXXXXXXX", "action->"+action);
 
         if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action) ){
             String uuid = nfcMethod.readFromIntent(intent);
-            Log.i("XXXXXXXXXX", "uuid->"+uuid);
             app.postService(service -> {
                 service.getPatient(uuid, data -> {
-                    Log.i("XXXXXXXXXX1", "uuid->" + data[0]);
-                    app.setCurrentPatient(data[0]);
-                    app.setNewEncounter();
-                    Intent i = new Intent(this, Encounter.class);
-                    i.putExtra("isNew", true);
-
-                    Log.i("XXXXXXXXX2", "uuid->" + data[0]);
-
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+                    if(data == null){
+                        popMessage();
+                    }else {
+                        app.setCurrentPatient(data[0]);
+                        app.setNewEncounter();
+                        Intent i = new Intent(this, Encounter.class);
+                        i.putExtra("isNew", true);
+                        startActivity(i);
+                        overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+                    }
                 });
             });
 
         }
+    }
+
+    private void popMessage() {
+        new AlertDialog.Builder(this)
+                .setIcon(R.drawable.nfc)
+                .setTitle(R.string.patient_not_found)//Titre de la boite de dialogue
+                .setMessage("Impossible de trouver le patient associé. Resssayez plus tard !")//Message affiché
+                .setNegativeButton(getString(R.string.ok), (dialogInterface, i) -> {})
+                .create().show();
     }
 
 
@@ -325,14 +330,18 @@ public class EcoSanteActivity extends ImagePickerActivity
     @Override
     protected void onResume() {
         super.onResume();
-        nfcAdapter.enableForegroundDispatch(this, nfcIntent, null,null);
+        if(nfcAdapter != null) {
+            nfcAdapter.enableForegroundDispatch(this, nfcIntent, null, null);
+        }
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
 
     }
     @Override
     protected void onPause(){
         super.onPause();
-        nfcAdapter.disableForegroundDispatch(this);
+        if(nfcAdapter != null) {
+            nfcAdapter.disableForegroundDispatch(this);
+        }
     }
 
     @Override
@@ -392,6 +401,9 @@ public class EcoSanteActivity extends ImagePickerActivity
                  showFragment(Physicians.class,R.anim.fade_in, R.anim.fade_out);
                  break;
 
+            case R.id.nav_cluster:
+                showFragment(ClusterView.class,R.anim.fade_in, R.anim.fade_out);
+                break;
 
             case R.id.nav_admin_nurses:
                 showFragment(Nurses.class,R.anim.fade_in, R.anim.fade_out);

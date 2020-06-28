@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/user"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:cardCornerRadius="5dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <LinearLayout
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/card1line0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="Logo" />
+                    <ImageView
+                        android:padding="5dp"
+                        android:id="@+id/logo"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:src="@drawable/kamit"
+                        android:scaleType="centerInside"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#545353" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/card1line3"
+                    android:layout_below="@id/card1line0"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:background="@color/colorPrimary"
+                        android:textColor="@color/cardview_light_background"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    <TextView
+                        android:textColor="@color/cardview_light_background"
+                        style="@style/TextView.InputLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="0dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="0dp"
+                        android:text="Compte" />
+
+                    <TextView
+                        android:textColor="@color/cardview_light_background"
+                        android:id="@+id/account"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:textSize="18sp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="2dp"
+                        android:text="KamitMed" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#060606" />
+
+                </LinearLayout>
+                    <LinearLayout
+                        android:textColor="@color/cardview_light_background"
+                        android:background="@color/colorPrimary"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:textColor="@color/cardview_light_background"
+                            style="@style/TextView.InputLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="0dp"
+                            android:text="Matricule" />
+
+                        <TextView
+                            android:textColor="@color/cardview_light_background"
+                            android:id="@+id/matricule"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:textSize="18sp"
+                            android:paddingRight="0dp"
+                            android:paddingBottom="2dp"
+                            android:text="XXXZXXZS3" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#060606" />
+
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/card1line1"
+                    android:layout_below="@id/card1line3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/cluster_name_container"
+                        android:hint="@string/cluster_name">
+
+                        <EditText android:importantForAutofill="no"
+                            android:id="@+id/cluster_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textNoSuggestions|textPersonName|textCapSentences"
+
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="KamitMed Group" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@id/card1line1"
+                    android:id="@+id/addresscontainter"
+                    android:hint="@string/adress">
+
+                    <EditText android:importantForAutofill="no"
+                        android:id="@+id/address"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textNoSuggestions|textPersonName|textCapSentences"
+
+                        android:maxLines="1"
+                        android:padding="8dp"
+                        android:text="Parcelles Assainies U21 N227" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:id="@+id/card1line2"
+                    android:layout_below="@id/addresscontainter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+
+                        android:hint="@string/city">
+
+                        <EditText android:importantForAutofill="no"
+                            android:id="@+id/city"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textNoSuggestions|textPersonName|textCapSentences"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="Dakar" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="@string/country">
+
+                        <EditText android:importantForAutofill="no"
+                            android:id="@+id/country"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textNoSuggestions|textPersonName|textCapSentences"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="Pays" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/user"
+            android:id="@+id/card2"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:cardCornerRadius="5dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <LinearLayout
+                    android:id="@+id/phonesContainner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+
+                        android:hint="@string/phone1">
+
+                        <EditText android:importantForAutofill="no"
+                            android:id="@+id/phone1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="phone"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="77543452" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="@string/phone2">
+
+                        <EditText android:importantForAutofill="no"
+                            android:id="@+id/phone2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="phone"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:text="76123456" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_below="@id/phonesContainner"
+                    android:id="@+id/emailContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Email">
+
+                    <EditText android:importantForAutofill="no"
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textNoSuggestions|textEmailAddress"
+                        android:maxLines="1"
+                        android:text="xxxx@gmail.com"
+                        android:padding="8dp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_below="@id/emailContainer"
+                    android:id="@+id/websiteContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Site Web">
+
+                    <EditText android:importantForAutofill="no"
+                        android:id="@+id/website"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textNoSuggestions|textWebEditText"
+                        android:maxLines="1"
+                        android:text="http://www.uqtr.ca"
+                        android:padding="8dp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <Button
+                    android:background="@drawable/radius5o"
+                    android:textColor="@color/common_google_signin_btn_text_dark_default"
+                    android:layout_below="@id/websiteContainer"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sauvegarder"
+                    android:elevation="4dp" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</ScrollView>
+

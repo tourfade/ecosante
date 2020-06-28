@@ -289,5 +289,14 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="writing_card">Ecriture de Carte</string>
+    <string name="bring_card_closer">Coller la carte NFC au mobile.</string>
+    <string name="cancel">Annuler</string>
+    <string name="patient_not_found">Patient non Trouvé</string>
+    <string name="ok">OK</string>
+    <string name="cluster">Cluster</string>
+    <string name="cluster_name">Nom du Cluster</string>
+    <string name="city">Ville</string>
+    <string name="country">Pays</string>
 
 </resources>

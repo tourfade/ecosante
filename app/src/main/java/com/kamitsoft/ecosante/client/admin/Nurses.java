@@ -67,7 +67,7 @@ public class Nurses extends BaseFragment {
 
 
         model.getUsers().observe(this, userInfos -> {
-            Log.i("XXXXXXX", "-->"+userInfos);
+
             connectedUser = app.getCurrentUser();
             if(connectedUser == null){
                 return;

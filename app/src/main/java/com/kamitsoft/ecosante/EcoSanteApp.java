@@ -114,7 +114,7 @@ public class EcoSanteApp extends MultiDexApplication {
         });
 
         new UsersRepository(this).getConnectedUser().observeForever(user->{
-            Log.i("XXXXXX", "-->"+((user==null)?null:user.getUsername()));
+
             currentUser = user;
 
         });
