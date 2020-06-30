@@ -17,6 +17,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.kamitsoft.ecosante.BuildConfig;
 import com.kamitsoft.ecosante.EcoSanteApp;
 import com.kamitsoft.ecosante.ImagePickerActivity;
+import com.kamitsoft.ecosante.Splash;
 import com.kamitsoft.ecosante.client.admin.ClusterView;
 import com.kamitsoft.ecosante.client.admin.DistrictMap;
 import com.kamitsoft.ecosante.client.nurse.NurseDistrictMap;
@@ -202,6 +203,7 @@ public class EcoSanteActivity extends ImagePickerActivity
 
 
     }
+
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -213,10 +215,13 @@ public class EcoSanteActivity extends ImagePickerActivity
 
         if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action) ){
             String uuid = nfcMethod.readFromIntent(intent);
-            app.postService(service -> {
+            app.postService(service ->
                 service.getPatient(uuid, data -> {
                     if(data == null){
                         popMessage();
+                    }else if(data[0].getUuid() == null){
+                        startActivity(new Intent(this, SignIn.class));
+                        finish();
                     }else {
                         app.setCurrentPatient(data[0]);
                         app.setNewEncounter();
@@ -225,8 +230,7 @@ public class EcoSanteActivity extends ImagePickerActivity
                         startActivity(i);
                         overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
                     }
-                });
-            });
+                }));
 
         }
     }
@@ -239,7 +243,6 @@ public class EcoSanteActivity extends ImagePickerActivity
                 .setNegativeButton(getString(R.string.ok), (dialogInterface, i) -> {})
                 .create().show();
     }
-
 
     private void initDrawerMenu() {
         navigationView.getMenu().setGroupVisible(R.id.nurse_menu, false);
@@ -336,6 +339,7 @@ public class EcoSanteActivity extends ImagePickerActivity
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
 
     }
+
     @Override
     protected void onPause(){
         super.onPause();
@@ -355,7 +359,6 @@ public class EcoSanteActivity extends ImagePickerActivity
         }
 
     }
-
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

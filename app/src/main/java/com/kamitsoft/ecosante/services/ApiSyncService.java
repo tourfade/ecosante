@@ -84,10 +84,14 @@ public class ApiSyncService extends Service {
     private CompletionWithData<PatientInfo> patientInfoCompletionWithData;
 
     public void getPatient(String uuid, CompletionWithData<PatientInfo> patientInfoCompletionWithData) {
+        if(app.getCurrentUser() == null){
+            PatientInfo patientInfo = new PatientInfo();
+            patientInfo.setUuid(null);
+            patientInfoCompletionWithData.onReady(patientInfo);
+        }
 
-        PatientInfo patient=patientRepository.getPatient(uuid);
+        PatientInfo patient = patientRepository.getPatient(uuid);
         if(patient!=null && patientInfoCompletionWithData!= null) {
-
             patientInfoCompletionWithData.onReady(patient);
             return;
         }
@@ -285,8 +289,6 @@ public class ApiSyncService extends Service {
         }
     }
 
-
-
     private void initRepositories() {
         encounterRepository = new EncountersRepository(app);
         patientRepository = new PatientsRepository(app);
@@ -302,7 +304,7 @@ public class ApiSyncService extends Service {
 
     }
 
-    public void updatePassword(String oldpw, String npw, CompletionWithData<Boolean> completion) {
+    public  void updatePassword(String oldpw, String npw, CompletionWithData<Boolean> completion) {
         proxy.updateCredentials(oldpw,npw).enqueue(new Callback<UserAccountInfo>() {
             @Override
             public void onResponse(Call<UserAccountInfo> call, Response<UserAccountInfo> response) {
@@ -438,7 +440,7 @@ public class ApiSyncService extends Service {
 
     }
 
-    public void syncEncounters(EntitySync entitySync, List<EncounterInfo> dirty, Completion completion) {
+    public  void syncEncounters(EntitySync entitySync, List<EncounterInfo> dirty, Completion completion) {
 
         SyncData<List<EncounterInfo>> data = new SyncData<>();
         data.data = dirty;
@@ -494,7 +496,7 @@ public class ApiSyncService extends Service {
 
     }
 
-    public void syncSummaries(EntitySync entitySync, List<SummaryInfo> dirty, Completion completion) {
+    public  void syncSummaries(EntitySync entitySync, List<SummaryInfo> dirty, Completion completion) {
         SyncData<List<SummaryInfo>> data = new SyncData<>();
 
         data.timestamp = entitySync.getLastSynced();
@@ -549,7 +551,7 @@ public class ApiSyncService extends Service {
 
     }
 
-    public void syncMedications(EntitySync entitySync, List<MedicationInfo> dirty, Completion completion) {
+    public  void syncMedications(EntitySync entitySync, List<MedicationInfo> dirty, Completion completion) {
         SyncData<List<MedicationInfo>> data = new SyncData<>();
 
         data.timestamp = entitySync.getLastSynced();
@@ -604,7 +606,7 @@ public class ApiSyncService extends Service {
 
     }
 
-    public void syncLabs(EntitySync entitySync, List<LabInfo> dirty, Completion completion) {
+    public  void syncLabs(EntitySync entitySync, List<LabInfo> dirty, Completion completion) {
         SyncData<List<LabInfo>> data = new SyncData<>();
 
         data.timestamp = entitySync.getLastSynced();
@@ -658,7 +660,7 @@ public class ApiSyncService extends Service {
 
     }
 
-    public void syncDocs(EntitySync entitySync, List<DocumentInfo> dirty, Completion completion) {
+    public  void syncDocs(EntitySync entitySync, List<DocumentInfo> dirty, Completion completion) {
         SyncData<List<DocumentInfo>> data = new SyncData<>();
 
         data.timestamp = entitySync.getLastSynced();
@@ -770,7 +772,7 @@ public class ApiSyncService extends Service {
 
     }
 
-    public void syncAppointments(EntitySync entitySync, List<AppointmentInfo> dirty, Completion completion) {
+    public  void syncAppointments(EntitySync entitySync, List<AppointmentInfo> dirty, Completion completion) {
         SyncData<List<AppointmentInfo>> data = new SyncData<>();
 
         data.timestamp = entitySync.getLastSynced();
